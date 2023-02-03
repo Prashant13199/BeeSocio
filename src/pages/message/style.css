@@ -1,0 +1,77 @@
+.app {
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.app__body__light {
+  display: flex;
+  height: 85vh;
+  width: 90vw;
+  background-color: rgba(248,249,250,1);
+}
+.app__body__dark {
+  display: flex;
+  height: 85vh;
+  width: 90vw;
+  background-color: rgba(33,37,41,1);
+}
+.showsidebar {
+  flex: 0.35;
+  height: 100%;
+}
+.chatmain {
+  display: block;
+  flex: 0.65;
+  display: grid;
+  place-items: center;
+}
+.chatmain1 {
+  display: block;
+  flex: 0.35;
+  height: 100%;
+  overflow: auto;
+}
+.chatmain1::-webkit-scrollbar {
+  display: none;
+}
+@media screen and (max-width: 990px) {
+  .chatmain1 {
+    display: none;
+  }
+  .chatmain{
+    display: none;
+  }
+  .app{
+      height: 100%;
+      width: 100%;
+  }
+  .app__body__light {
+    padding-top: 0px;
+      height: 100%;
+      width: 100%;
+      box-shadow: none;
+      bottom: 0;
+      position: absolute;  
+      max-width: none;
+      background-color: white;
+  }
+
+  .app__body__dark {
+    padding-top: 0px;
+    height: 100%;
+    width: 100%;
+    box-shadow: none;
+    bottom: 0;
+    position: absolute;  
+    max-width: none;
+    background-color: black;
+}
+
+  .chattitle{
+    display: none;
+  }
+  .showsidebar {
+    display: none;
+  }
+}

@@ -1,0 +1,114 @@
+.createPost {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.createPost__loggedIn {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+
+.createPost__imageUpload > input {
+    display: none;   
+}
+.createPost__textarea {
+    width: 100%; 
+    border: none;
+    margin: 5px;
+}
+.createPost__textarea:focus {
+  outline: none;
+}
+
+#image-preview {
+    display: none;
+}
+
+  .ReactTags__tags {
+    position: relative;
+  }
+  
+  .ReactTags__clearAll {
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px;
+    background: #f88d8d;
+    color: #fff;
+    border: none;
+  }
+  
+  /* Styles for the input */
+  .ReactTags__tagInput {
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .ReactTags__tagInput input.ReactTags__tagInputField,
+  .ReactTags__tagInput input.ReactTags__tagInputField:focus {
+
+    outline: none;
+    border: none;
+    background-color: transparent;
+    color: gray;
+    margin: 5px;
+  }
+  
+  .ReactTags__editInput {
+    border-radius: 1px;
+  }
+  
+  .ReactTags__editTagInput {
+    display: inline-flex;
+  }
+  
+  /* Styles for selected tags */
+  .ReactTags__selected span.ReactTags__tag {
+    border: 1px solid #ddd;
+    background: #63bcfd;
+    color: white;
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px;
+    margin: 0 5px;
+    border-radius: 2px;
+  }
+  .ReactTags__selected a.ReactTags__remove {
+    color: #aaa;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  /* Styles for suggestions */
+  .ReactTags__suggestions {
+    position: absolute;
+  }
+  .ReactTags__suggestions ul {
+    list-style-type:decimal;
+    background: white;
+    width: fit-content;
+  }
+  .ReactTags__suggestions li {
+    padding: 5px 10px;
+    margin: 0;
+  }
+  .ReactTags__suggestions li mark {
+    text-decoration: underline;
+    background: none;
+    font-weight: 600;
+  }
+  .ReactTags__suggestions ul li.ReactTags__activeSuggestion {
+    background: #b7cfe0;
+    cursor: pointer;
+  }
+  
+  .ReactTags__remove {
+    border: none;
+    cursor: pointer;
+    background: none;
+    margin-left: 10px;
+    color: white;
+  }
+  
+  

@@ -1,0 +1,22 @@
+.suggestions{
+    padding: 10px;
+    border-radius: 8px;
+    height: 250px;
+    min-width: 380px;
+    margin: 10px;
+}
+.suggestionList {
+    margin-top: 20px;
+    padding: 5px 10px;
+}
+.viewall {
+    opacity: 1;
+}
+.viewall:hover {
+    opacity: 0.5;
+}
+@media screen and (max-width: 990px) {
+    .suggestions{
+        margin-bottom: 60px;
+    }
+}
