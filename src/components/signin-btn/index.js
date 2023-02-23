@@ -17,7 +17,7 @@ export default function SignInBtn() {
           localStorage.setItem("uid", userBySignIn.uid);
           localStorage.setItem("theme", "light");
           setLoading(false);
-          window.location.reload();
+          window.location.replace('/')
         } else {
           database
             .ref(`/Users/${userBySignIn.uid}`)
@@ -33,7 +33,7 @@ export default function SignInBtn() {
               localStorage.setItem("uid", userBySignIn.uid);
               localStorage.setItem("theme", "light");
               setLoading(false);
-              window.location.reload();
+              window.location.replace('/')
             })
             .catch((e) => {
               console.log(e);
