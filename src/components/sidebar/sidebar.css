@@ -1,0 +1,59 @@
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0.35;
+  }
+  .side__bar {
+    display: none;
+  }
+  .sidebar__header {
+    display: none;
+  }
+  .sidebar__chats {
+    margin-top: 10px;
+    flex: 1;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    min-width: 250px;
+  }
+  .sidebar__chats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide {
+    display: none;
+  }
+  .sidebar__search {
+    padding: 0px 10px;
+    padding-top: 10px;
+    z-index: 2;
+  }
+  .sidebar__search_mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 990px) {
+    .sidebar__header {
+      display: flex;
+      height: 55px;
+      align-items: center;
+    }
+    .sidebar__header .MuiIconButton-root {
+      padding-right: 7px !important;
+    }
+    .sidebar {
+      flex: 1;
+    }
+    .sidebar__search {
+      display: none;
+    }
+    .sidebar__search_mobile {
+      display: block;
+      padding: 0px 10px;
+      z-index: 2;
+    }
+  }
+
+ 
+  

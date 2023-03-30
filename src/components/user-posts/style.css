@@ -1,0 +1,28 @@
+.userPost__img {
+    height: 30vh;
+    width: 100%;
+    object-fit: cover;
+}
+.userPost__img:hover{
+    cursor: pointer;
+    box-shadow: 4px 4px 8px #686868, -4px -4px 8px #ffffff;
+}
+.userPost__video {
+    height: 35vh;
+    width: 100%;
+    object-fit: cover;
+}
+
+.userPost__video:hover{
+    cursor: pointer;
+    box-shadow: 4px 4px 8px #686868, -4px -4px 8px #ffffff;
+}
+
+@media screen and (max-width: 990px) {
+    .userPost__video {
+        height: 25vh;
+    }
+    .userPost__img {
+        height: 20vh;
+    }
+}

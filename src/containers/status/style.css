@@ -1,0 +1,29 @@
+.addStatus__btn {
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    margin-right: 6px;
+}
+.statusadd__img {
+    position: relative;
+    margin: 4px;
+    padding: 2px;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 65px;
+    width: 65px;
+    min-width: 65px;
+    object-fit: cover;
+}
+.statusaddicon {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+}
+.addStatus__btn:hover {
+    opacity: 1;
+}
+.status{
+    display: flex;
+    padding: 5px;
+}

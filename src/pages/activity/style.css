@@ -1,0 +1,28 @@
+.activityPage{
+    margin: auto;
+    padding-bottom: 20px;
+    max-width: 800px;
+    padding-top: 60px;
+    padding-bottom: 200px;
+}
+.activitylight{
+    background-color: rgba(248,249,250,1);
+}
+.activitydark{
+    background-color: rgba(33,37,41,1);
+}
+.br {
+    display: block;
+}
+@media screen and (max-width: 990px) {
+    .activityPage{
+        padding-bottom: 120px;
+    }
+    .activitylight{
+        max-width: none;
+        background-color: transparent;
+    }
+    .activitydark{
+        background-color: transparent;
+    }
+}

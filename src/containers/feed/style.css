@@ -1,0 +1,9 @@
+.feed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    scroll-behavior: inherit;
+    padding-bottom: 100px;
+}
+

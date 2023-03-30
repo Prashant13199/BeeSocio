@@ -1,0 +1,32 @@
+.searchPage{
+    margin: auto;
+    padding-bottom: 20px;
+    max-width: 800px;
+    padding-top: 60px;
+    padding-bottom: 200px;
+}
+.searchUserlight {
+    font-size: 20px;
+    z-index:99;
+    background-color: rgba(248,249,250,1);
+}
+.searchUserdark {
+    font-size: 20px;
+    z-index:99;
+    background-color: rgba(33,37,41,1);
+}
+@media screen and (max-width: 990px) {
+    .searchUser1{
+        width: 100%;
+        margin-top: 10px;
+    }
+    .searchPage{
+        padding-bottom: 100px;
+    }
+    .searchUserlight{
+        background-color: transparent;
+    }
+    .searchUserdark{
+        background-color: transparent;
+    }
+}

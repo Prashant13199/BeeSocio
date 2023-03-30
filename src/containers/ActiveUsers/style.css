@@ -1,0 +1,14 @@
+.activeusers{
+    padding: 10px;
+    border-radius: 8px;
+    height: 200px;
+    overflow: auto;
+    min-width: 380px;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.activeuserslist {
+    margin-top: 20px;
+    padding: 5px 10px;
+}

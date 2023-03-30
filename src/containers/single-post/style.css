@@ -1,0 +1,65 @@
+.singlepost__center{
+    text-align: center;
+}
+.singlepost__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.singlepost__headerLeft{
+    display: flex;
+    justify-content: space-around;
+}
+
+.singlepost__profilePic{
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.singlepost__photoUrl {
+    width: 100%;
+    margin: 8px 0px;
+    height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.singlepost__caption {
+    margin: 0px 5px;
+    color: black;
+    max-width: 800px;
+    word-wrap: break-word;
+}
+
+.singlepost_like {
+    display: flex;
+    justify-content: space-between;
+}
+.singlepost_likeM {
+    display: flex;
+    justify-content: space-between;
+}
+.mobile{
+    display: none;
+}
+.pc{
+    display:block;
+}
+@media screen and (max-width: 990px) {
+    .mobile{
+        display: block;
+    }
+    .pc{
+        display: none;
+    }
+    .singlepost__center{
+        min-height: 200px;
+    }
+    .singlepost__photoUrl {
+        height: 50vh;
+        width: 100%;
+    }
+}
+

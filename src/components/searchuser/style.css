@@ -1,0 +1,15 @@
+.searchuser__img{
+    cursor: pointer;
+    height: 50px;
+    width: 50px;
+    min-width: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.sugfollow1 {
+    cursor: pointer;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
