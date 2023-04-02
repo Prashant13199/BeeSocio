@@ -17,9 +17,6 @@ import ForgotPassword from "./pages/Authentication/forgotpassword";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { IconButton } from "@material-ui/core";
 import Error from "./pages/error";
-import Alert from '@mui/material/Alert';
-import CloseIcon from '@mui/icons-material/Close';
-import { isMobile } from "react-device-detect";
 
 function App() {
 
@@ -28,7 +25,6 @@ function App() {
 
   const [showScroll, setShowScroll] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(true);
   
   const checkScrollTop = () => {
     if (!showScroll && window.pageYOffset > 600) {
@@ -72,25 +68,6 @@ function App() {
         {currentuid ? (
           <>
             <NavbarHead />
-            {open && isMobile && <Alert
-              severity="info"
-              className="mobilealert"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setOpen(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mb: 2 }}
-            >
-              Download Mobile App <a style={{textDecoration: 'none'}} target="_blank" href="https://drive.google.com/file/d/1VwXzEe5hy3ODfx-0qsQecrhJ4XSwsX-A/view?usp=share_link">.apk</a>
-            </Alert>}
             <Switch>
               <Route path="/" component={Home} exact={true} />
               <Route

@@ -133,7 +133,6 @@ export default function Status() {
               borderRadius: "50%", fontSize: "20px"
             }} />
           </div>
-          <div style={{ color: theme === "light" ? "black" : "white", fontSize: "12px", alignItems: "center" }}>Add Story</div>
         </div>
 
 

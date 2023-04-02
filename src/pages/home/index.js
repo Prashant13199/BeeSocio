@@ -121,10 +121,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div
-        className="home_mobile"
-        style={{ backgroundColor: theme === "light" ? "white" : "black" }}
-      >
+      <div className="home_mobile" style={{ backgroundColor: theme === "light" ? "white" : "black", marginTop: '10px' }}>
         <div className={theme === "light" ? "statuslight" : "statusdark"}>
           <Status />
         </div>

@@ -2,22 +2,21 @@
     cursor: pointer;
     display: grid;
     place-items: center;
-    margin-right: 6px;
+    margin-right: 5px;
 }
 .statusadd__img {
     position: relative;
-    margin: 4px;
-    padding: 2px;
-    border-radius: 50%;
+    border-radius: 10px;
     cursor: pointer;
-    height: 65px;
-    width: 65px;
-    min-width: 65px;
+    height: 100px;
+    width: 80px;
+    min-width: 80px;
     object-fit: cover;
+    opacity: 0.8;
 }
 .statusaddicon {
     position: absolute;
-    right: 10px;
+    right: 5px;
     bottom: 5px;
 }
 .addStatus__btn:hover {
@@ -25,5 +24,4 @@
 }
 .status{
     display: flex;
-    padding: 5px;
 }

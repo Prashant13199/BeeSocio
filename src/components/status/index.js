@@ -29,9 +29,9 @@ export default function SingleStatus({
 
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
-  const [img, setImg] = useState("");
   const [currentUsername, setCurrentUsername] = useState("");
   const [username, setUsername] = useState("");
+  const [photo, setPhoto] = useState("");
   const [postUsername, setPostUsername] = useState("");
   const [statusreply, setStatusreply] = useState(null);
   const [statusview, setStatusview] = useState([]);
@@ -71,6 +71,7 @@ export default function SingleStatus({
     database.ref(`/Users/${uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setUsername(snapshot.val().username);
+        setPhoto(snapshot.val().photo)
       }
     });
   }, [uid]);
@@ -158,9 +159,6 @@ export default function SingleStatus({
   };
 
   useEffect(() => {
-    database.ref(`/Users/${uid}`).on("value", (snapshot) => {
-      setImg(snapshot.val().photo);
-    });
     database
       .ref(`/Status/${id}/seen`)
       .orderByChild("timestamp")
@@ -299,7 +297,7 @@ export default function SingleStatus({
                   exact={true}
                 >
                   <img
-                    src={img}
+                    src={photo}
                     alt=""
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null;
@@ -499,9 +497,10 @@ export default function SingleStatus({
             })}
         </Modal.Body>
       </Modal>
-      <div>
+      <div style={{ marginRight: '5px' }}>
+      <div style={{ position: 'relative' }}>
         <img
-          src={img}
+          src={statusImg}
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
             currentTarget.src =
@@ -511,7 +510,20 @@ export default function SingleStatus({
           className={view ? "status__img1" : "status__img"}
           onClick={handleShow}
         />
-        <div style={{ color: theme === "light" ? "black" : "white", fontSize: "12px", textAlign: "center" }}>{username.length > 8 ? username.substring(0, 8).concat("..") : username}</div>
+        <img
+          src={photo}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src =
+              "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
+          }}
+          alt=""
+          style={{
+            position: 'absolute', right: '5px', bottom: '5px', height: '20px', width: '20px', borderRadius: '50%'
+          }}
+          onClick={handleShow}
+        />
+      </div>
       </div>
     </>
   ) : (
