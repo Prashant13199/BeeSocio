@@ -2,7 +2,7 @@
   height: 25px;
   width: 25px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 10px;
   border-color: transparent;
   border-style: solid;
   border-width: 1px;
@@ -27,7 +27,7 @@
   height: 25px;
   width: 25px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 10px;
   border-color: black ;
   border-style: solid;
   border-width: 1px;
@@ -37,7 +37,7 @@
   height: 25px;
   width: 25px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 10px;
   border-color: white ;
   border-style: solid;
   border-width: 1px;

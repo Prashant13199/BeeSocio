@@ -15,7 +15,7 @@
     height: 35px;
     width: 35px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
 }
 
 .singlepost__photoUrl {
@@ -23,7 +23,7 @@
     margin: 8px 0px;
     height: 70vh;
     object-fit: contain;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .singlepost__caption {

@@ -306,11 +306,11 @@ export default function CreatePost({ handleClose }) {
             alt="If not visible, try different link"
             style={{
               color: theme === "light" ? "black" : "white",
-              height: "250px",
+              height: "50vh",
               width: "100%",
               marginBottom: "20px",
-              borderRadius: "8px",
-              objectFit: "contain",
+              borderRadius: "10px",
+              objectFit: "cover",
             }}
           />
         </div>

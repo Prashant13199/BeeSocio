@@ -80,8 +80,8 @@ export default function VideoTabUser({ props }) {
             <Grid container
                 spacing={
                     {
-                        xs: 0.2,
-                        md: 0.2
+                        xs: 0.5,
+                        md: 0.5
                     }
                 }
                 columns={

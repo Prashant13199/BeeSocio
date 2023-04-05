@@ -2,6 +2,7 @@
     height: 30vh;
     width: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 .userPost__img:hover{
     cursor: pointer;
@@ -11,6 +12,7 @@
     height: 35vh;
     width: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .userPost__video:hover{

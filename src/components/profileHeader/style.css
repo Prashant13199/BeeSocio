@@ -3,7 +3,7 @@
     width: 200px;
     min-width: 160px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
     cursor: pointer;
 }
 .info_name {

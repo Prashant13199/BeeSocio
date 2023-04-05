@@ -1,6 +1,6 @@
 .like__img1{
     padding: 0px;
-    border-radius: 50%;
+    border-radius: 10px;
     cursor: pointer;
     height: 30px;
     width: 30px;
@@ -9,7 +9,7 @@
 }
 .like__img1_online {
     padding: 2px;
-    border-radius: 50%;
+    border-radius: 10px;
     border-style: solid;
     border-width: 2px;
     border-color: green;

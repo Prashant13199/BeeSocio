@@ -46,6 +46,7 @@ export default function ProfileHeader() {
     const theme = localStorage.getItem("theme");
     const [postCount, setPostCount] = useState(0);
     const [videoCount, setVideoCount] = useState(0);
+    const avatarArray = ['Willow', 'Spooky', 'Bubba', 'Lily', 'Whiskers', 'Pepper', 'Tiger', 'Zoey', 'Dusty', 'Simba']
 
     let fileName = "";
     let history = useHistory();
@@ -244,7 +245,7 @@ export default function ProfileHeader() {
                 } catch (e) {
                     console.log(e);
                 }
-                database.ref(`/Users/${currentuid}`).update({ photo: "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png" }).then(() => {
+                database.ref(`/Users/${currentuid}`).update({ photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}` }).then(() => {
                     Swal.fire({
                         background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                         color: theme === "light" ? "black" : "white",

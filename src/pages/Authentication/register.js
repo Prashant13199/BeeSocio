@@ -18,6 +18,7 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  const avatarArray = ['Willow', 'Spooky', 'Bubba', 'Lily', 'Whiskers', 'Pepper', 'Tiger', 'Zoey', 'Dusty', 'Simba']
   const register = async () => {
     setLoading(true);
     auth
@@ -29,8 +30,7 @@ export default function Register() {
           .update({
             uid: user.user.uid,
             username: email.replace("@gmail.com", ""),
-            photo:
-              "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png",
+            photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}`,
             email: email,
             createdAccountOn: Date.now(),
             timestamp: Date.now(),

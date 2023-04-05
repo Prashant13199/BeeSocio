@@ -111,7 +111,7 @@ function Sidebar() {
         });
     }
   };
-
+  const avatarArray = ['Willow', 'Spooky', 'Bubba', 'Lily', 'Whiskers', 'Pepper', 'Tiger', 'Zoey', 'Dusty', 'Simba']
   const createGroup = () => {
     Swal.fire({
       background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
@@ -136,7 +136,7 @@ function Sidebar() {
             createdBy: currentuid,
             group: true,
             timestamp: Date.now(),
-            photo: "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png",
+            photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}`,
           })
           .then(() => {
             database

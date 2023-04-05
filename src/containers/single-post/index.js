@@ -471,7 +471,7 @@ export default function SinglePost({
           }}
         >
           <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{likes.length}</b> Likes
+            <b>{likes.length}</b> {likes.length>1 ? 'Likes':'Like'}
           </Modal.Title>
           <IconButton onClick={handleClose}>
             <CloseOutlinedIcon color="error" />
@@ -533,7 +533,7 @@ export default function SinglePost({
           }}
         >
           <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{comments.length}</b> comments
+            <b>{comments.length}</b> {comments.length > 1 ? 'Comments' : 'Comment'}
           </Modal.Title>
           <IconButton onClick={handleClose1}>
             <CloseOutlinedIcon color="error" />

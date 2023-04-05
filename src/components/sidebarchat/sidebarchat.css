@@ -36,7 +36,7 @@
   }
   .sidebarChat__img{
     padding: 0px;
-    border-radius: 50%;
+    border-radius: 10px;
     height: 40px;
     width: 40px;
     min-width: 40px;

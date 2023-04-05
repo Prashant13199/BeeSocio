@@ -33,7 +33,7 @@
     height: 35px;
     width: 35px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
 }
 
 .post__delete {
@@ -45,6 +45,7 @@
     margin-bottom: 8px;
     height: 70vh;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .post__caption {

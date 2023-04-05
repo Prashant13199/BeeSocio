@@ -490,7 +490,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           }}
         >
           <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{likes.length}</b> Likes
+            <b>{likes.length}</b> {likes.length>1 ? 'Likes':'Like'}
           </Modal.Title>
           <IconButton onClick={handleClose}>
             <CloseOutlinedIcon color="error" />
@@ -525,7 +525,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           }}
         >
           <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{comments.length}</b> comments
+            <b>{comments.length}</b> {comments.length > 1 ? 'Comments' : 'Comment'}
           </Modal.Title>
           <IconButton onClick={handleClose1}>
             <CloseOutlinedIcon color="error" />
@@ -746,7 +746,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
         </Modal.Body>
       </Modal>
       <div className="post" style={{
-        borderBottom: `1px solid ${theme==='light' ? 'rgb(242, 241, 241)' : 'rgb(24, 27, 30)'}`,
+        borderBottom: `1px solid ${theme==='light' ? 'rgb(242, 241, 241)' : 'rgb(24, 27, 30)'}`, paddingBottom: '10px'
       }}>
         <div className="post__header">
           <div className="post__headerLeft">
@@ -784,6 +784,15 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               >
                 {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
               </Link>
+              <div style={{display: 'flex'}}>
+              <div
+                style={{
+                  color: "grey",
+                  fontSize: "12px",
+                }}
+              >
+                {timeDifference(new Date(), new Date(timestamp))}
+              </div>
               <div
                 style={{
                   color: "grey",
@@ -791,7 +800,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
                   display: venue ? "block" : "none"
                 }}
               >
-                {venue}
+              &nbsp;&#183; {venue}
+              </div>
               </div>
             </div>
             <div style={{ display: showSuggested ? "block" : "none", color: theme === "light" ? "black" : "white", marginLeft: "20px" }}>&bull; suggested</div>
@@ -876,7 +886,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
                 color: theme === "light" ? "black" : "white",
               }}
             >
-              <b>{likes.length}</b> Likes
+              <b>{likes.length}</b> {likes.length > 1 ? 'Likes' : 'Like'}
             </a>
           </div>
           <div style={{ fontSize: "medium", display: comments.length ? "block" : "none", marginLeft: likes.length ? "10px" : "0px" }}>
@@ -887,7 +897,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
                 color: theme === "light" ? "black" : "white",
               }}
             >
-              <b>{comments.length}</b> Comments
+              <b>{comments.length}</b> {comments.length>1 ? 'Comments' : 'Comment'}
             </a>
           </div>
         </div>
@@ -908,15 +918,6 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
             {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
           </Link>&nbsp;
           {caption}
-        </div>
-        <div
-          style={{
-            color: "grey",
-            fontSize: "12px",
-            margin: "10px 10px",
-          }}
-        >
-          {timeDifference(new Date(), new Date(timestamp))}
         </div>
       </div>
     </>

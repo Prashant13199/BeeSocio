@@ -144,7 +144,7 @@ export default function CommentReplyShow({
           }}
         >
           <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{clikes.length}</b> Likes
+            <b>{clikes.length}</b> {clikes.length > 1 ? 'Likes' : 'Like'}
           </Modal.Title>
           <IconButton onClick={handleClose}>
             <CloseOutlinedIcon color="error" />
@@ -236,7 +236,7 @@ export default function CommentReplyShow({
         })}
       </div>
       <div className="pClike">
-        <a onClick={clikes.length !== 0 && handleShow} >{clikes.length} Likes&nbsp;&nbsp;</a>
+        <a onClick={clikes.length !== 0 && handleShow} >{clikes.length} {clikes.length > 1 ? 'Likes' : 'Like'}&nbsp;&nbsp;</a>
         {timeDifference(new Date(), new Date(time))}&nbsp;&nbsp;
       </div>
     </>

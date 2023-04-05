@@ -61,7 +61,7 @@ export default function Home() {
                 {!loading ? <img
                   src={currentPhoto}
                   style={{
-                    borderRadius: "50%",
+                    borderRadius: "10px",
                     height: "80px",
                     width: "80px",
                     objectFit: "cover",

@@ -2011,7 +2011,7 @@ function Chat() {
           }}
           >
             <img alt="" onClick={() => handleShow4()} src={photo} style={{
-              height: "200px", width: "200px", objectFit: "cover", borderRadius: "50%", cursor: "pointer"
+              height: "200px", width: "200px", objectFit: "cover", borderRadius: "10px", cursor: "pointer"
             }} />
             <h2 onClick={() => changeGroupUsername()} style={{
               color: theme === "light" ? "black" : "white", cursor: "pointer", marginTop: "20px"
@@ -2616,7 +2616,7 @@ function Chat() {
                         className="noselect"
                       >
                         <div style={{ display: "flex" }}>
-                          <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: currentuid !== message.uid ? "block" : "none", borderRadius: "50%", minWidth: "20px", margin: "5px" }} onError={
+                          <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: currentuid !== message.uid ? "block" : "none", borderRadius: "10px", minWidth: "20px", margin: "5px" }} onError={
                             ({ currentTarget }) => {
                               currentTarget.onerror = null;
                               currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
@@ -2927,7 +2927,7 @@ function Chat() {
                                   to={message.postuid === currentuid ? `/profile` : `/userprofile/${message.postuid}`}
                                 >
                                   <img src={convert_to_pic(message.postuid)} style={{
-                                    height: "25px", width: "25px", objectFit: "cover", borderRadius: "50%"
+                                    height: "25px", width: "25px", objectFit: "cover", borderRadius: "10px"
                                   }} />
                                   <div style={{ marginLeft: "5px" }}>{convert_to_username(message.postuid)}</div>
                                 </Link>
