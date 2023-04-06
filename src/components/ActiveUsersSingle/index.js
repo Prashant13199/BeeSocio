@@ -63,7 +63,7 @@ export default function ActiveUsersSingle({ uid }) {
           exact={true}
         >
           <img
-            className="suggestion__img"
+            className={status ? "activeuser__img_online" :"activeuser__img"}
             src={photo}
             alt=""
             onError={({ currentTarget }) => {

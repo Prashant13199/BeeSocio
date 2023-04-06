@@ -349,7 +349,6 @@ export default function NavbarHead() {
                     activeClassName="is-active"
                     exact={true}
                   >
-
                     <IconButton>
                       <Badge badgeContent={mnotifications.length} color="primary">
                         {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
@@ -364,7 +363,6 @@ export default function NavbarHead() {
                     activeClassName="is-active"
                     exact={true}
                   >
-
                     <IconButton onClick={() => {
                       clearNotification();
                     }}>

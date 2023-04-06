@@ -3020,7 +3020,14 @@ function Chat() {
                 width: "fit-content",
               }}
             >
-              <DoneAllIcon color="primary" style={{ fontSize: "18px" }} />
+              <img alt="" src={photo} style={{
+                  height: "20px", width: "20px", objectFit: "cover", borderRadius: "50%", margin: "2px"
+                }} onError={
+                  ({ currentTarget }) => {
+                    currentTarget.onerror = null;
+                    currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
+                  }
+                } />
             </div>
           )}
           {seenGroup.length !== 0 && messages1.length && messages1[messages1.length - 1].message.uid === currentuid && (

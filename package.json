@@ -14,6 +14,7 @@
     "@testing-library/user-event": "^12.8.3",
     "autoprefixer": "^10.4.5",
     "bootstrap": "^5.2.1",
+    "caniuse-lite": "^1.0.30001474",
     "compressorjs": "^1.1.1",
     "emoji-mart": "^5.1.0",
     "firebase": "^9.10.0",

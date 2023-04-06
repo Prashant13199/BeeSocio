@@ -61,9 +61,7 @@ function App() {
           style={{ display: showScroll ? "flex" : "none",backgroundColor: theme === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)"}}
           onClick={scrollTop}
         >
-          <IconButton>
             <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
-          </IconButton>
         </div>
         {currentuid ? (
           <>

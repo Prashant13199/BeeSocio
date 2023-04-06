@@ -1,6 +1,5 @@
 .scrollTop {
     position: fixed; 
-    width: 100%;
     bottom: 30px;
     right: 30px;
     align-items: center;
@@ -11,8 +10,6 @@
     transition: opacity 0.4s;
     max-width: fit-content;
     border-radius: 10px;
-    height: 45px;
-    width: 45px;
     opacity: 0.7;
   }
   .scrollTop:hover{

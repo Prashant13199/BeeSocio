@@ -154,9 +154,7 @@ function Sidebar() {
         <div className="sidebar__header">
           <Link to="/" style={{ color: theme === "light" ? "black" : "white", textDecoration: "none", fontSize: "24px", }}>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <IconButton>
                 <ArrowBackIosIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
-              </IconButton>
               <div style={{ fontWeight: "700" }}>Chats</div>
             </div>
           </Link>
