@@ -9,11 +9,13 @@
     font-size: 20px;
     z-index:99;
     background-color: rgba(248,249,250,1);
+    border-radius: 10px;
 }
 .searchUserdark {
     font-size: 20px;
     z-index:99;
     background-color: rgba(33,37,41,1);
+    border-radius: 10px;
 }
 @media screen and (max-width: 990px) {
     .searchUser1{

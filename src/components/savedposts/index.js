@@ -129,12 +129,7 @@ export default function SavedPost({ id, photoURL }) {
                         <img className="userPost__img"
                             src={photoURL}
                             alt=""
-                            onError={
-                                ({ currentTarget }) => {
-                                    currentTarget.onerror = null;
-                                    currentTarget.src = "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                                }
-                            } />
+                             />
                     )
                 } </Grid>
         </>

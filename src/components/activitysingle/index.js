@@ -36,7 +36,7 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
         <Link to={postid ? `/singlefeed/${postid}` : `/userprofile/${uid}`} style={{ textDecoration: "none" }} className="noselect">
             <div className={theme === "light" ? "activitysinglelight" : "activitysingledark"} {...bind(id)}>
                 <div style={{ display: "flex" }}> <Link to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}>
-                    <img src={photo} className="activity__profilePic" alt="" onError={({ currentTarget }) => { currentTarget.onerror = null; currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png"; }} />
+                    <img src={photo} className="activity__profilePic" alt="" />
                 </Link>
                     <div style={{ marginLeft: "10px" }}>
                         <div className="activity__center">
@@ -48,7 +48,7 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
                         </div>
                     </div>
                 </div>
-                <img style={{ display: postid ? "block" : "none" }} effect="blur" className="activity__postPic" alt="" src={photoUrl} onError={({ currentTarget }) => { currentTarget.onerror = null; currentTarget.src = "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg"; }} />
+                <img style={{ display: postid ? "block" : "none" }} effect="blur" className="activity__postPic" alt="" src={photoUrl} />
             </div>
         </Link>);
 }

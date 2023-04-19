@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Post } from "..";
 import { database } from "../../firebase";
 import "./style.css";
-import ReactLoading from "react-loading";
 import icon from "../../bee.png";
+import loadingIcon from '../../assets/loading.gif'
+
 
 export default function Feed() {
     const theme = localStorage.getItem("theme");
-    const currentuid = localStorage.getItem("uid");
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalPosts, setTotalPosts] = useState(0)
@@ -35,7 +35,7 @@ export default function Feed() {
             setPosts(postList);
             setLoading(false);
         });
-    }, [currentuid]);
+    }, []);
 
     const fetchMore = () => {
         setFetching(true)
@@ -125,12 +125,7 @@ export default function Feed() {
 
             }
             {(totalPosts > posts.length && fetching) && <center style={{ marginTop: "20px" }}>
-                <ReactLoading
-                    type="spinningBubbles"
-                    color="#0892d0"
-                    height={"20px"}
-                    width={"20px"}
-                />
+                <img src={loadingIcon} height={'20px'} width={'20px'} />
             </center>}
             {(totalPosts === posts.length) && <center style={{
                 color: "gray", marginTop: "50px"
@@ -145,9 +140,7 @@ export default function Feed() {
             }
         }>
             <center>
-                <ReactLoading type="spinningBubbles" color="#0892d0"
-                    height={"30px"}
-                    width={"30px"} />
+                    <img src={loadingIcon} height={'30px'} width={'30px'} />
             </center>
         </div>
     );

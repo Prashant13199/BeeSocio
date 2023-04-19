@@ -5,9 +5,11 @@ import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { time } from "../../services/time";
 import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
   const currentuid = localStorage.getItem("uid");
+  const location = useLocation();
   const [messages, setMessages] = useState("");
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
@@ -15,8 +17,16 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
   const [roomName, setRoomName] = useState("");
   const theme = localStorage.getItem("theme");
   const history = useHistory();
+  const [active, setActive] = useState(false)
 
   useEffect(() => {
+    console.log(location && location.pathname.split('/')[3])
+    console.log(id)
+    if(location && location.pathname.split('/')[3] === id) {
+      setActive(true)
+    }else {
+      setActive(false)
+    }
     if (groupName) {
       database
         .ref(`/Rooms/${id}`)
@@ -66,7 +76,7 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
       });
       setmNotification(mNotification);
     });
-  }, [currentuid]);
+  }, []);
 
   const [mnotifications, setmNotification] = useState([]);
 
@@ -95,17 +105,13 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
         }}
         className="chata"
       >
-        <div className={theme === "light" ? "sidebarChat" : "sidebarChatdark"}>
+        <div className={active ? theme === "light" ? "sidebarChat_active" : "sidebarChatdark_active" : theme==="light" ? "sidebarChat" : "sidebarChatdark"}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <img
               src={photo}
               className={status ? "sidebarChat__img__online" : "sidebarChat__img"}
               alt=""
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null;
-                currentTarget.src =
-                  "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-              }}
+              
             />
             <div className="sidebarChat__info">
               <div style={{ display: "flex", height: "15px" }}>

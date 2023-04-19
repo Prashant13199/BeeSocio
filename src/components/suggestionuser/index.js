@@ -19,7 +19,7 @@ export default function SuggestionUSer({ uid }) {
         setCurrentUsername(snapshot.val().username);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${uid}`).on("value", (snapshot) => {
@@ -151,7 +151,7 @@ export default function SuggestionUSer({ uid }) {
       });
     }
   };
-  return currentuid !== uid ? (
+  return currentuid !== uid && !like ? (
     <div
       style={{
         padding: "10px",
@@ -181,11 +181,7 @@ export default function SuggestionUSer({ uid }) {
             className="suggestion__img"
             src={photo}
             alt=""
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-              currentTarget.src =
-                "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-            }}
+            
           />
           {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
         </Link>

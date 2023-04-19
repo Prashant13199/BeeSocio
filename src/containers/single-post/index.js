@@ -118,7 +118,7 @@ export default function SinglePost({
         setSuperUser(snapshot.val().superuser);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${uid}/`).on("value", (snapshot) => {
@@ -265,25 +265,31 @@ export default function SinglePost({
           console.log(e);
         }
         if (photoURL.includes('mp4')) {
-          database
-            .ref(`/Users/${currentuid}/Videos/${id}`)
-            .remove()
-            .then(() => {
+          if(uid === currentuid) {
+            database.ref(`/Users/${currentuid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
-            .catch((e) => {
-              console.log(e);
-            });
+              .catch((e) => { console.log(e) });
+          }else{
+            database.ref(`/Users/${uid}/Videos/${id}`).remove().then(() => {
+              console.log("Deleted");
+            })
+              .catch((e) => { console.log(e) });
+          }
+          
         } else {
-          database
-            .ref(`/Users/${currentuid}/Posts/${id}`)
-            .remove()
-            .then(() => {
+          if(uid === currentuid) {
+            database.ref(`/Users/${currentuid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
-            .catch((e) => {
-              console.log(e);
-            });
+            .catch((e) => { console.log(e) });
+          }
+          else{
+            database.ref(`/Users/${uid}/Posts/${id}`).remove().then(() => {
+              console.log("Deleted");
+            })
+            .catch((e) => { console.log(e) });
+          }
         }
 
         database
@@ -547,7 +553,7 @@ export default function SinglePost({
               theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <div style={{ height: "45vh", overflow: "auto" }}>
+          <div style={{ height: "43vh", overflow: "auto" }}>
             {comments && comments.map((comment) => (
               <Comment
                 uid={comment.uid}
@@ -625,11 +631,6 @@ export default function SinglePost({
                 className="like__img"
                 src={currentPhoto}
                 alt=""
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null;
-                  currentTarget.src =
-                    "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                }}
               />
               <a
                 className="users2__a"
@@ -696,7 +697,7 @@ export default function SinglePost({
                 tags
               </ListGroup.Item>
             )}
-            {(currentuid === uid || superUser) && (
+            {(currentuid === uid) && (
               <ListGroup.Item
                 action
                 variant="danger"
@@ -743,11 +744,7 @@ export default function SinglePost({
               className="singlepost__profilePic"
               alt=""
               src={photo}
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null;
-                currentTarget.src =
-                  "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-              }}
+              
             />
             <div>
               <div style={{ marginLeft: "10px" }}>
@@ -814,6 +811,7 @@ export default function SinglePost({
         <IconButton onClick={handlebookmark}>
           {bookmarkpost ? <BookmarkIcon sx={{color: 'white'}} style={{ fontSize: '30px' }} /> : <BookmarkBorderOutlinedIcon sx={{color: 'white'}} style={{ fontSize: '30px' }} />}
         </IconButton>
+
         <IconButton onClick={handleShow5} style={{
           display: (uid === currentuid || tagss || superUser) ? "block" : "none"
         }}>

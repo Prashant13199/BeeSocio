@@ -7,6 +7,16 @@
     justify-content: space-between;
     border-radius: 8px;
   }
+  .sidebarChat_active {
+    display: flex;
+    cursor: pointer;
+    margin: 6px;
+    padding: 8px;
+    height: 60px;
+    justify-content: space-between;
+    border-radius: 8px;
+    background-color: rgb(175, 218, 243)
+  }
   .sidebarChat:hover {
     min-width: fit-content;
     background-color: rgb(175, 218, 243)
@@ -19,6 +29,16 @@
     height: 60px;
     justify-content: space-between;
     border-radius: 8px;
+  }
+  .sidebarChatdark_active{
+    display: flex;
+    cursor: pointer;
+    margin: 6px;
+    padding: 8px;
+    height: 60px;
+    justify-content: space-between;
+    border-radius: 8px;
+    background-color: rgb(21, 64, 89)
   }
   .sidebarChatdark:hover {
     min-width: fit-content;

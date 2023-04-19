@@ -24,7 +24,6 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import MicNoneIcon from '@mui/icons-material/MicNone';
 import GifOutlinedIcon from '@mui/icons-material/GifOutlined';
 import StopIcon from '@mui/icons-material/Stop';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
 import EditIcon from '@mui/icons-material/Edit';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
 import smile from "../../assets/smiling.png";
@@ -41,7 +40,7 @@ import sweat from "../../assets/sweat.png";
 import starstruck from "../../assets/starstruck.png";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import StickyBox from "react-sticky-box";
-import ReactLoading from "react-loading";
+import loadingIcon from '../../assets/loading.gif'
 import ReplyIcon from '@mui/icons-material/Reply';
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import Like from '../like'
@@ -1029,7 +1028,7 @@ function Chat() {
         });
         setmNotification(mnotificationList);
       });
-  }, [currentuid]);
+  }, []);
 
   const handleScroll = async (id) => {
     if (id) {
@@ -2541,11 +2540,6 @@ function Chat() {
             src={photo}
             alt=""
             onClick={handleShow8}
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-              currentTarget.src =
-                "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-            }}
           />
           <div className="chat__headerInfo">
             {uid ? <Link
@@ -2591,12 +2585,8 @@ function Chat() {
             </p> :
             fetching && (messages1.length < totalMessageCount) &&
             <p className="chat_timeline">
-              <ReactLoading
-                type="spinningBubbles"
-                color="#0892d0"
-                height={"20px"}
-                width={"20px"}
-              /></p>}
+              <img src={loadingIcon} height={'20px'} width={'20px'} />
+            </p>}
           {dates && dates.map((data) => {
             return <>
               <StickyBox style={{ zIndex: "2" }}>
@@ -2616,12 +2606,7 @@ function Chat() {
                         className="noselect"
                       >
                         <div style={{ display: "flex" }}>
-                          <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: currentuid !== message.uid ? "block" : "none", borderRadius: "10px", minWidth: "20px", margin: "5px" }} onError={
-                            ({ currentTarget }) => {
-                              currentTarget.onerror = null;
-                              currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                            }
-                          } />
+                          <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: currentuid !== message.uid ? "block" : "none", borderRadius: "10px", minWidth: "20px", margin: "5px" }} />
                           <div className={`chat__message ${message.uid === currentuid && "chat__receiver"}`}
                             style={{
                               color: theme === "light" ? "black" : "white", backgroundColor: theme === "light" ? message.uid === currentuid ? "#ffc8b8" : "#c8e1fd" : message.uid === currentuid ? "#844836" : "#274261",
@@ -2699,11 +2684,6 @@ function Chat() {
                                     alt=""
                                     className="chatpost__img"
                                     src={message.statusphoto}
-                                    onError={({ currentTarget }) => {
-                                      currentTarget.onerror = null;
-                                      currentTarget.src =
-                                        "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                                    }}
                                   />
                                 )}
 
@@ -2763,11 +2743,6 @@ function Chat() {
                                           alt=""
                                           className="chat__img_reply"
                                           src={message.replyphoto}
-                                          onError={({ currentTarget }) => {
-                                            currentTarget.onerror = null;
-                                            currentTarget.src =
-                                              "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                                          }}
                                         />
                                       )}
                                     {message.replyphoto.includes(".pdf") && message.fname}
@@ -2789,11 +2764,7 @@ function Chat() {
                                         alt=""
                                         className="chat__img_reply"
                                         src={message.replypost}
-                                        onError={({ currentTarget }) => {
-                                          currentTarget.onerror = null;
-                                          currentTarget.src =
-                                            "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                                        }}
+                                        
                                       />
                                     )}
                                   </>}
@@ -2860,11 +2831,7 @@ function Chat() {
                                       }}
                                       alt=""
                                       src={message.photo}
-                                      onError={({ currentTarget }) => {
-                                        currentTarget.onerror = null;
-                                        currentTarget.src =
-                                          "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                                      }}
+                                      
                                     />
                                   )}
                                 {message.photo.includes(".pdf") &&
@@ -2945,11 +2912,7 @@ function Chat() {
                                       alt=""
                                       className="chatpost__img"
                                       src={message.post}
-                                      onError={({ currentTarget }) => {
-                                        currentTarget.onerror = null;
-                                        currentTarget.src =
-                                          "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                                      }}
+                                      
                                     />
                                   )}
                                 </div>
@@ -3022,12 +2985,7 @@ function Chat() {
             >
               <img alt="" src={photo} style={{
                   height: "20px", width: "20px", objectFit: "cover", borderRadius: "50%", margin: "2px"
-                }} onError={
-                  ({ currentTarget }) => {
-                    currentTarget.onerror = null;
-                    currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                  }
-                } />
+                }}/>
             </div>
           )}
           {seenGroup.length !== 0 && messages1.length && messages1[messages1.length - 1].message.uid === currentuid && (
@@ -3043,12 +3001,7 @@ function Chat() {
               {seenGroup && seenGroup.map((user) => {
                 return <img alt="" src={convert_to_pic(user.id)} style={{
                   height: "20px", width: "20px", objectFit: "cover", borderRadius: "50%", margin: "2px"
-                }} onError={
-                  ({ currentTarget }) => {
-                    currentTarget.onerror = null;
-                    currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                  }
-                } />
+                }} />
               })}
             </div>
           )}

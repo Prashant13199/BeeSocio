@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { database } from "../../firebase";
 import "./style.css";
-import ReactLoading from "react-loading";
 import ActiveUsersSingle from "../../components/ActiveUsersSingle";
+import loadingIcon from '../../assets/loading.gif'
 
 export default function ActiveUsers() {
 
@@ -50,13 +50,8 @@ export default function ActiveUsers() {
             <></>
           )
         ) : (
-          <center style={{ paddingTop: "60px" }}>
-            <ReactLoading
-              type="spinningBubbles"
-              color="#0892d0"
-              height={"20px"}
-              width={"20px"}
-            />
+          <center style={{ paddingTop: "20px" }}>
+            <img src={loadingIcon} height={'20px'} width={'20px'} />
           </center>
         )}
       </div>

@@ -2,8 +2,9 @@ import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
 import { database } from "../../firebase";
 import empty from "../../assets/empty.png";
-import ReactLoading from "react-loading";
+
 import Post from "../post";
+import loadingIcon from '../../assets/loading.gif'
 
 export default function FeedTabUser({ props }) {
     const theme = localStorage.getItem("theme");
@@ -118,12 +119,7 @@ export default function FeedTabUser({ props }) {
                 </div>
             }
             {(totalPosts > posts.length && fetching) && <center style={{ marginTop: "20px" }}>
-                <ReactLoading
-                    type="spinningBubbles"
-                    color="#0892d0"
-                    height={"20px"}
-                    width={"20px"}
-                />
+                <img src={loadingIcon} height={'20px'} width={'20px'} />
             </center>}
         </>
     );

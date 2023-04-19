@@ -3,7 +3,7 @@ import { database } from "../../firebase";
 import "./style.css";
 import SuggestionUSer from "../../components/suggestionuser";
 import { Link } from "react-router-dom";
-import ReactLoading from "react-loading";
+import loadingIcon from '../../assets/loading.gif'
 
 export default function Suggestions() {
   const [users, setUsers] = useState([]);
@@ -62,13 +62,8 @@ export default function Suggestions() {
             <></>
           )
         ) : (
-          <center style={{ paddingTop: "60px" }}>
-            <ReactLoading
-              type="spinningBubbles"
-              color="#0892d0"
-              height={"20px"}
-              width={"20px"}
-            />
+          <center style={{ paddingTop: "20px" }}>
+            <img src={loadingIcon} height={'20px'} width={'20px'} />
           </center>
         )}
       </div>

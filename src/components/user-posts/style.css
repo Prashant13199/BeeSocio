@@ -1,23 +1,21 @@
 .userPost__img {
-    height: 30vh;
+    height: 40vh;
     width: 100%;
     object-fit: cover;
-    border-radius: 10px;
 }
 .userPost__img:hover{
     cursor: pointer;
-    box-shadow: 4px 4px 8px #686868, -4px -4px 8px #ffffff;
+    box-shadow: 3px 3px 6px #686868, -3px -3px 6px #ffffff;
 }
 .userPost__video {
-    height: 35vh;
+    height: 45vh;
     width: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+    object-fit: cover;    
 }
 
 .userPost__video:hover{
     cursor: pointer;
-    box-shadow: 4px 4px 8px #686868, -4px -4px 8px #ffffff;
+    box-shadow: 3px 3px 6px #686868, -3px -3px 6px #ffffff;
 }
 
 @media screen and (max-width: 990px) {

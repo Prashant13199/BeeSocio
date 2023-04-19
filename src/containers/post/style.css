@@ -43,9 +43,8 @@
 .post__photoUrl {
     width: 600px;
     margin-bottom: 8px;
-    height: 70vh;
+    height: 80vh;
     object-fit: cover;
-    border-radius: 10px;
 }
 
 .post__caption {

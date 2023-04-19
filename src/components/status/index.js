@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { makeid } from "../../services/makeid";
 import Like from "../like";
-import ReactLoading from "react-loading";
+import loadingIcon from '../../assets/loading.gif'
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -52,12 +52,18 @@ export default function SingleStatus({
   let like = false;
 
   useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 800);
+  },[])
+
+  useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${postuid}/`).on("value", (snapshot) => {
@@ -97,7 +103,6 @@ export default function SingleStatus({
         });
         likeList.reverse();
         setLikes(likeList);
-        setLoading(false);
       });
   }, [id]);
 
@@ -270,7 +275,7 @@ export default function SingleStatus({
       }
     });
   };
-  return !loading ? (
+  return (
     <>
       <Modal
         show={show}
@@ -299,12 +304,8 @@ export default function SingleStatus({
                   <img
                     src={photo}
                     alt=""
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null;
-                      currentTarget.src =
-                        "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                    }}
-                    style={{ borderRadius: "50%", height: "35px", width: "35px", objectFit: "cover" }}
+                    
+                    style={{ borderRadius: "10px", height: "35px", width: "35px", objectFit: "cover" }}
                   />
                 </Link>
                 <div style={{ marginLeft: "10px" }}>
@@ -323,7 +324,7 @@ export default function SingleStatus({
                   <div
                     style={{
                       color: "white",
-                      fontSize: "12px",
+                      fontSize: "10px",
                     }}
                   >
                     {timeDifference(new Date(), new Date(timestamp))}
@@ -362,11 +363,7 @@ export default function SingleStatus({
                       className="status__photoUrl"
                       alt=""
                       src={statusImg}
-                      onError={({ currentTarget }) => {
-                        currentTarget.onerror = null;
-                        currentTarget.src =
-                          "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                      }}
+                     
                     />
                   )}
               </Link>
@@ -389,11 +386,7 @@ export default function SingleStatus({
                     className="status__photoUrl"
                     alt=""
                     src={statusImg}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null;
-                      currentTarget.src =
-                        "https://cdn.segmentnext.com/wp-content/themes/segmentnext/images/no-image-available.jpg";
-                    }}
+                    
                   />
                 )}
               </div>
@@ -498,42 +491,26 @@ export default function SingleStatus({
         </Modal.Body>
       </Modal>
       <div style={{ marginRight: '5px' }}>
-      <div style={{ position: 'relative' }}>
+      {!loading ? <div style={{ position: 'relative' }}>
         <img
           src={statusImg}
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null;
-            currentTarget.src =
-              "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-          }}
           alt=""
           className={view ? "status__img1" : "status__img"}
           onClick={handleShow}
         />
         <img
           src={photo}
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null;
-            currentTarget.src =
-              "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-          }}
+          
           alt=""
           style={{
-            position: 'absolute', right: '5px', bottom: '5px', height: '20px', width: '20px', borderRadius: '50%'
+            position: 'absolute', right: '5px', bottom: '5px', height: '20px', width: '20px', borderRadius: '5px'
           }}
           onClick={handleShow}
         />
-      </div>
+      </div> :  <div className="status__load">
+      <img src={loadingIcon} height={'20px'} width={'20px'} />
+    </div>}
       </div>
     </>
-  ) : (
-    <div className="status__load">
-      <ReactLoading
-        type="spinningBubbles"
-        color="#0892d0"
-        height={"20px"}
-        width={"20px"}
-      />
-    </div>
-  );
+  ) 
 }

@@ -7,9 +7,11 @@
 }
 .activitylight{
     background-color: rgba(248,249,250,1);
+    border-radius: 10px;
 }
 .activitydark{
     background-color: rgba(33,37,41,1);
+    border-radius: 10px;
 }
 .br {
     display: block;

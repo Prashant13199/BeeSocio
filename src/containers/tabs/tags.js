@@ -25,7 +25,7 @@ export default function TagTab() {
             tagList.reverse();
             setTags(tagList)
         });
-    }, [currentuid]);
+    }, []);
 
     return (
         <>

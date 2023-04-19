@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Feed } from "../../containers";
 import Suggestions from "../../containers/suggestions";
 import "./style.css";
@@ -6,16 +6,19 @@ import { Helmet } from "react-helmet";
 import Status from "../../containers/status";
 import { Link } from "react-router-dom";
 import { database } from "../../firebase";
-import ReactLoading from "react-loading";
+
 import ActiveUsers from "../../containers/ActiveUsers";
+import loadingIcon from '../../assets/loading.gif'
 
 export default function Home() {
+
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [loading, setLoading] = useState(false)
   const theme = localStorage.getItem("theme");
-  useLayoutEffect(() => {
+  
+  useEffect(() => {
     setLoading(true)
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
@@ -24,7 +27,7 @@ export default function Home() {
         setLoading(false)
       }
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,23 +70,14 @@ export default function Home() {
                     objectFit: "cover",
                   }}
                   alt="userphoto"
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null;
-                    currentTarget.src =
-                      "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                  }}
                 /> : <div style={{
                   height: "80px",
                   width: "80px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}>
-                  <ReactLoading
-                    type="spinningBubbles"
-                    color="#0892d0"
-                    height={"20px"}
-                    width={"20px"}
-                  /></div>}
+                  <img alt="" src={loadingIcon} height={'20px'} width={'20px'} />
+                  </div>}
               </div>
             </Link>
             <Link
@@ -116,7 +110,7 @@ export default function Home() {
               Siya Developers
             </a>
             <p style={{maxWidth: '300px'}}>
-              Download BeeSocio Mobile App <a style={{textDecoration: 'none'}} target="_blank" href="https://drive.google.com/file/d/1VwXzEe5hy3ODfx-0qsQecrhJ4XSwsX-A/view?usp=share_link">.apk</a>
+              Download BeeSocio Mobile App <a style={{textDecoration: 'none'}} target="_blank" href="https://drive.google.com/file/d/1RO0QdqvLXWSDnfRqHloOUFpUpEFd6ulO/view?usp=share_link">.apk</a>
             </p>
           </div>
         </div>

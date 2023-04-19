@@ -6,7 +6,8 @@ import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { IconButton } from "@material-ui/core";
-import ReactLoading from "react-loading";
+import loadingIcon from '../../assets/loading.gif'
+import icon from "../../bee.png";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from "react-bootstrap";
@@ -228,12 +229,7 @@ function Sidebar() {
           ) : (
             <div style={{ marginTop: "150px", minWidth: "50px" }}>
               <center>
-                <ReactLoading
-                  type="spinningBubbles"
-                  color="#0892d0"
-                  height={"30px"}
-                  width={"30px"}
-                />
+                <img src={loadingIcon} height={'30px'} width={'30px'} />
               </center>
             </div>
           )}

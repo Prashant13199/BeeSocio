@@ -3,7 +3,7 @@
     cursor: pointer;
     height: 100px;
     width: 80px;
-    min-width: 65px;
+    min-width: 80px;
     object-fit: cover;
 }
 .status__img1 {
@@ -12,7 +12,7 @@
     cursor: pointer;
     height: 100px;
     width: 80px;
-    min-width: 65px;
+    min-width: 80px;
     object-fit: cover;
 }
 .status__photoUrl {
@@ -24,7 +24,7 @@
     background-color: rgba(0, 0, 0, 0.3);
     position: absolute;
     top: 0;
-    padding: 10px;
+    padding: 5px;
 }
 .status__headerRight{
     display: flex;
@@ -49,8 +49,14 @@
 }
 
 .status__load {
-    padding: 15px;
+    border-radius: 10px;
+    height: 100px;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 .overlay {
 bottom: 0;
 height: 100%;

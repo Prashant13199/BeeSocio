@@ -28,7 +28,7 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
                 setCurrentEmail(snapshot.val().email);
             }
         });
-    }, [currentuid]);
+    }, []);
 
     const sendPicMessage = async () => {
         Swal.fire({
@@ -99,11 +99,6 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
                     className="like__img"
                     src={photo}
                     alt=""
-                    onError={({ currentTarget }) => {
-                        currentTarget.onerror = null;
-                        currentTarget.src =
-                            "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                    }}
                 />
                 <a
                     className="users2__a"

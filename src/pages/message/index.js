@@ -22,14 +22,9 @@ export default function Message() {
                                 backgroundColor: theme === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)"
                             }}>
                                 <img src={icon} alt=""
-                                    style={{
-                                        objectFit: "contain", height: "350px", width: "350px", margin: 0, padding: 0
-                                    }}
+                                    style={{ objectFit: "contain", height: "350px", width: "350px", margin: 0, padding: 0 }}
                                 />
-                                <div style={{
-                                    color: theme === "light" ? "black" : "white", margin: 0, padding: 0,
-                                    fontSize: "40px", fontWeight: "700"
-                                }}>BeeSocio Messenger</div>
+                                <div style={{ color: theme === "light" ? "black" : "white", margin: 0, padding: 0, fontSize: "40px", fontWeight: "700" }}>BeeSocio Messenger</div>
                             </div>
                         </Route>
                         <Route path="/message/rooms/:roomId" exact={true}>

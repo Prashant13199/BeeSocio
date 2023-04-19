@@ -25,7 +25,7 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
       });
       setItems(itemsList);
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -33,7 +33,7 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
         setCurrentUsername(snapshot.val().username);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   let mentionedUser = "";
 

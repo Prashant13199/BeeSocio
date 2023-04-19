@@ -26,7 +26,7 @@ export default function CommentInput({ id, uid, photoURL }) {
       });
       setItems(itemsList);
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -34,7 +34,7 @@ export default function CommentInput({ id, uid, photoURL }) {
         setCurrentUsername(snapshot.val().username);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   let mentionedUser = "";
 

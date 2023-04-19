@@ -1,7 +1,6 @@
 .activeusers{
     padding: 10px;
     border-radius: 8px;
-    height: 200px;
     overflow: auto;
     min-width: 380px;
     margin-left: 10px;
@@ -10,4 +9,7 @@
 .activeuserslist {
     margin-top: 20px;
     padding: 5px 10px;
+    max-height: 200px;
+    min-height: 50px;
+    overflow-y: auto;
 }

@@ -9,12 +9,14 @@
   height: 85vh;
   width: 90vw;
   background-color: rgba(248,249,250,1);
+  border-radius: 10px;
 }
 .app__body__dark {
   display: flex;
   height: 85vh;
   width: 90vw;
   background-color: rgba(33,37,41,1);
+  border-radius: 10px;
 }
 .showsidebar {
   flex: 0.35;
@@ -25,12 +27,14 @@
   flex: 0.65;
   display: grid;
   place-items: center;
+  border-radius: 10px;
 }
 .chatmain1 {
   display: block;
   flex: 0.35;
   height: 100%;
   overflow: auto;
+  border-radius: 10px;
 }
 .chatmain1::-webkit-scrollbar {
   display: none;
@@ -55,6 +59,7 @@
       position: absolute;  
       max-width: none;
       background-color: white;
+      border-radius: 0px;
   }
 
   .app__body__dark {
@@ -66,6 +71,7 @@
     position: absolute;  
     max-width: none;
     background-color: black;
+    border-radius: 0px;
 }
 
   .chattitle{

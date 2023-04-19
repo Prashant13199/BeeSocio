@@ -34,7 +34,7 @@ export default function CreatePost({ handleClose }) {
         setCurrentUsername(snapshot.val().username);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     let users = [];

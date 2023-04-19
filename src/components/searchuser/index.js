@@ -20,7 +20,7 @@ export default function SearchUser({ uid }) {
         setCurrentUsername(snapshot.val().username);
       }
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${uid}`).on("value", (snapshot) => {
@@ -177,11 +177,7 @@ export default function SearchUser({ uid }) {
                 className="searchuser__img"
                 src={photo}
                 alt=""
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null;
-                  currentTarget.src =
-                    "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                }}
+                
               />
             </Link>
           </div>

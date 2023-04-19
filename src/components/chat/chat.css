@@ -4,6 +4,7 @@
     flex-direction: column;
     width: 100%;
     position: relative;
+    border-radius: 10px;
   }
   #chat_light {
     background-color: rgb(242, 241, 241);
@@ -276,7 +277,7 @@
   }
 
   .chat__footer {
-    border-radius: 20px;
+    border-radius: 10px;
     margin: 0px 10px;
     margin-bottom: 10px;
   }
@@ -298,7 +299,7 @@
     resize: none;
     outline: none;
     overflow:hidden;
-    border-radius: 8px;
+    border-radius: 10px;
   }
   .createPost__imageUpload{
     margin-top: auto;

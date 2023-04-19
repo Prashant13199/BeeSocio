@@ -166,7 +166,7 @@ export default function UserProfileHeader(props) {
             var names = [props.uid, currentuid];
             names.sort();
             let chatRoom = names.join("");
-            database.ref(`Rooms/${chatRoom}`).set({ name1: props.uid, name2: currentuid, timestamp: Date.now() }).then(() => {
+            database.ref(`Rooms/${chatRoom}`).set({ name1: props.uid, name2: currentuid }).then(() => {
                 history.push(`/message/rooms/${names.join("")
                     }`);
             }).catch((e) => {
@@ -300,12 +300,7 @@ export default function UserProfileHeader(props) {
                 <img className="profile__img" alt=""
                     src={photo}
                     onClick={handleShow2}
-                    onError={
-                        ({ currentTarget }) => {
-                            currentTarget.onerror = null;
-                            currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                        }
-                    } />
+                />
                 <div>
                     <div className="info_name"
                         style={
@@ -368,7 +363,8 @@ export default function UserProfileHeader(props) {
                     backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                     padding: "5px 20px",
                     margin: "0px 5px",
-                    fontSize: "small"
+                    fontSize: "small",
+                    borderRadius: '10px',
                 }
             }>
 

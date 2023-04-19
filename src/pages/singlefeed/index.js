@@ -3,7 +3,8 @@ import { database } from "../../firebase";
 import Post from "../../containers/post";
 import { Helmet } from "react-helmet";
 import "./style.css";
-import ReactLoading from "react-loading";
+
+import loadingIcon from '../../assets/loading.gif'
 
 export default function SingleFeed(props) {
   const [posts, setPosts] = useState([]);
@@ -71,12 +72,7 @@ export default function SingleFeed(props) {
         ) : (
           <div style={{ marginTop: "150px", minHeight: "90vh" }}>
             <center>
-              <ReactLoading
-                type="spinningBubbles"
-                color="#0892d0"
-                height={"30px"}
-                width={"30px"}
-              />
+              <img alt="" src={loadingIcon} height={'30px'} width={'30px'} />
             </center>
           </div>
         )}

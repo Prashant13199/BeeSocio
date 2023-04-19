@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./style.css";
 import { Helmet } from "react-helmet";
 import { database } from "../../firebase";
-import ReactLoading from "react-loading";
+
+import loadingIcon from '../../assets/loading.gif'
 import SearchUser from "../../components/searchuser";
 
 export default function Search() {
@@ -129,12 +130,7 @@ export default function Search() {
                 )}
               </div>
               {(totalUsers > users.length && fetching) && <center style={{ marginTop: "20px" }}>
-                <ReactLoading
-                  type="spinningBubbles"
-                  color="#0892d0"
-                  height={"20px"}
-                  width={"20px"}
-                />
+                <img alt="" src={loadingIcon} height={'20px'} width={'20px'} />
               </center>}
             </div>
 
@@ -142,12 +138,7 @@ export default function Search() {
         ) : (
           <div style={{ paddingTop: "150px", minHeight: "100vh" }}>
             <center>
-              <ReactLoading
-                type="spinningBubbles"
-                color="#0892d0"
-                height={"30px"}
-                width={"30px"}
-              />
+              <img alt="" src={loadingIcon} height={'30px'} width={'30px'} />
             </center>
           </div>
         )}

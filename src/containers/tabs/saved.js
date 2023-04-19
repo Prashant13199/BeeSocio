@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { database } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
-import ReactLoading from "react-loading";
+import loadingIcon from '../../assets/loading.gif'
 
 export default function SavedTab() {
     const theme = localStorage.getItem("theme");
@@ -37,7 +37,7 @@ export default function SavedTab() {
             saveList.reverse();
             setSavedPosts(saveList);
         });
-    }, [currentuid]);
+    }, []);
 
     const fetch = () => {
         setFetching(true)
@@ -133,12 +133,7 @@ export default function SavedTab() {
                 </div>
             }
             {(totalSaved > savedposts.length && fetching) && <center style={{ marginTop: "20px" }}>
-                <ReactLoading
-                    type="spinningBubbles"
-                    color="#0892d0"
-                    height={"20px"}
-                    width={"20px"}
-                />
+                <img src={loadingIcon} height={'20px'} width={'20px'} />
             </center>}
         </>
     );

@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import { Helmet } from "react-helmet";
 import ActivitySingle from "../../components/activitysingle";
-import ReactLoading from "react-loading";
+
+import loadingIcon from '../../assets/loading.gif'
 import { date } from "../../services/date";
 
 export default function Activity() {
@@ -70,7 +71,7 @@ export default function Activity() {
         setData(datas);
         setLoading(false);
       });
-  }, [currentuid]);
+  }, []);
 
   const fetchMore = () => {
     setFetching(true)
@@ -152,25 +153,23 @@ export default function Activity() {
               className={theme === "light" ? "activitylight" : "activitydark"}
             >
               {dates && dates.map((date) => {
-                return <div>
+                return <div key={date}>
                   <div style={{ color: theme === "light" ? "black" : "white", padding: "15px", fontWeight: "800" }}>{date}</div>
                   {data && data.map(({ id, activity }) => {
-                    return date === id && <div>
-                      {activity && activity.map(({ id, data }) => {
-                        return (
-                          <ActivitySingle
-                            id={id}
-                            uid={data.uid}
-                            photoUrl={data.photoUrl}
-                            timestamp={data.timestamp}
-                            text={data.text}
-                            key={id}
-                            postid={data.postid}
-                            comment={data.comment}
-                          />
-                        );
-                      })}
-                    </div>
+                    return date === id && activity && activity.map(({ id, data }) => {
+                      return (
+                        <ActivitySingle
+                          id={id}
+                          uid={data.uid}
+                          photoUrl={data.photoUrl}
+                          timestamp={data.timestamp}
+                          text={data.text}
+                          key={id}
+                          postid={data.postid}
+                          comment={data.comment}
+                        />
+                      );
+                    })
                   })}
                 </div>
               })}
@@ -201,22 +200,12 @@ export default function Activity() {
         ) : (
           <div style={{ paddingTop: "200px", minHeight: "100vh" }}>
             <center>
-              <ReactLoading
-                type="spinningBubbles"
-                color="#0892d0"
-                height={"30px"}
-                width={"30px"}
-              />
+              <img alt="" src={loadingIcon} height={'30px'} width={'30px'} />
             </center>
           </div>
         )}
         {(totalActivity > data.length && fetching) && <center style={{ marginTop: "20px" }}>
-          <ReactLoading
-            type="spinningBubbles"
-            color="#0892d0"
-            height={"20px"}
-            width={"20px"}
-          />
+          <img alt="" src={loadingIcon} height={'20px'} width={'20px'} />
         </center>}
       </div>
     </div>

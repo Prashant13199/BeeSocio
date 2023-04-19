@@ -20,8 +20,11 @@
     overflow-y: scroll;
   }
   .searchUser {
-    width: 250px;
-    margin-top: 5px;
+    width: 150px;
+    margin-top: 8px;
+}
+.searchUser:hover {
+  width: 250px;
 }
 .navbar__img_active_light{
   height: 25px;
@@ -30,7 +33,7 @@
   border-radius: 10px;
   border-color: black ;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
   padding: 1px;
 }
 .navbar__img_active_dark{
@@ -40,7 +43,7 @@
   border-radius: 10px;
   border-color: white ;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
   padding: 1px;
 }
 

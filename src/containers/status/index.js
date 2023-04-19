@@ -18,13 +18,15 @@ export default function Status() {
   const [currentPhoto, setCurrentPhoto] = useState("")
   const [following, setfollowing] = useState([]);
   const theme = localStorage.getItem("theme");
+
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentPhoto(snapshot.val().photo);
       }
     });
-  }, [currentuid]);
+  }, []);
+
   useEffect(() => {
     database
       .ref("/Status")
@@ -83,7 +85,8 @@ export default function Status() {
         });
         setfollowing(followList);
       });
-  }, [currentuid]);
+  }, []);
+
   return (
     <>
       <Modal
@@ -119,11 +122,7 @@ export default function Status() {
           <div style={{ position: "relative" }}>
             <img
               src={currentPhoto}
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null;
-                currentTarget.src =
-                  "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-              }}
+              
               alt=""
               className={"statusadd__img"}
             />

@@ -66,11 +66,6 @@ export default function ActiveUsersSingle({ uid }) {
             className={status ? "activeuser__img_online" :"activeuser__img"}
             src={photo}
             alt=""
-            onError={({ currentTarget }) => {
-              currentTarget.onerror = null;
-              currentTarget.src =
-                "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-            }}
           />
           {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
         </Link>

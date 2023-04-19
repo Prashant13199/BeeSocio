@@ -50,6 +50,7 @@ export default function ProfileHeader() {
 
     let fileName = "";
     let history = useHistory();
+    console.log(progress)
 
     useLayoutEffect(() => {
         database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -82,7 +83,7 @@ export default function ProfileHeader() {
             });
             setcfollowing(followingList);
         });
-    }, [currentuid]);
+    }, []);
 
     const addBio = () => {
         Swal.fire({
@@ -766,12 +767,7 @@ export default function ProfileHeader() {
                     alt=""
                     src={currentPhoto}
                     onClick={handleShow4}
-                    onError={
-                        ({ currentTarget }) => {
-                            currentTarget.onerror = null;
-                            currentTarget.src = "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                        }
-                    } />
+                     />
                 <div>
                     <div className="info_name"
                         style={
@@ -821,7 +817,8 @@ export default function ProfileHeader() {
                     backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                     padding: "5px 20px",
                     margin: "0px 5px",
-                    fontSize: "small"
+                    fontSize: "small",
+                    borderRadius: '10px',
                 }
             }>
 

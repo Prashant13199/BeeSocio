@@ -79,7 +79,7 @@ export default function NavbarHead() {
 
   useEffect(() => {
     window.addEventListener("blur", () => {
-      if (fetchedUid) {
+      if (fetchedUid && isMobile) {
         database.ref(`/Users/${fetchedUid}`).update({
           status: false,
           lastseen: Date.now(),
@@ -117,7 +117,7 @@ export default function NavbarHead() {
       });
       setItems(itemsList);
     });
-  }, [currentuid]);
+  }, []);
 
   const handleOnSelect = (item) => {
     if (item.uid !== currentuid) {
@@ -159,7 +159,7 @@ export default function NavbarHead() {
         });
         setmNotification(mnotificationList);
       });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/messages`).on("value", (snapshot) => {
@@ -177,7 +177,7 @@ export default function NavbarHead() {
         }
       });
     });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database
@@ -193,7 +193,7 @@ export default function NavbarHead() {
         });
         setNotification(notificationList);
       });
-  }, [currentuid]);
+  }, []);
 
   useEffect(() => {
     database
@@ -213,7 +213,7 @@ export default function NavbarHead() {
           }
         });
       });
-  }, [currentuid]);
+  }, []);
 
   const clearNotification = () => {
     database.ref(`/Users/${currentuid}/notification`).remove();
@@ -324,6 +324,7 @@ export default function NavbarHead() {
                     to="/"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       {location && location.pathname === '/' ? <HomeIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
@@ -336,6 +337,7 @@ export default function NavbarHead() {
                     to="/search"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
@@ -348,6 +350,7 @@ export default function NavbarHead() {
                     to="/message"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <Badge badgeContent={mnotifications.length} color="primary">
@@ -362,6 +365,7 @@ export default function NavbarHead() {
                     to="/activity"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton onClick={() => {
                       clearNotification();
@@ -387,17 +391,13 @@ export default function NavbarHead() {
                     to="/profile"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <img
                         className={location && location.pathname === '/profile' ? theme === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
                         alt=""
                         src={currentPhoto}
-                        onError={({ currentTarget }) => {
-                          currentTarget.onerror = null;
-                          currentTarget.src =
-                            "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                        }}
                       />
                     </IconButton>
                   </NavLink>
@@ -527,6 +527,7 @@ export default function NavbarHead() {
                     to="/"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       {location && location.pathname === '/' ? <HomeIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
@@ -540,6 +541,7 @@ export default function NavbarHead() {
                     to="/search"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
@@ -560,6 +562,7 @@ export default function NavbarHead() {
                     to="/activity"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
 
                     <IconButton onClick={() => {
@@ -579,17 +582,13 @@ export default function NavbarHead() {
                     to="/profile"
                     activeClassName="is-active"
                     exact={true}
+                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <img
                         className={location && location.pathname === '/profile' ? theme === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
                         alt=""
                         src={currentPhoto}
-                        onError={({ currentTarget }) => {
-                          currentTarget.onerror = null;
-                          currentTarget.src =
-                            "https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/user.png";
-                        }}
                       />
                     </IconButton>
                   </NavLink>
