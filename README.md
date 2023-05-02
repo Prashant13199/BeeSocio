@@ -2,6 +2,8 @@
 
 Social App built using React and Firebase.
 
+Deployed Link: https://beesocio.netlify.app
+
 # Screenshots
 
 <img width="1440" alt="Screenshot 2023-05-02 at 10 27 31 AM" src="https://user-images.githubusercontent.com/63857410/235582843-477c0b79-5225-462e-b023-be3d96472954.png">
