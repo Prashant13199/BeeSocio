@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { database } from "../../firebase";
 import Post from "../../containers/post";
 import { Helmet } from "react-helmet";
 import "./style.css";
-
 import loadingIcon from '../../assets/loading.gif'
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SingleFeed(props) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
+
   useEffect(() => {
     setTimeout(() => {
       window.scrollTo(0, 0);
@@ -39,7 +40,7 @@ export default function SingleFeed(props) {
       </Helmet>
       <div
         className="singlefeed"
-        style={{ backgroundColor: theme === "light" ? "white" : "black" }}
+        style={{ backgroundColor: mode === "light" ? "white" : "black" }}
       >
         {!loading ? (
           posts.length !== 0 ? (
@@ -63,7 +64,7 @@ export default function SingleFeed(props) {
               style={{
                 marginTop: "200px",
                 fontSize: "20px",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
               }}
             >
               Post Deleted

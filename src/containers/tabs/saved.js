@@ -1,12 +1,13 @@
 import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { database } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
 import loadingIcon from '../../assets/loading.gif'
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SavedTab() {
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     const currentuid = localStorage.getItem("uid");
 
     const [savedposts, setSavedPosts] = useState([]);
@@ -127,7 +128,7 @@ export default function SavedTab() {
                 }><img src={empty} alt=""
                     height={"90px"} /><div style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>No Saved Posts</div>
                 </div>

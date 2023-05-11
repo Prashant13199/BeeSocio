@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import { Modal } from "react-bootstrap";
@@ -11,6 +11,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { IconButton } from "@mui/material";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function CommentReplyShow({
   uid,
@@ -34,7 +35,7 @@ export default function CommentReplyShow({
   const [clikes, setcLikes] = useState([]);
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const [superUser, setSuperUser] = useState(false)
 
   useEffect(() => {
@@ -140,10 +141,10 @@ export default function CommentReplyShow({
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             <b>{clikes.length}</b> {clikes.length > 1 ? 'Likes' : 'Like'}
           </Modal.Title>
           <IconButton onClick={handleClose}>
@@ -155,7 +156,7 @@ export default function CommentReplyShow({
           style={{
             maxHeight: "400px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           {clikes ? clikes.map((like) => <Like uid={like.uid} />) : <></>}
@@ -168,12 +169,12 @@ export default function CommentReplyShow({
             className="comment__img"
             src={photo}
             alt=""
-            
+
           />
           <Link
             style={{
               textDecoration: "none",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               fontWeight: "bold",
             }}
             to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}
@@ -190,14 +191,14 @@ export default function CommentReplyShow({
         </div>
         <div className="comment_like">
           <div className="comment__likeBtn" onClick={handlecLike}>
-            {like ? <FavoriteIcon sx={{ color: "red", fontSize: "15px" }} /> : <FavoriteBorderIcon sx={{ color: theme === "light" ? "black" : "white", fontSize: "15px" }} />}
+            {like ? <FavoriteIcon sx={{ color: "red", fontSize: "15px" }} /> : <FavoriteBorderIcon sx={{ color: mode === "light" ? "black" : "white", fontSize: "15px" }} />}
           </div>
         </div>
       </div>
       <div
         style={{
           marginLeft: "25px",
-          color: theme === "light" ? "black" : "white",
+          color: mode === "light" ? "black" : "white",
           wordWrap: "break-word",
           display: caption.length ? "block" : "none"
         }}

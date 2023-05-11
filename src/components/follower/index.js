@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Button } from "react-bootstrap";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Follower({ uid }) {
   const currentuid = localStorage.getItem("uid");
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   useEffect(() => {
     database.ref(`/Users/${uid}`).on("value", (snapshot) => {
       setPhoto(snapshot.val().photo);
@@ -19,8 +20,8 @@ export default function Follower({ uid }) {
   const handleUnfollow = () => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: `Are you sure to remove ${username}?`,
       text: "You won't be able to revert this!",
 
@@ -51,8 +52,8 @@ export default function Follower({ uid }) {
           });
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Removed!",
 
           text: "Follower removed",
@@ -86,7 +87,7 @@ export default function Follower({ uid }) {
               className="like__img"
               src={photo}
               alt=""
-              
+
             />
           </Link>
         </div>
@@ -94,7 +95,7 @@ export default function Follower({ uid }) {
           <Link
             style={{
               textDecoration: "none",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               fontWeight: "500", marginLeft: "10px"
             }}
             to={`/userprofile/${uid}`}

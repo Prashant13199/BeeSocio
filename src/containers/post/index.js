@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import Comment from "../../components/comment";
 import Like from "../../components/like";
@@ -25,6 +25,9 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Group from "../../components/Group";
 import $ from "jquery";
 import { Waypoint } from 'react-waypoint';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Post({ uid, id, photoURL, caption, timestamp, tagss, venue }) {
   const [show, setShow] = useState(false);
@@ -47,7 +50,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   const [username, setUsername] = useState();
   const [bookmarkpost, setBookmarkpost] = useState(false);
   const [comments, setComments] = useState([]);
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
@@ -63,6 +66,10 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   let handleExitViewport = function () {
     document.getElementById('video').pause()
   };
+
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
 
   useEffect(() => {
     database.ref(`/Rooms`).on('value', snapshot => {
@@ -296,8 +303,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
     handleClose5();
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Are you sure to delete?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -322,41 +329,41 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           console.log(e);
         }
         if (photoURL.includes('mp4')) {
-          if(uid === currentuid) {
+          if (uid === currentuid) {
             database.ref(`/Users/${currentuid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
-          }else{
+          } else {
             database.ref(`/Users/${uid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
           }
-          
+
         } else {
-          if(uid === currentuid) {
+          if (uid === currentuid) {
             database.ref(`/Users/${currentuid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
-            .catch((e) => { console.log(e) });
+              .catch((e) => { console.log(e) });
           }
-          else{
+          else {
             database.ref(`/Users/${uid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
-            .catch((e) => { console.log(e) });
+              .catch((e) => { console.log(e) });
           }
         }
 
-          database.ref(`/Posts/${id}`).remove().then(() => {
-              console.log("Deleted");
-            })
-            .catch((e) => { console.log(e) });
+        database.ref(`/Posts/${id}`).remove().then(() => {
+          console.log("Deleted");
+        })
+          .catch((e) => { console.log(e) });
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Deleted!",
           text: "Your post has been deleted.",
           icon: "success",
@@ -381,8 +388,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
       .then(() => {
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Added to status!",
           icon: "success",
           timer: 800,
@@ -395,8 +402,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   const handleOnSelect = (item) => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "You are sending post to",
       text: `${item.name.toLowerCase()}?`,
       icon: "warning",
@@ -432,8 +439,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           .then(() => {
             Swal.fire({
               background:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-              color: theme === "light" ? "black" : "white",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              color: mode === "light" ? "black" : "white",
               title: "Sent!",
               text: `Post sent to ${item.name}`,
               icon: "success",
@@ -464,8 +471,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
     $temp.remove();
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Success!",
       text: "Copied to clipboard",
       icon: "success",
@@ -487,11 +494,11 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{likes.length}</b> {likes.length>1 ? 'Likes':'Like'}
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
+            <b>{likes.length}</b> {likes.length > 1 ? 'Likes' : 'Like'}
           </Modal.Title>
           <IconButton onClick={handleClose}>
             <CloseOutlinedIcon color="error" />
@@ -502,7 +509,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
             height: '60vh',
             overflow: 'auto',
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           {likes ? (
@@ -522,10 +529,10 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             <b>{comments.length}</b> {comments.length > 1 ? 'Comments' : 'Comment'}
           </Modal.Title>
           <IconButton onClick={handleClose1}>
@@ -536,7 +543,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           style={{
             height: '60vh',
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <div style={{ height: "43vh", overflow: "auto" }}>
@@ -574,10 +581,10 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             <b>{tagss && tagss.length}</b> Tags
           </Modal.Title>
           <IconButton onClick={handleClose4}>
@@ -589,7 +596,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
             height: '60vh',
             overflow: 'auto',
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           {tagss ? tagss.map((tag) => <Like uid={tag} key={tag} />) : <></>}
@@ -605,10 +612,10 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Share To
           </Modal.Title>
           <IconButton onClick={handleClose2}>
@@ -620,7 +627,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
             height: "60vh",
             overflowY: "auto",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <ReactSearchAutocomplete
@@ -631,11 +638,11 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
             formatResult={formatResult}
             placeholder="Search user"
             styling={{
-              backgroundColor: theme === "light" ? "white" : "black",
+              backgroundColor: mode === "light" ? "white" : "black",
               placeholderColor: "gray",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               hoverBackgroundColor:
-                theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
               height: "35px",
               borderRadius: "10px",
               border: "none",
@@ -654,7 +661,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               <a
                 className="users2__a"
 
-                style={{ color: theme === "light" ? "black" : "white" }}
+                style={{ color: mode === "light" ? "black" : "white" }}
               >
                 {currentUsername && currentUsername.length > 15 ? currentUsername.substring(0, 15).concat('...') : currentUsername}
               </a>
@@ -740,15 +747,15 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           </ListGroup>
         </Modal.Body>
       </Modal>
-      <div className="post" style={{
-        borderBottom: `1px solid ${theme==='light' ? 'rgb(242, 241, 241)' : 'rgb(24, 27, 30)'}`, paddingBottom: '10px'
+      <div className="post" data-aos="fade-up" style={{
+        borderBottom: `1px solid ${mode === 'light' ? 'rgb(242, 241, 241)' : 'rgb(24, 27, 30)'}`, paddingBottom: '10px'
       }}>
         <div className="post__header">
           <div className="post__headerLeft">
             <Link
               style={{
                 textDecoration: "none",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
                 fontWeight: "bold",
               }}
               to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}
@@ -765,7 +772,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               <Link
                 style={{
                   textDecoration: "none",
-                  color: theme === "light" ? "black" : "white",
+                  color: mode === "light" ? "black" : "white",
                   fontWeight: "bold",
                 }}
                 to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}
@@ -774,34 +781,34 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               >
                 {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
               </Link>
-              <div style={{display: 'flex'}}>
-              <div
-                style={{
-                  color: "grey",
-                  fontSize: "12px",
-                }}
-              >
-                {timeDifference(new Date(), new Date(timestamp))}
-              </div>
-              <div
-                style={{
-                  color: "grey",
-                  fontSize: "12px",
-                  display: venue ? "block" : "none"
-                }}
-              >
-              &nbsp;&#183; {venue}
-              </div>
+              <div style={{ display: 'flex' }}>
+                <div
+                  style={{
+                    color: "grey",
+                    fontSize: "12px",
+                  }}
+                >
+                  {timeDifference(new Date(), new Date(timestamp))}
+                </div>
+                <div
+                  style={{
+                    color: "grey",
+                    fontSize: "12px",
+                    display: venue ? "block" : "none"
+                  }}
+                >
+                  &nbsp;&#183; {venue}
+                </div>
               </div>
             </div>
-            <div style={{ display: showSuggested ? "block" : "none", color: theme === "light" ? "black" : "white", marginLeft: "20px" }}>&bull; suggested</div>
+            <div style={{ display: showSuggested ? "block" : "none", color: mode === "light" ? "black" : "white", marginLeft: "20px" }}>&bull; suggested</div>
           </div>
 
           {(uid === currentuid || tagss || superUser) && (
             <div>
               <div className="post__delete" onClick={handleShow5}>
                 <IconButton>
-                  <MoreHorizIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
+                  <MoreHorizIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
                 </IconButton>
               </div>
             </div>
@@ -839,17 +846,17 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           <div className="post_like">
             <div className="post__likeBtn" onClick={handleLike}>
               <IconButton>
-                {like ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />}
+                {like ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />}
               </IconButton>
             </div>
             <div className="post__showpost" onClick={handleShow1}>
               <IconButton>
-                <InsertCommentIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
+                <InsertCommentIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
               </IconButton>
             </div>
             <div className="post__share" onClick={handleShow2}>
               <IconButton>
-                <ShareOutlinedIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
+                <ShareOutlinedIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
               </IconButton>
             </div>
 
@@ -857,7 +864,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           <div className="post_like">
             <div className="post__bookmark" onClick={handlebookmark} style={{ backgroundColor: "transparent" }}>
               <IconButton>
-                {bookmarkpost ? <BookmarkIcon style={{ color: theme === 'light' ? 'black' : 'white' }} /> : <BookmarkBorderOutlinedIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />}
+                {bookmarkpost ? <BookmarkIcon style={{ color: mode === 'light' ? 'black' : 'white' }} /> : <BookmarkBorderOutlinedIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />}
               </IconButton>
             </div>
           </div>
@@ -868,7 +875,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               onClick={handleShow}
               style={{
                 cursor: "pointer",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
               }}
             >
               <b>{likes.length}</b> {likes.length > 1 ? 'Likes' : 'Like'}
@@ -879,21 +886,21 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               onClick={handleShow1}
               style={{
                 cursor: "pointer",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
               }}
             >
-              <b>{comments.length}</b> {comments.length>1 ? 'Comments' : 'Comment'}
+              <b>{comments.length}</b> {comments.length > 1 ? 'Comments' : 'Comment'}
             </a>
           </div>
         </div>
         <div
           className="post__caption"
-          style={{ color: theme === "light" ? "black" : "white", display: caption ? "block" : "none" }}
+          style={{ color: mode === "light" ? "black" : "white", display: caption ? "block" : "none" }}
         >
           <Link
             style={{
               textDecoration: "none",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               fontWeight: "bold",
             }}
             to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}

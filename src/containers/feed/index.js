@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Post } from "..";
 import { database } from "../../firebase";
 import "./style.css";
 import icon from "../../bee.png";
 import loadingIcon from '../../assets/loading.gif'
+import { ColorModeContext } from "../../services/ThemeContext";
 
 
 export default function Feed() {
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalPosts, setTotalPosts] = useState(0)
@@ -115,7 +116,7 @@ export default function Feed() {
                         <center style={
                             {
                                 marginTop: "20px",
-                                color: theme === "light" ? "black" : "white"
+                                color: mode === "light" ? "black" : "white"
                             }
                         }>
                             <h4>Please upload or follow to see posts</h4>
@@ -140,7 +141,7 @@ export default function Feed() {
             }
         }>
             <center>
-                    <img src={loadingIcon} height={'30px'} width={'30px'} />
+                <img src={loadingIcon} height={'30px'} width={'30px'} />
             </center>
         </div>
     );

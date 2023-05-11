@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { storage, database } from "../../firebase";
 import "./style.css";
 import { Modal } from "react-bootstrap";
@@ -16,6 +16,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { timeDifference } from "../../services/timeDifference";
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SingleStatus({
   statusImg,
@@ -39,6 +42,10 @@ export default function SingleStatus({
   const [likes, setLikes] = useState([]);
   const [view, setView] = useState(false);
 
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
+
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
@@ -48,14 +55,14 @@ export default function SingleStatus({
   const handleShow2 = () => setShow2(true);
 
   const currentuid = localStorage.getItem("uid");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   let like = false;
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 800);
-  },[])
+  }, [])
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -209,8 +216,8 @@ export default function SingleStatus({
         });
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Replied to status",
           icon: "success",
           timer: 800,
@@ -226,8 +233,8 @@ export default function SingleStatus({
   const deletePost = () => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Are you sure to delete?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -242,12 +249,12 @@ export default function SingleStatus({
           if (!postuid) {
             var imageRef = storage.refFromURL(statusImg);
             imageRef.delete()
-            .then(() => {
-              console.log("Deleted from storage");
-            })
-            .catch((e) => {
-              console.log(e);
-            });
+              .then(() => {
+                console.log("Deleted from storage");
+              })
+              .catch((e) => {
+                console.log(e);
+              });
           }
         } catch (e) {
           console.log(e);
@@ -264,8 +271,8 @@ export default function SingleStatus({
           });
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Deleted!",
           text: "Your status has been deleted.",
           icon: "success",
@@ -290,7 +297,7 @@ export default function SingleStatus({
           style={{
             padding: 0,
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <div className="container">
@@ -304,7 +311,7 @@ export default function SingleStatus({
                   <img
                     src={photo}
                     alt=""
-                    
+
                     style={{ borderRadius: "10px", height: "35px", width: "35px", objectFit: "cover" }}
                   />
                 </Link>
@@ -363,7 +370,7 @@ export default function SingleStatus({
                       className="status__photoUrl"
                       alt=""
                       src={statusImg}
-                     
+
                     />
                   )}
               </Link>
@@ -386,7 +393,7 @@ export default function SingleStatus({
                     className="status__photoUrl"
                     alt=""
                     src={statusImg}
-                    
+
                   />
                 )}
               </div>
@@ -436,8 +443,8 @@ export default function SingleStatus({
                   }
                 }}
                 style={{
-                  backgroundColor: theme === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)",
-                  color: theme === "light" ? "black" : "white",
+                  backgroundColor: mode === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)",
+                  color: mode === "light" ? "black" : "white",
                 }}
               ></input>
             </div>
@@ -456,10 +463,10 @@ export default function SingleStatus({
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             <b>{statusview.length}</b> Views&nbsp;&nbsp;<b>{likes.length !== 0 && likes.length}</b> {likes.length !== 0 && "Likes"}
           </Modal.Title>
           <IconButton onClick={handleClose2}>
@@ -470,7 +477,7 @@ export default function SingleStatus({
         <Modal.Body
           style={{
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           {statusview &&
@@ -490,27 +497,27 @@ export default function SingleStatus({
             })}
         </Modal.Body>
       </Modal>
-      <div style={{ marginRight: '5px' }}>
-      {!loading ? <div style={{ position: 'relative' }}>
-        <img
-          src={statusImg}
-          alt=""
-          className={view ? "status__img1" : "status__img"}
-          onClick={handleShow}
-        />
-        <img
-          src={photo}
-          
-          alt=""
-          style={{
-            position: 'absolute', right: '5px', bottom: '5px', height: '20px', width: '20px', borderRadius: '5px'
-          }}
-          onClick={handleShow}
-        />
-      </div> :  <div className="status__load">
-      <img src={loadingIcon} height={'20px'} width={'20px'} />
-    </div>}
+      <div style={{ marginRight: '5px' }} data-aos="fade-down">
+        {!loading ? <div style={{ position: 'relative' }}>
+          <img
+            src={statusImg}
+            alt=""
+            className={view ? "status__img1" : "status__img"}
+            onClick={handleShow}
+          />
+          <img
+            src={photo}
+
+            alt=""
+            style={{
+              position: 'absolute', right: '5px', bottom: '5px', height: '20px', width: '20px', borderRadius: '5px'
+            }}
+            onClick={handleShow}
+          />
+        </div> : <div className="status__load">
+          <img src={loadingIcon} height={'20px'} width={'20px'} />
+        </div>}
       </div>
     </>
-  ) 
+  )
 }

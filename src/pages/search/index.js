@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { Helmet } from "react-helmet";
 import { database } from "../../firebase";
 
 import loadingIcon from '../../assets/loading.gif'
 import SearchUser from "../../components/searchuser";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Search() {
 
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
 
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(true);
@@ -109,7 +110,7 @@ export default function Search() {
       </Helmet>
       <div
         style={{
-          backgroundColor: theme === "light" ? "white" : "black",
+          backgroundColor: mode === "light" ? "white" : "black",
           minHeight: "100vh",
         }}
       >
@@ -118,7 +119,7 @@ export default function Search() {
             <div className="searchPage">
               <div
                 className={
-                  theme === "light" ? "searchUserlight" : "searchUserdark"
+                  mode === "light" ? "searchUserlight" : "searchUserdark"
                 }
               >
                 {users ? (

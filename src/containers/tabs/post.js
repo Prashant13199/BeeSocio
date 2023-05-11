@@ -4,9 +4,11 @@ import { database } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
 import loadingIcon from '../../assets/loading.gif'
+import { ColorModeContext } from "../../services/ThemeContext";
+import { useContext } from "react";
 
 export default function PostTab() {
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     const currentuid = localStorage.getItem("uid");
 
     const [posts, setPosts] = useState([]);
@@ -125,7 +127,7 @@ export default function PostTab() {
                 }><img src={empty} alt=""
                     height={"90px"} /><div style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>No Posts</div>
                 </div>

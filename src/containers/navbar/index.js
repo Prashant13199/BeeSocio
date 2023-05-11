@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { NavLink } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
@@ -25,6 +25,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import { ColorModeContext } from '../../services/ThemeContext';
 
 export default function NavbarHead() {
   const location = useLocation();
@@ -39,9 +40,9 @@ export default function NavbarHead() {
   const audio = new Audio(audio1);
   const [items, setItems] = useState([]);
   const [fetchedUid, setFetchedUid] = useState("");
-  const theme = localStorage.getItem("theme");
   const [mnotifications, setmNotification] = useState([]);
   const [notifications, setNotification] = useState([]);
+  const { toggleColorMode, mode } = useContext(ColorModeContext);
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -219,10 +220,6 @@ export default function NavbarHead() {
     database.ref(`/Users/${currentuid}/notification`).remove();
   };
 
-  const changeTheme = () => {
-    localStorage.setItem("theme", theme === "light" ? "dark" : "light");
-  };
-
   return (
     <>
       <Modal
@@ -235,10 +232,10 @@ export default function NavbarHead() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Create Post
           </Modal.Title>
           <IconButton onClick={handleClose}>
@@ -248,7 +245,7 @@ export default function NavbarHead() {
         <Modal.Body
           style={{
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <CreatePost handleClose={handleClose} />
@@ -257,7 +254,7 @@ export default function NavbarHead() {
       <div className="nav__pc">
         <Navbar
           expand="lg"
-          bg={theme === "light" ? "light" : "dark"}
+          bg={mode === "light" ? "light" : "dark"}
           fixed="top"
           variant="light"
           collapseOnSelect
@@ -272,7 +269,7 @@ export default function NavbarHead() {
                 <NavLink
                   style={{
                     textDecoration: "none",
-                    color: theme === "light" ? "black" : "white",
+                    color: mode === "light" ? "black" : "white",
                     fontSize: "22px",
                     fontWeight: "350",
                   }}
@@ -304,11 +301,11 @@ export default function NavbarHead() {
                       formatResult={formatResult}
                       placeholder="Search"
                       styling={{
-                        backgroundColor: theme === "light" ? "white" : "black",
+                        backgroundColor: mode === "light" ? "white" : "black",
                         placeholderColor: "grey",
-                        color: theme === "light" ? "black" : "white",
+                        color: mode === "light" ? "black" : "white",
                         hoverBackgroundColor:
-                          theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                          mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
                         height: "33px",
                         borderRadius: "8px",
                         border: "none",
@@ -324,10 +321,10 @@ export default function NavbarHead() {
                     to="/"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
-                      {location && location.pathname === '/' ? <HomeIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                      {location && location.pathname === '/' ? <HomeIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                     </IconButton>
                   </NavLink>
                 </Nav.Link>
@@ -337,10 +334,10 @@ export default function NavbarHead() {
                     to="/search"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
-                      {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                      {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                     </IconButton>
                   </NavLink>
                 </Nav.Link>
@@ -350,11 +347,11 @@ export default function NavbarHead() {
                     to="/message"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <Badge badgeContent={mnotifications.length} color="primary">
-                        {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                        {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                       </Badge>
                     </IconButton>
 
@@ -365,13 +362,13 @@ export default function NavbarHead() {
                     to="/activity"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton onClick={() => {
                       clearNotification();
                     }}>
                       <Badge badgeContent={notifications.length} color="primary">
-                        {location && location.pathname === '/activity' ? <FavoriteIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <FavoriteBorderOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                        {location && location.pathname === '/activity' ? <FavoriteIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <FavoriteBorderOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                       </Badge>
                     </IconButton>
 
@@ -382,7 +379,7 @@ export default function NavbarHead() {
                   eventKey="4"
                 >
                   <IconButton onClick={handleShow}>
-                    <AddCircleOutlineIcon style={{ color: theme === "light" ? "black" : "white" }} />
+                    <AddCircleOutlineIcon style={{ color: mode === "light" ? "black" : "white" }} />
                   </IconButton>
                 </Nav.Link>
 
@@ -391,11 +388,11 @@ export default function NavbarHead() {
                     to="/profile"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <img
-                        className={location && location.pathname === '/profile' ? theme === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
+                        className={location && location.pathname === '/profile' ? mode === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
                         alt=""
                         src={currentPhoto}
                       />
@@ -404,10 +401,8 @@ export default function NavbarHead() {
                 </Nav.Link>
                 <Nav.Link eventKey="16">
                   <NavLink to="" activeClassName="is-active" exact={true}>
-                    <IconButton onClick={() => {
-                      changeTheme();
-                    }}>
-                      {theme === "light" ? <DarkModeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                    <IconButton onClick={toggleColorMode}>
+                      {mode === "light" ? <DarkModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                     </IconButton>
                   </NavLink>
                 </Nav.Link>
@@ -420,8 +415,8 @@ export default function NavbarHead() {
         <div className="nav__mobile">
           <div>
             <Navbar
-              bg={theme === "light" ? "light" : "dark"}
-              variant={theme === "light" ? "light" : "dark"}
+              bg={mode === "light" ? "light" : "dark"}
+              variant={mode === "light" ? "light" : "dark"}
               fixed="top"
               style={{
                 height: "45px",
@@ -430,8 +425,8 @@ export default function NavbarHead() {
               <Nav>
                 <Nav.Link eventKey="17">
                   <NavLink to="" activeClassName="is-active" exact={true}>
-                    <IconButton onClick={() => { changeTheme(); }}>
-                      {theme === "light" ? <DarkModeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                    <IconButton onClick={toggleColorMode}>
+                      {mode === "light" ? <DarkModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                     </IconButton>
                   </NavLink>
                 </Nav.Link>
@@ -442,7 +437,7 @@ export default function NavbarHead() {
                   {location && location.pathname === '/' && <NavLink
                     style={{
                       textDecoration: "none",
-                      color: theme === "light" ? "black" : "white",
+                      color: mode === "light" ? "black" : "white",
                       fontSize: "22px"
                     }}
                     to="/"
@@ -472,11 +467,11 @@ export default function NavbarHead() {
                           formatResult={formatResult}
                           placeholder="Search"
                           styling={{
-                            backgroundColor: theme === "light" ? "white" : "black",
+                            backgroundColor: mode === "light" ? "white" : "black",
                             placeholderColor: "grey",
-                            color: theme === "light" ? "black" : "white",
+                            color: mode === "light" ? "black" : "white",
                             hoverBackgroundColor:
-                              theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                              mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
                             height: "33px",
                             borderRadius: "8px",
                             border: "none",
@@ -502,7 +497,7 @@ export default function NavbarHead() {
 
                     <IconButton>
                       <Badge badgeContent={mnotifications.length} color="primary">
-                        {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                        {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                       </Badge>
                     </IconButton>
 
@@ -514,8 +509,8 @@ export default function NavbarHead() {
           </div>
           <div>
             <Navbar
-              bg={theme === "light" ? "light" : "dark"}
-              variant={theme === "light" ? "light" : "dark"}
+              bg={mode === "light" ? "light" : "dark"}
+              variant={mode === "light" ? "light" : "dark"}
               fixed="bottom"
               style={{
                 height: "45px",
@@ -527,10 +522,10 @@ export default function NavbarHead() {
                     to="/"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
-                      {location && location.pathname === '/' ? <HomeIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                      {location && location.pathname === '/' ? <HomeIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                     </IconButton>
                   </NavLink>
                 </Nav.Link>
@@ -541,10 +536,10 @@ export default function NavbarHead() {
                     to="/search"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
-                      {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                      {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                     </IconButton>
                   </NavLink>
                 </Nav.Link>
@@ -552,7 +547,7 @@ export default function NavbarHead() {
               <Nav className="me-auto">
                 <Nav.Link eventKey="13">
                   <IconButton onClick={handleShow}>
-                    <AddCircleOutlineIcon style={{ color: theme === "light" ? "black" : "white" }} />
+                    <AddCircleOutlineIcon style={{ color: mode === "light" ? "black" : "white" }} />
                   </IconButton>
                 </Nav.Link>
               </Nav>
@@ -562,14 +557,14 @@ export default function NavbarHead() {
                     to="/activity"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
 
                     <IconButton onClick={() => {
                       clearNotification();
                     }}>
                       <Badge badgeContent={notifications.length} color="primary">
-                        {location && location.pathname === '/activity' ? <FavoriteIcon style={{ color: theme === "light" ? "black" : "white" }} /> : <FavoriteBorderOutlinedIcon style={{ color: theme === "light" ? "black" : "white" }} />}
+                        {location && location.pathname === '/activity' ? <FavoriteIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <FavoriteBorderOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                       </Badge>
                     </IconButton>
                   </NavLink>
@@ -582,11 +577,11 @@ export default function NavbarHead() {
                     to="/profile"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: theme === "light" ? 'white' :'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <img
-                        className={location && location.pathname === '/profile' ? theme === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
+                        className={location && location.pathname === '/profile' ? mode === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
                         alt=""
                         src={currentPhoto}
                       />

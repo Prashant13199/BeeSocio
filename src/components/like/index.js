@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { Link } from "react-router-dom";
 import { database } from "../../firebase";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Like({ uid }) {
 
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [status, setStatus] = useState(false);
+  const currentuid = localStorage.getItem("uid");
 
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   useEffect(() => {
     database.ref(`/Users/${uid}`).on("value", (snapshot) => {
       if (snapshot.val()) {
@@ -19,9 +23,14 @@ export default function Like({ uid }) {
       }
     });
   }, [uid]);
-  const currentuid = localStorage.getItem("uid");
+
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
+
+
   return (
-    <div style={{ fontSize: "22px", margin: "10px 0px" }}>
+    <div style={{ fontSize: "22px", margin: "10px 0px" }} data-aos="fade-right">
       <img
         className={status ? "like__img1_online" : "like__img1"}
         src={photo}
@@ -30,7 +39,7 @@ export default function Like({ uid }) {
       <Link
         style={{
           textDecoration: "none",
-          color: theme === "light" ? "black" : "white",
+          color: mode === "light" ? "black" : "white",
           marginLeft: "10px"
         }}
         to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { database, storage } from "../../firebase";
 import "./style.css";
 import SingleStatus from "../../components/status";
@@ -8,6 +8,7 @@ import CreateStatus from "../create-status";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconButton } from "@material-ui/core";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Status() {
   const currentuid = localStorage.getItem("uid");
@@ -17,7 +18,7 @@ export default function Status() {
   const handleShow = () => setShow(true);
   const [currentPhoto, setCurrentPhoto] = useState("")
   const [following, setfollowing] = useState([]);
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -98,10 +99,10 @@ export default function Status() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Create Status
           </Modal.Title>
           <IconButton onClick={handleClose}>
@@ -111,7 +112,7 @@ export default function Status() {
         <Modal.Body
           style={{
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <CreateStatus handleClose={handleClose} />
@@ -121,14 +122,14 @@ export default function Status() {
         <div onClick={handleShow} className="addStatus__btn">
           <div style={{ position: "relative" }}>
             <img
-              src={currentPhoto}
-              
+              src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
+
               alt=""
               className={"statusadd__img"}
             />
             <AddCircleIcon className="statusaddicon" color="primary" style={{
               backgroundColor:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
               borderRadius: "50%", fontSize: "20px"
             }} />
           </div>

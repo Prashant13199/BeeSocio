@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import { Helmet } from "react-helmet";
 import ActivitySingle from "../../components/activitysingle";
-
+import { ColorModeContext } from "../../services/ThemeContext";
 import loadingIcon from '../../assets/loading.gif'
 import { date } from "../../services/date";
 
@@ -11,7 +11,7 @@ export default function Activity() {
   const currentuid = localStorage.getItem("uid");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const [totalActivity, setTotalActivity] = useState(0)
   const [lastKey, setLastKey] = useState("")
   const [fetching, setFetching] = useState(false)
@@ -139,7 +139,7 @@ export default function Activity() {
   return (
     <div
       style={{
-        backgroundColor: theme === "light" ? "white" : "black",
+        backgroundColor: mode === "light" ? "white" : "black",
         minHeight: "100vh",
       }}
     >
@@ -150,11 +150,11 @@ export default function Activity() {
         {!loading ? (
           data.length !== 0 ? (
             <div
-              className={theme === "light" ? "activitylight" : "activitydark"}
+              className={mode === "light" ? "activitylight" : "activitydark"}
             >
               {dates && dates.map((date) => {
                 return <div key={date}>
-                  <div style={{ color: theme === "light" ? "black" : "white", padding: "15px", fontWeight: "800" }}>{date}</div>
+                  <div style={{ color: mode === "light" ? "black" : "white", padding: "15px", fontWeight: "800" }}>{date}</div>
                   {data && data.map(({ id, activity }) => {
                     return date === id && activity && activity.map(({ id, data }) => {
                       return (
@@ -175,7 +175,7 @@ export default function Activity() {
               })}
             </div>) : (
             <div
-              className={theme === "light" ? "activitylight" : "activitydark"}
+              className={mode === "light" ? "activitylight" : "activitydark"}
             >
               {data.length === 0 && !loading && (
                 <center>
@@ -188,7 +188,7 @@ export default function Activity() {
                       alignItems: "center",
                       justifyContent: "center",
                       display: "flex",
-                      color: theme === "light" ? "black" : "white",
+                      color: mode === "light" ? "black" : "white",
                     }}
                   >
                     No Activity

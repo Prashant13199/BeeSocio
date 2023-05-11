@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import { Modal } from "react-bootstrap";
@@ -11,6 +11,9 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { IconButton } from "@mui/material";
 import { Button } from "react-bootstrap";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function UserProfileHeader(props) {
 
@@ -33,9 +36,13 @@ export default function UserProfileHeader(props) {
     const [bio, setBio] = useState("");
     const [website, setWebsite] = useState("");
     let history = useHistory();
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     const [postCount, setPostCount] = useState(0);
     const [videoCount, setVideoCount] = useState(0);
+
+    useEffect(() => {
+        AOS.init({ duration: 800 })
+    }, [])
 
     useEffect(() => {
         database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -109,8 +116,8 @@ export default function UserProfileHeader(props) {
                 }/notification/${currentuid}`).set({ text: `${currentUsername} started following you` });
         } else {
             Swal.fire({
-                background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                color: theme === "light" ? "black" : "white",
+                background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                color: mode === "light" ? "black" : "white",
                 title: `Are you sure to unfollow ${username}?`,
                 text: "You won't be able to revert this!",
                 icon: "warning",
@@ -149,8 +156,8 @@ export default function UserProfileHeader(props) {
                             console.log(e);
                         });
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Unfollowed!",
                         text: "Following removed.",
                         icon: "success",
@@ -184,12 +191,12 @@ export default function UserProfileHeader(props) {
                 <Modal.Header style={
                     {
                         padding: "5px 10px",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <Modal.Title style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <b>{
@@ -210,7 +217,7 @@ export default function UserProfileHeader(props) {
                     {
                         height: "60vh",
                         overflow: "auto",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     {
@@ -232,12 +239,12 @@ export default function UserProfileHeader(props) {
                 <Modal.Header style={
                     {
                         padding: "5px 10px",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <Modal.Title style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <b>{
@@ -258,7 +265,7 @@ export default function UserProfileHeader(props) {
                     {
                         height: "60vh",
                         overflow: "auto",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     {
@@ -280,7 +287,7 @@ export default function UserProfileHeader(props) {
                 scrollable>
                 <Modal.Body style={{
                     padding: 0,
-                    backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                    backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                 }}>
                     <div style={{
                         position: "relative", padding: 0
@@ -298,17 +305,19 @@ export default function UserProfileHeader(props) {
             </Modal>
             <div className="head">
                 <img className="profile__img" alt=""
-                    src={photo}
+                    src={photo ? photo : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`}
                     onClick={handleShow2}
+                    data-aos="fade-down"
                 />
                 <div>
                     <div className="info_name"
+                        data-aos="fade-left"
                         style={
                             {
-                                color: theme === "light" ? "black" : "white"
+                                color: mode === "light" ? "black" : "white"
                             }
                         }>
-                        {username && username.length > 15 ? username.substring(0, 12).concat('...') : username} </div>
+                        {username ? username.length > 15 ? username.substring(0, 12).concat('...') : username : 'Loading...'} </div>
                     <div style={{ display: "flex", marginTop: "10px" }}>
                         <Button onClick={handlefollow}
                             variant={like ? "warning" : "primary"}
@@ -341,7 +350,7 @@ export default function UserProfileHeader(props) {
             <div style={{ margin: "15px 10px" }}>
                 <div style={
                     {
-                        color: theme === "light" ? "black" : "white",
+                        color: mode === "light" ? "black" : "white",
                         display: bio ? "block" : "none"
                     }
                 }>
@@ -349,7 +358,7 @@ export default function UserProfileHeader(props) {
                 <a href={website}
                     style={
                         {
-                            color: theme === "light" ? "black" : "white",
+                            color: mode === "light" ? "black" : "white",
                             display: website ? "block" : "none"
                         }
                     }
@@ -360,7 +369,7 @@ export default function UserProfileHeader(props) {
                 {
                     display: "flex",
                     justifyContent: "space-between",
-                    backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                    backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                     padding: "5px 20px",
                     margin: "0px 5px",
                     fontSize: "small",
@@ -374,7 +383,7 @@ export default function UserProfileHeader(props) {
                     <a style={
                         {
                             textDecoration: "none",
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <strong>{postCount}</strong>
@@ -391,7 +400,7 @@ export default function UserProfileHeader(props) {
                     <a style={
                         {
                             textDecoration: "none",
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <strong>{videoCount}</strong>
@@ -411,7 +420,7 @@ export default function UserProfileHeader(props) {
                         style={
                             {
                                 textDecoration: "none",
-                                color: theme === "light" ? "black" : "white",
+                                color: mode === "light" ? "black" : "white",
 
                             }
                         }>
@@ -433,7 +442,7 @@ export default function UserProfileHeader(props) {
                     <a style={
                         {
                             textDecoration: "none",
-                            color: theme === "light" ? "black" : "white",
+                            color: mode === "light" ? "black" : "white",
 
                         }
                     }

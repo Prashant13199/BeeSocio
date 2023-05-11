@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import "./style.css";
+import { ColorModeContext } from "../../services/ThemeContext";
+
 
 export default function Error() {
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   return (
     <>
       <Helmet>
@@ -12,7 +14,7 @@ export default function Error() {
       </Helmet>
       <div
         style={{
-          background: theme === "light" ? "white" : "black",
+          background: mode === "light" ? "white" : "black",
           minHeight: "100vh",
         }}
       >
@@ -29,13 +31,13 @@ export default function Error() {
                     <div className="contant_box_404">
                       <h3
                         className="h2"
-                        style={{ color: theme === "light" ? "black" : "white" }}
+                        style={{ color: mode === "light" ? "black" : "white" }}
                       >
                         Look like you're lost
                       </h3>
 
                       <p
-                        style={{ color: theme === "light" ? "black" : "white" }}
+                        style={{ color: mode === "light" ? "black" : "white" }}
                       >
                         the page you are looking is not avaible!
                       </p>

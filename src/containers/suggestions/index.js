@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { database } from "../../firebase";
 import "./style.css";
 import SuggestionUSer from "../../components/suggestionuser";
 import { Link } from "react-router-dom";
 import loadingIcon from '../../assets/loading.gif'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Suggestions() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
+
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
 
   useEffect(() => {
     database
@@ -31,7 +38,7 @@ export default function Suggestions() {
       });
   }, []);
   return (
-    <div className="suggestions">
+    <div className="suggestions" data-aos="fade-left">
       <div
         style={{
           display: "flex",
@@ -48,7 +55,7 @@ export default function Suggestions() {
         >
           Suggestions For You
         </p>
-        <Link className="viewall" to="/search" exact={true} style={{color: theme === "light" ? "black" : "white",textDecoration:"none"}}>
+        <Link className="viewall" to="/search" exact={true} style={{ color: mode === "light" ? "black" : "white", textDecoration: "none" }}>
           view all
         </Link>
       </div>

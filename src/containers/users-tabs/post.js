@@ -1,13 +1,13 @@
 import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { database } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
-
+import { ColorModeContext } from "../../services/ThemeContext";
 import loadingIcon from '../../assets/loading.gif'
 
 export default function PostTabUser({ props }) {
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
 
     const [posts, setPosts] = useState([]);
     const [lastKey, setLastKey] = useState("")
@@ -125,7 +125,7 @@ export default function PostTabUser({ props }) {
                 }><img src={empty} alt=""
                     height={"90px"} /><div style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>No Posts</div>
                 </div>

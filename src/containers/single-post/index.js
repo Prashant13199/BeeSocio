@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import Comment from "../../components/comment";
 import Like from "../../components/like";
@@ -23,6 +23,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import InsertCommentIcon from '@mui/icons-material/InsertComment';
 import Group from "../../components/Group";
 import $ from "jquery";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SinglePost({
   uid,
@@ -59,7 +60,7 @@ export default function SinglePost({
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const [bookmarkpost, setBookmarkpost] = useState(false);
   const [groups, setGroups] = useState([])
   const [likes, setLikes] = useState([]);
@@ -240,8 +241,8 @@ export default function SinglePost({
 
   const deletePost = async () => {
     Swal.fire({
-      background: theme === "light" ? "rgba(248,249,250,1)" : "#1F1B24",
-      color: theme === "light" ? "black" : "white",
+      background: mode === "light" ? "rgba(248,249,250,1)" : "#1F1B24",
+      color: mode === "light" ? "black" : "white",
       title: "Are you sure to delete?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -265,30 +266,30 @@ export default function SinglePost({
           console.log(e);
         }
         if (photoURL.includes('mp4')) {
-          if(uid === currentuid) {
+          if (uid === currentuid) {
             database.ref(`/Users/${currentuid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
-          }else{
+          } else {
             database.ref(`/Users/${uid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
           }
-          
+
         } else {
-          if(uid === currentuid) {
+          if (uid === currentuid) {
             database.ref(`/Users/${currentuid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
-            .catch((e) => { console.log(e) });
+              .catch((e) => { console.log(e) });
           }
-          else{
+          else {
             database.ref(`/Users/${uid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
-            .catch((e) => { console.log(e) });
+              .catch((e) => { console.log(e) });
           }
         }
 
@@ -303,8 +304,8 @@ export default function SinglePost({
           });
 
         Swal.fire({
-          background: theme === "light" ? "rgba(248,249,250,1)" : "#1F1B24",
-          color: theme === "light" ? "black" : "white",
+          background: mode === "light" ? "rgba(248,249,250,1)" : "#1F1B24",
+          color: mode === "light" ? "black" : "white",
           title: "Deleted!",
           text: "Your post has been deleted.",
           icon: "success",
@@ -328,8 +329,8 @@ export default function SinglePost({
       .then(() => {
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Added to status!",
           icon: "success",
           timer: 800,
@@ -342,8 +343,8 @@ export default function SinglePost({
   const handleOnSelect = (item) => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "You are sending post to",
       text: `${item.name.toLowerCase()}?`,
       icon: "warning",
@@ -379,8 +380,8 @@ export default function SinglePost({
           .then(() => {
             Swal.fire({
               background:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-              color: theme === "light" ? "black" : "white",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              color: mode === "light" ? "black" : "white",
               title: "Sent!",
               text: `Post sent to ${item.name}`,
               icon: "success",
@@ -450,8 +451,8 @@ export default function SinglePost({
     $temp.remove();
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Success!",
       text: "Copied to clipboard",
       icon: "success",
@@ -473,11 +474,11 @@ export default function SinglePost({
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
-            <b>{likes.length}</b> {likes.length>1 ? 'Likes':'Like'}
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
+            <b>{likes.length}</b> {likes.length > 1 ? 'Likes' : 'Like'}
           </Modal.Title>
           <IconButton onClick={handleClose}>
             <CloseOutlinedIcon color="error" />
@@ -488,7 +489,7 @@ export default function SinglePost({
             height: '60vh',
             overflow: 'auto',
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           {likes && likes.map((like) => <Like uid={like.uid} key={like.uid} />)}
@@ -504,10 +505,10 @@ export default function SinglePost({
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             <b>{tagss && tagss.length}</b> Tags
           </Modal.Title>
           <IconButton onClick={handleClose4}>
@@ -519,7 +520,7 @@ export default function SinglePost({
             height: '60vh',
             overflow: 'auto',
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           {tagss && tagss.map((tag) => <Like uid={tag} key={tag} />)}
@@ -535,10 +536,10 @@ export default function SinglePost({
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             <b>{comments.length}</b> {comments.length > 1 ? 'Comments' : 'Comment'}
           </Modal.Title>
           <IconButton onClick={handleClose1}>
@@ -550,7 +551,7 @@ export default function SinglePost({
           style={{
             height: "60vh",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <div style={{ height: "43vh", overflow: "auto" }}>
@@ -586,10 +587,10 @@ export default function SinglePost({
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Share To
           </Modal.Title>
           <IconButton onClick={handleClose2}>
@@ -599,7 +600,7 @@ export default function SinglePost({
         <Modal.Body
           style={{
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
             height: "60vh",
             overflowY: "auto",
           }}
@@ -612,11 +613,11 @@ export default function SinglePost({
             formatResult={formatResult}
             placeholder="Search"
             styling={{
-              backgroundColor: theme === "light" ? "white" : "black",
+              backgroundColor: mode === "light" ? "white" : "black",
               placeholderColor: "gray",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               hoverBackgroundColor:
-                theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
               height: "35px",
               borderRadius: "10px",
               border: "none",
@@ -635,7 +636,7 @@ export default function SinglePost({
               <a
                 className="users2__a"
 
-                style={{ color: theme === "light" ? "black" : "white" }}
+                style={{ color: mode === "light" ? "black" : "white" }}
               >
                 {currentUsername && currentUsername.length > 15 ? currentUsername.substring(0, 15).concat('...') : currentUsername}
               </a>
@@ -701,7 +702,7 @@ export default function SinglePost({
               <ListGroup.Item
                 action
                 variant="danger"
-                // className={theme === "light" ? "listitem" : "listitemdark"}
+                // className={mode === "light" ? "listitem" : "listitemdark"}
                 onClick={() => {
                   deletePost();
                 }}
@@ -712,7 +713,7 @@ export default function SinglePost({
             <ListGroup.Item
               action
               variant="info"
-              // className={theme === "light" ? "listitem" : "listitemdark"}
+              // className={mode === "light" ? "listitem" : "listitemdark"}
               onClick={() => {
                 handleShow2();
               }}
@@ -744,7 +745,7 @@ export default function SinglePost({
               className="singlepost__profilePic"
               alt=""
               src={photo}
-              
+
             />
             <div>
               <div style={{ marginLeft: "10px" }}>
@@ -789,34 +790,35 @@ export default function SinglePost({
         }}>
           <CloseOutlinedIcon color="error" />
         </IconButton>
-        <div style={{ backgroundColor: "rgba(0, 0, 0, 0.3)",position: "absolute", right: 0, bottom: 0, display: 'grid' }}>
-        <div style={{ display: "grid", placeItems: "center"
-        }}>
-          <IconButton onClick={handleLike} >
-            {like ? <FavoriteIcon style={{ fontSize: "30px" }} sx={{ color: "red" }} /> : <FavoriteBorderIcon sx={{color: 'white'}} style={{ fontSize: '30px' }} />}
+        <div style={{ backgroundColor: "rgba(0, 0, 0, 0.3)", position: "absolute", right: 0, bottom: 0, display: 'grid' }}>
+          <div style={{
+            display: "grid", placeItems: "center"
+          }}>
+            <IconButton onClick={handleLike} >
+              {like ? <FavoriteIcon style={{ fontSize: "30px" }} sx={{ color: "red" }} /> : <FavoriteBorderIcon sx={{ color: 'white' }} style={{ fontSize: '30px' }} />}
+            </IconButton>
+            <div onClick={handleShow} style={{ color: "white", fontSize: "15px", cursor: 'pointer' }}>{likes.length}</div>
+          </div>
+
+          <div style={{
+            display: "grid", placeItems: "center"
+          }}>
+            <IconButton onClick={handleShow1}>
+              <InsertCommentIcon sx={{ color: 'white' }} style={{ fontSize: '30px' }} />
+            </IconButton>
+            <div onClick={handleShow1} style={{ color: "white", fontSize: "15px", cursor: 'pointer' }}>{comments.length}</div>
+          </div>
+
+
+          <IconButton onClick={handlebookmark}>
+            {bookmarkpost ? <BookmarkIcon sx={{ color: 'white' }} style={{ fontSize: '30px' }} /> : <BookmarkBorderOutlinedIcon sx={{ color: 'white' }} style={{ fontSize: '30px' }} />}
           </IconButton>
-          <div onClick={handleShow} style={{ color: "white", fontSize: "15px", cursor: 'pointer' }}>{likes.length}</div>
-        </div>
 
-        <div style={{
-          display: "grid", placeItems: "center"
-        }}>
-          <IconButton onClick={handleShow1}>
-            <InsertCommentIcon sx={{color: 'white'}} style={{ fontSize: '30px' }} />
+          <IconButton onClick={handleShow5} style={{
+            display: (uid === currentuid || tagss || superUser) ? "block" : "none"
+          }}>
+            <MoreHorizIcon style={{ fontSize: '30px' }} sx={{ color: 'white' }} />
           </IconButton>
-          <div onClick={handleShow1} style={{ color: "white", fontSize: "15px", cursor: 'pointer' }}>{comments.length}</div>
-        </div>
-
-
-        <IconButton onClick={handlebookmark}>
-          {bookmarkpost ? <BookmarkIcon sx={{color: 'white'}} style={{ fontSize: '30px' }} /> : <BookmarkBorderOutlinedIcon sx={{color: 'white'}} style={{ fontSize: '30px' }} />}
-        </IconButton>
-
-        <IconButton onClick={handleShow5} style={{
-          display: (uid === currentuid || tagss || superUser) ? "block" : "none"
-        }}>
-          <MoreHorizIcon style={{ fontSize: '30px' }} sx={{color: 'white'}} />
-        </IconButton>
         </div>
         <div style={{
           color: "white", display: caption ? "block" : "none",

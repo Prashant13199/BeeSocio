@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Group({
     id,
@@ -16,7 +17,7 @@ export default function Group({
     const [username, setUsername] = useState("");
     const [currentUsername, setCurrentUsername] = useState("");
     const [currentEmail, setCurrentEmail] = useState("");
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     useEffect(() => {
         database.ref(`/Rooms/${id}`).on("value", (snapshot) => {
             setPhoto(snapshot.val().photo);
@@ -34,8 +35,8 @@ export default function Group({
     const sendPicMessage = async () => {
         Swal.fire({
             background:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "You are sending post to",
             text: `${username.toLowerCase()}?`,
             icon: "warning",
@@ -65,8 +66,8 @@ export default function Group({
                                 .then(() => {
                                     Swal.fire({
                                         background:
-                                            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                                        color: theme === "light" ? "black" : "white",
+                                            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                                        color: mode === "light" ? "black" : "white",
                                         title: "Sent!",
                                         text: `Post sent to ${username}`,
                                         icon: "success",
@@ -89,12 +90,12 @@ export default function Group({
                     className="like__img"
                     src={photo}
                     alt=""
-                    
+
                 />
                 <a
                     className="users2__a"
 
-                    style={{ color: theme === "light" ? "black" : "white" }}
+                    style={{ color: mode === "light" ? "black" : "white" }}
                 >
                     {username && username.length > 15 ? username.substring(0, 15).concat('...') : username}
                 </a>

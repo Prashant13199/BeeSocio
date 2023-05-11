@@ -3,6 +3,8 @@ import { database } from "../../firebase";
 import "./style.css";
 import ActiveUsersSingle from "../../components/ActiveUsersSingle";
 import loadingIcon from '../../assets/loading.gif'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export default function ActiveUsers() {
 
@@ -11,18 +13,22 @@ export default function ActiveUsers() {
   const currentuid = localStorage.getItem('uid');
 
   useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
+
+  useEffect(() => {
     database.ref(`/Users/${currentuid}/following`).on("value", (snapshot) => {
-        let usersList = [];
-        snapshot.forEach((snap) => {
-            usersList.push({id: snap.val().uid, uid: snap.val().uid})
-        });
-        setUsers(usersList)
-        setLoading(false);
+      let usersList = [];
+      snapshot.forEach((snap) => {
+        usersList.push({ id: snap.val().uid, uid: snap.val().uid })
+      });
+      setUsers(usersList)
+      setLoading(false);
     });
-  },[]);
+  }, []);
 
   return (
-    <div className="activeusers">
+    <div className="activeusers" data-aos="fade-left">
       <div
         style={{
           display: "flex",

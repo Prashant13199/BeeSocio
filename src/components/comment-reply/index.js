@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { database } from "../../firebase";
 import "./style.css";
 import { makeid } from "../../services/makeid";
 import { MentionsInput, Mention } from 'react-mentions'
 import { Button } from "react-bootstrap";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply }) {
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
-  const theme = localStorage.getItem("theme")
+  const { mode } = useContext(ColorModeContext);
   const [commentReply, setCommentReply] = useState("");
   const [items, setItems] = useState("");
 
@@ -116,13 +117,13 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
         style={{
           '&multiLine': {
             input: {
-              color: theme === "light" ? "black" : "white"
+              color: mode === "light" ? "black" : "white"
             },
           },
 
           '&singleLine': {
             input: {
-              color: theme === "light" ? "black" : "white"
+              color: mode === "light" ? "black" : "white"
             },
           },
 

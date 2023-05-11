@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SinglePost from "../../containers/single-post";
 import { Grid } from "@mui/material";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function UserPost({
     uid,
@@ -17,7 +20,10 @@ export default function UserPost({
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
+    useEffect(() => {
+        AOS.init({ duration: 800 })
+    }, [])
     return (
         <>
             <Modal show={show}
@@ -26,7 +32,7 @@ export default function UserPost({
                 scrollable
                 size="lg"
             >
-                <Modal.Body style={{ padding: 0, backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)" }}>
+                <Modal.Body style={{ padding: 0, backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)" }}>
                     <SinglePost key={id}
                         id={id}
                         handleModal={handleClose}
@@ -38,7 +44,7 @@ export default function UserPost({
                         tagss={tagss} />
                 </Modal.Body>
             </Modal>
-            <Grid onClick={handleShow}
+            <Grid onClick={handleShow} data-aos="fade-up"
                 item
                 xs={2}
                 sm={4}

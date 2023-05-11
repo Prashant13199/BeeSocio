@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./sidebarchat.css";
 import { database } from "../../firebase";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
@@ -6,8 +6,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { time } from "../../services/time";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
+
   const currentuid = localStorage.getItem("uid");
   const location = useLocation();
   const [messages, setMessages] = useState("");
@@ -15,16 +19,20 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
   const [username, setUsername] = useState("");
   const [status, setStatus] = useState(false);
   const [roomName, setRoomName] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const history = useHistory();
   const [active, setActive] = useState(false)
 
   useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
+
+  useEffect(() => {
     console.log(location && location.pathname.split('/')[3])
     console.log(id)
-    if(location && location.pathname.split('/')[3] === id) {
+    if (location && location.pathname.split('/')[3] === id) {
       setActive(true)
-    }else {
+    } else {
       setActive(false)
     }
     if (groupName) {
@@ -101,24 +109,22 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
         onClick={handleLink}
         key={id}
         style={{
-          color: theme === "light" ? "black" : "white",
+          color: mode === "light" ? "black" : "white",
         }}
         className="chata"
       >
-        <div className={active ? theme === "light" ? "sidebarChat_active" : "sidebarChatdark_active" : theme==="light" ? "sidebarChat" : "sidebarChatdark"}>
+        <div data-aos="fade-right" className={active ? mode === "light" ? "sidebarChat_active" : "sidebarChatdark_active" : mode === "light" ? "sidebarChat" : "sidebarChatdark"}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <img
-              src={photo}
+              src={photo ? photo : `https://api.dicebear.com/6.x/thumbs/png?seed=Bubba`}
               className={status ? "sidebarChat__img__online" : "sidebarChat__img"}
               alt=""
-              
+
             />
             <div className="sidebarChat__info">
               <div style={{ display: "flex", height: "15px" }}>
                 <h6 style={{ fontWeight: "700" }}>
-                  {username.length < 20
-                    ? username
-                    : username.substring(0, 20).concat("...")}
+                  {username.length < 20 ? username : username.substring(0, 20).concat("...")}
                 </h6>
               </div>
               {messages[0]?.message &&

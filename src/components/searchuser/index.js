@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { database } from "../../firebase";
 import "./style.css";
 import { Button } from "react-bootstrap";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SearchUser({ uid }) {
   const [photo, setPhoto] = useState("");
@@ -11,8 +14,12 @@ export default function SearchUser({ uid }) {
   const [follow, setfollow] = useState([]);
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   let like = false;
+
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -88,8 +95,8 @@ export default function SearchUser({ uid }) {
     } else {
       Swal.fire({
         background:
-          theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-        color: theme === "light" ? "black" : "white",
+          mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+        color: mode === "light" ? "black" : "white",
         title: `Are you sure to unfollow ${username}?`,
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -141,8 +148,8 @@ export default function SearchUser({ uid }) {
             });
           Swal.fire({
             background:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Unfollowed!",
             text: "Following removed.",
             icon: "success",
@@ -163,6 +170,7 @@ export default function SearchUser({ uid }) {
           display: "flex",
           justifyContent: "space-between",
         }}
+
       >
         <div
           style={{
@@ -170,14 +178,15 @@ export default function SearchUser({ uid }) {
             justifyContent: "center",
             alignItems: "center",
           }}
+          data-aos="fade-right"
         >
           <div>
             <Link to={`/userprofile/${uid}`}>
               <img
                 className="searchuser__img"
-                src={photo}
+                src={photo ? photo : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`}
                 alt=""
-                
+
               />
             </Link>
           </div>
@@ -185,18 +194,18 @@ export default function SearchUser({ uid }) {
             <Link
               style={{
                 textDecoration: "none",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
                 fontWeight: "500", marginLeft: "10px"
               }}
               to={`/userprofile/${uid}`}
               activeClassName="is-active"
               exact={true}
             >
-              {username && username.length > 15 ? username.substring(0, 15).concat('...') : username}
+              {username ? username.length > 15 ? username.substring(0, 15).concat('...') : username : 'Loading...'}
             </Link>
           </div>
         </div>
-        <div className="sugfollow1">
+        <div className="sugfollow1" data-aos="fade-left">
           <a onClick={handlefollow}>
             {like ? (
               <Button

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { database } from "../../firebase";
 import "./style.css";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SuggestionUSer({ uid }) {
   const [photo, setPhoto] = useState("");
@@ -10,7 +11,7 @@ export default function SuggestionUSer({ uid }) {
   const [follow, setfollow] = useState([]);
   const currentuid = localStorage.getItem("uid");
   const [currentusername, setCurrentUsername] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
 
   let like = false;
   useEffect(() => {
@@ -86,8 +87,8 @@ export default function SuggestionUSer({ uid }) {
     } else {
       Swal.fire({
         background:
-          theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-        color: theme === "light" ? "black" : "white",
+          mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+        color: mode === "light" ? "black" : "white",
         title: `Are you sure to unfollow ${username}?`,
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -139,8 +140,8 @@ export default function SuggestionUSer({ uid }) {
             });
           Swal.fire({
             background:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "rgba(33,37,41,1)" : "white",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "rgba(33,37,41,1)" : "white",
             title: "Unfollowed!",
             text: "Following removed.",
             icon: "success",
@@ -170,7 +171,7 @@ export default function SuggestionUSer({ uid }) {
         <Link
           style={{
             textDecoration: "none",
-            color: theme === "light" ? "black" : "white",
+            color: mode === "light" ? "black" : "white",
             fontWeight: "500",
           }}
           to={`/userprofile/${uid}`}
@@ -181,7 +182,7 @@ export default function SuggestionUSer({ uid }) {
             className="suggestion__img"
             src={photo}
             alt=""
-            
+
           />
           {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
         </Link>

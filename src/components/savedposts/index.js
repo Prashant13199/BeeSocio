@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { IconButton } from "@mui/material";
 import { Grid } from "@mui/material";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SavedPost({ id, photoURL }) {
 
@@ -16,7 +17,7 @@ export default function SavedPost({ id, photoURL }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [posts, setPosts] = useState([]);
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     useEffect(() => {
         database.ref(`/Posts/${id}`).on("value", (snapshot) => {
             let postList = [];
@@ -44,12 +45,12 @@ export default function SavedPost({ id, photoURL }) {
                 <Modal.Header style={
                     {
                         padding: "5px 10px",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <Modal.Title style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         Post
@@ -61,7 +62,7 @@ export default function SavedPost({ id, photoURL }) {
                 </Modal.Header>
                 <Modal.Body style={
                     {
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     {
@@ -97,14 +98,14 @@ export default function SavedPost({ id, photoURL }) {
                                 <IconButton onClick={removeSaved}>
                                     <DeleteIcon style={
                                         {
-                                            color: theme === "light" ? "black" : "white"
+                                            color: mode === "light" ? "black" : "white"
                                         }
                                     } />
                                 </IconButton>
                                 <br />
                                 <p style={
                                     {
-                                        color: theme === "light" ? "black" : "white"
+                                        color: mode === "light" ? "black" : "white"
                                     }
                                 }>Post Not Found</p>
                             </div>
@@ -129,7 +130,7 @@ export default function SavedPost({ id, photoURL }) {
                         <img className="userPost__img"
                             src={photoURL}
                             alt=""
-                             />
+                        />
                     )
                 } </Grid>
         </>

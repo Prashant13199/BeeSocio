@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { database } from "../../firebase";
 import "./style.css";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function ActiveUsersSingle({ uid }) {
 
@@ -9,7 +10,7 @@ export default function ActiveUsersSingle({ uid }) {
   const [username, setUsername] = useState("");
   const [status, setStatus] = useState(false);
   const currentuid = localStorage.getItem("uid");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   let history = useHistory();
 
   useEffect(() => {
@@ -23,18 +24,18 @@ export default function ActiveUsersSingle({ uid }) {
   }, [uid]);
 
   const sendMessage = async () => {
-        if (uid !== currentuid) {
-            var names = [uid, currentuid];
-            names.sort();
-            let chatRoom = names.join("");
-            database.ref(`Rooms/${chatRoom}`).set({ name1: uid, name2: currentuid, timestamp: Date.now() }).then(() => {
-                history.push(`/message/rooms/${names.join("")
-                    }`);
-            }).catch((e) => {
-                console.log(e);
-            });
-        }
-    };
+    if (uid !== currentuid) {
+      var names = [uid, currentuid];
+      names.sort();
+      let chatRoom = names.join("");
+      database.ref(`Rooms/${chatRoom}`).set({ name1: uid, name2: currentuid, timestamp: Date.now() }).then(() => {
+        history.push(`/message/rooms/${names.join("")
+          }`);
+      }).catch((e) => {
+        console.log(e);
+      });
+    }
+  };
 
   return currentuid !== uid && status ? (
     <div
@@ -55,7 +56,7 @@ export default function ActiveUsersSingle({ uid }) {
         <Link
           style={{
             textDecoration: "none",
-            color: theme === "light" ? "black" : "white",
+            color: mode === "light" ? "black" : "white",
             fontWeight: "500",
           }}
           to={`/userprofile/${uid}`}
@@ -63,7 +64,7 @@ export default function ActiveUsersSingle({ uid }) {
           exact={true}
         >
           <img
-            className={status ? "activeuser__img_online" :"activeuser__img"}
+            className={status ? "activeuser__img_online" : "activeuser__img"}
             src={photo}
             alt=""
           />

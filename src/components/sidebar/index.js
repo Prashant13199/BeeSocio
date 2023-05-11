@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./sidebar.css";
 import SidebarChat from "../sidebarchat";
 import { database } from "../../firebase";
@@ -12,6 +12,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from "react-bootstrap";
 import Swal from "sweetalert2";
+import { ColorModeContext } from "../../services/ThemeContext";
 import { makeid } from '../../services/makeid.js'
 
 function Sidebar() {
@@ -20,7 +21,7 @@ function Sidebar() {
   const [rooms, setRooms] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
 
   const handleOnSelect = (item) => {
     history.push('/message')
@@ -115,8 +116,8 @@ function Sidebar() {
   const avatarArray = ['Willow', 'Spooky', 'Bubba', 'Lily', 'Whiskers', 'Pepper', 'Tiger', 'Zoey', 'Dusty', 'Simba']
   const createGroup = () => {
     Swal.fire({
-      background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+      background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Enter Group Name",
       input: "text",
       inputAttributes: {
@@ -153,9 +154,9 @@ function Sidebar() {
     <>
       <div className="sidebar">
         <div className="sidebar__header">
-          <Link to="/" style={{ color: theme === "light" ? "black" : "white", textDecoration: "none", fontSize: "24px", }}>
+          <Link to="/" style={{ color: mode === "light" ? "black" : "white", textDecoration: "none", fontSize: "24px", }}>
             <div style={{ display: "flex", alignItems: "center" }}>
-                <ArrowBackIosIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
+              <ArrowBackIosIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
               <div style={{ fontWeight: "700" }}>Chats</div>
             </div>
           </Link>
@@ -168,11 +169,11 @@ function Sidebar() {
             formatResult={formatResult}
             placeholder="Start a new chat"
             styling={{
-              backgroundColor: theme === "light" ? "white" : "black",
+              backgroundColor: mode === "light" ? "white" : "black",
               placeholderColor: "gray",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               hoverBackgroundColor:
-                theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
               height: "35px",
               borderRadius: "8px",
               border: "none",
@@ -187,11 +188,11 @@ function Sidebar() {
             formatResult={formatResult}
             placeholder="Start a new chat"
             styling={{
-              backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
               placeholderColor: "gray",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               hoverBackgroundColor:
-                theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
               height: "35px",
               borderRadius: "8px",
               border: "none",

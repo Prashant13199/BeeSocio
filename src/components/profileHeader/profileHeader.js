@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { database, storage } from "../../firebase";
 import { Modal } from "react-bootstrap";
@@ -14,6 +14,9 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { IconButton } from "@mui/material";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function ProfileHeader() {
 
@@ -43,7 +46,7 @@ export default function ProfileHeader() {
     const [progress, setProgress] = useState(0);
     const [compressedFile, setCompressedFile] = useState(null);
     const [link, setLink] = useState("");
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     const [postCount, setPostCount] = useState(0);
     const [videoCount, setVideoCount] = useState(0);
     const avatarArray = ['Willow', 'Spooky', 'Bubba', 'Lily', 'Whiskers', 'Pepper', 'Tiger', 'Zoey', 'Dusty', 'Simba']
@@ -52,7 +55,11 @@ export default function ProfileHeader() {
     let history = useHistory();
     console.log(progress)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        AOS.init({ duration: 800 })
+    }, [])
+
+    useEffect(() => {
         database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
             if (snapshot.val()) {
                 setCurrentUsername(snapshot.val().username);
@@ -87,8 +94,8 @@ export default function ProfileHeader() {
 
     const addBio = () => {
         Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: currentBio ? "Edit Bio" : "Add Bio",
             input: "text",
             inputAttributes: {
@@ -102,8 +109,8 @@ export default function ProfileHeader() {
             if (result.isConfirmed) {
                 database.ref(`/Users/${currentuid}`).update({ bio: result.value }).then(() => {
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: " Success",
                         timer: 800,
                         icon: "success",
@@ -112,8 +119,8 @@ export default function ProfileHeader() {
                     });
                 }).catch((e) => {
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Error",
                         timer: 1500,
                         icon: "error",
@@ -126,8 +133,8 @@ export default function ProfileHeader() {
     };
     const addWebsite = () => {
         Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: currentWebsite ? "Edit Website" : "Add Website",
             input: "text",
             inputAttributes: {
@@ -141,8 +148,8 @@ export default function ProfileHeader() {
             if (result.isConfirmed) {
                 database.ref(`/Users/${currentuid}`).update({ website: result.value }).then(() => {
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: " Success",
                         timer: 800,
                         icon: "success",
@@ -151,8 +158,8 @@ export default function ProfileHeader() {
                     });
                 }).catch((e) => {
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Error",
                         timer: 1500,
                         icon: "error",
@@ -165,8 +172,8 @@ export default function ProfileHeader() {
     };
     const changeUsername = () => {
         Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Change Username",
             input: "text",
             inputAttributes: {
@@ -181,27 +188,27 @@ export default function ProfileHeader() {
             if (result.isConfirmed) {
                 database.ref("/Users").on("value", (snapshot) => {
                     snapshot.forEach((snap) => {
-                        if (snap.val().username === result.value.replaceAll(" ","")) {
+                        if (snap.val().username === result.value.replaceAll(" ", "")) {
                             flag = true;
                         }
                     });
                 });
                 if (!flag) {
                     flag = false;
-                    database.ref(`/Users/${currentuid}`).update({ username: result.value.replaceAll(" ","") }).then(() => {
+                    database.ref(`/Users/${currentuid}`).update({ username: result.value.replaceAll(" ", "") }).then(() => {
                         Swal.fire({
-                            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                            color: theme === "light" ? "black" : "white",
+                            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                            color: mode === "light" ? "black" : "white",
                             title: "Username Changed",
                             timer: 800,
                             icon: "success",
-                            text: `Username Changed to ${result.value.replaceAll(" ","")}`,
+                            text: `Username Changed to ${result.value.replaceAll(" ", "")}`,
                             showConfirmButton: false
                         });
                     }).catch((e) => {
                         Swal.fire({
-                            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                            color: theme === "light" ? "black" : "white",
+                            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                            color: mode === "light" ? "black" : "white",
                             title: "Error",
                             timer: 1500,
                             icon: "error",
@@ -212,8 +219,8 @@ export default function ProfileHeader() {
                 } else {
                     flag = false;
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Error",
                         icon: "error",
                         text: `Username Exists!!`,
@@ -225,8 +232,8 @@ export default function ProfileHeader() {
     };
     const removePhoto = () => {
         Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Are you sure to delete?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -248,8 +255,8 @@ export default function ProfileHeader() {
                 }
                 database.ref(`/Users/${currentuid}`).update({ photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}` }).then(() => {
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Success",
                         timer: 800,
                         icon: "success",
@@ -262,14 +269,14 @@ export default function ProfileHeader() {
     };
     const handleLogout = () => {
         Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
             title: "Are you sure to logout?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes! log me out",
-            color: theme === "light" ? "black" : "white"
+            color: mode === "light" ? "black" : "white"
         }).then((result) => {
             if (result.isConfirmed) {
                 history.push('/')
@@ -316,8 +323,8 @@ export default function ProfileHeader() {
             }
         } else {
             Swal.fire({
-                background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                color: theme === "light" ? "black" : "white",
+                background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                color: mode === "light" ? "black" : "white",
                 title: "Error!",
                 text: "File not supported",
                 icon: "warning",
@@ -347,8 +354,8 @@ export default function ProfileHeader() {
                 storage.ref("userphoto").child(`${fileName}`).getDownloadURL().then((imageUrl) => {
                     database.ref(`/Users/${currentuid}`).update({ photo: imageUrl });
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Success!",
                         text: "User Photo Changed",
                         icon: "success",
@@ -358,8 +365,8 @@ export default function ProfileHeader() {
                 }).catch((e) => {
                     console.log(e);
                     Swal.fire({
-                        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                        color: theme === "light" ? "black" : "white",
+                        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                        color: mode === "light" ? "black" : "white",
                         title: "Error!",
                         text: e,
                         icon: "error",
@@ -380,8 +387,8 @@ export default function ProfileHeader() {
                 setLink("");
                 document.getElementById("image-preview").style.display = "none";
                 Swal.fire({
-                    background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                    color: theme === "light" ? "black" : "white",
+                    background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                    color: mode === "light" ? "black" : "white",
                     title: "Success!",
                     text: "User Photo Changed",
                     icon: "success",
@@ -391,8 +398,8 @@ export default function ProfileHeader() {
             }).catch((e) => {
                 console.log(e);
                 Swal.fire({
-                    background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                    color: theme === "light" ? "black" : "white",
+                    background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                    color: mode === "light" ? "black" : "white",
                     title: "Error!",
                     text: e,
                     icon: "error",
@@ -414,12 +421,12 @@ export default function ProfileHeader() {
                 <Modal.Header style={
                     {
                         padding: "5px 10px",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <Modal.Title style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <b>{
@@ -440,7 +447,7 @@ export default function ProfileHeader() {
                     {
                         height: "60vh",
                         overflow: "auto",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     {
@@ -464,12 +471,12 @@ export default function ProfileHeader() {
                 <Modal.Header style={
                     {
                         padding: "5px 10px",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <Modal.Title style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <b>{
@@ -490,7 +497,7 @@ export default function ProfileHeader() {
                     {
                         height: "60vh",
                         overflow: "auto",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     {
@@ -514,12 +521,12 @@ export default function ProfileHeader() {
                 <Modal.Header style={
                     {
                         padding: "5px 10px",
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <Modal.Title style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         Upload Picture
@@ -543,7 +550,7 @@ export default function ProfileHeader() {
                 </Modal.Header>
                 <Modal.Body style={
                     {
-                        backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                        backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                     }
                 }>
                     <div className="createPost">
@@ -551,7 +558,7 @@ export default function ProfileHeader() {
                             <div className="createPost__imagePreview">
                                 <img id="image-preview" alt="If not visible, try different link"
                                     style={{
-                                        color: theme === "light" ? "black" : "white",
+                                        color: mode === "light" ? "black" : "white",
                                         height: "250px",
                                         width: "100%",
                                         marginBottom: "20px",
@@ -570,7 +577,7 @@ export default function ProfileHeader() {
                                                     }>
                                                     <AddAPhotoIcon
                                                         style={
-                                                            { fontSize: "60px", color: theme === 'light' ? 'black' : 'white' }
+                                                            { fontSize: "60px", color: mode === 'light' ? 'black' : 'white' }
                                                         } />
                                                 </label>
                                                 <input type="file" id="fileInputProfile" accept="image/*"
@@ -579,7 +586,7 @@ export default function ProfileHeader() {
                                             <br />
                                             <div style={
                                                 {
-                                                    color: theme === "light" ? "black" : "white"
+                                                    color: mode === "light" ? "black" : "white"
                                                 }
                                             }>or</div>
                                             <br />
@@ -588,8 +595,8 @@ export default function ProfileHeader() {
                                                     value={link}
                                                     style={
                                                         {
-                                                            backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                                                            color: theme === "light" ? "#1F1B24" : "white"
+                                                            backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                                                            color: mode === "light" ? "#1F1B24" : "white"
                                                         }
                                                     }
                                                     onKeyPress={
@@ -742,7 +749,7 @@ export default function ProfileHeader() {
                 scrollable>
                 <Modal.Body style={{
                     padding: 0,
-                    backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+                    backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
                 }}>
                     <div style={{
                         position: "relative", padding: 0
@@ -760,22 +767,23 @@ export default function ProfileHeader() {
             </Modal>
 
             <div className="head">
-                <img className="profile__img"
+                <img data-aos="fade-down" className="profile__img"
                     style={
                         { cursor: "pointer" }
                     }
                     alt=""
-                    src={currentPhoto}
+                    src={currentPhoto ? currentPhoto : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`}
                     onClick={handleShow4}
-                     />
+                />
                 <div>
                     <div className="info_name"
+                        data-aos="fade-left"
                         style={
                             {
-                                color: theme === "light" ? "black" : "white"
+                                color: mode === "light" ? "black" : "white"
                             }
                         }>
-                        {currentusername && currentusername.length > 15 ? currentusername.substring(0, 12).concat('...') : currentusername}
+                        {currentusername ? currentusername.length > 15 ? currentusername.substring(0, 12).concat('...') : currentusername : 'Loading...'}
                     </div>
 
                     <div style={{ display: "flex", marginTop: "10px" }}>
@@ -794,7 +802,7 @@ export default function ProfileHeader() {
                 <div className="bio"
                     style={
                         {
-                            color: theme === "light" ? "black" : "white",
+                            color: mode === "light" ? "black" : "white",
                             display: currentBio ? "block" : "none"
                         }
                     }>
@@ -803,7 +811,7 @@ export default function ProfileHeader() {
                     className="web"
                     style={
                         {
-                            color: theme === "light" ? "black" : "white",
+                            color: mode === "light" ? "black" : "white",
                             display: currentWebsite ? "block" : "none"
                         }
                     }
@@ -814,7 +822,7 @@ export default function ProfileHeader() {
                 {
                     display: "flex",
                     justifyContent: "space-between",
-                    backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                    backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                     padding: "5px 20px",
                     margin: "0px 5px",
                     fontSize: "small",
@@ -828,7 +836,7 @@ export default function ProfileHeader() {
                     <a style={
                         {
                             textDecoration: "none",
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <strong>{postCount}</strong>
@@ -845,7 +853,7 @@ export default function ProfileHeader() {
                     <a style={
                         {
                             textDecoration: "none",
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>
                         <strong>{videoCount}</strong>
@@ -865,7 +873,7 @@ export default function ProfileHeader() {
                         style={
                             {
                                 textDecoration: "none",
-                                color: theme === "light" ? "black" : "white",
+                                color: mode === "light" ? "black" : "white",
 
                             }
                         }>
@@ -887,7 +895,7 @@ export default function ProfileHeader() {
                     <a style={
                         {
                             textDecoration: "none",
-                            color: theme === "light" ? "black" : "white",
+                            color: mode === "light" ? "black" : "white",
 
                         }
                     }

@@ -15,17 +15,18 @@ import Login from "./pages/Authentication/login";
 import Register from "./pages/Authentication/register";
 import ForgotPassword from "./pages/Authentication/forgotpassword";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { IconButton } from "@material-ui/core";
 import Error from "./pages/error";
+import { ColorModeContext } from './services/ThemeContext';
+import { useContext } from "react";
 
 function App() {
 
   const currentuid = localStorage.getItem("uid");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
 
   const [showScroll, setShowScroll] = useState(false);
   const [loading, setLoading] = useState(true);
-  
+
   const checkScrollTop = () => {
     if (!showScroll && window.pageYOffset > 600) {
       setShowScroll(true);
@@ -49,19 +50,19 @@ function App() {
   return (
     <LoadingScreen
       loading={loading}
-      bgColor={theme === "light" ? "#f1f1f1" : "black"}
+      bgColor={mode === "light" ? "#f1f1f1" : "black"}
       spinnerColor="#9ee5f8"
-      textColor={theme === "light" ? "#676767" : "white"}
+      textColor={mode === "light" ? "#676767" : "white"}
       logoSrc={logo}
       text="BeeSocio"
     >
       <BrowserRouter>
         <div
           className="scrollTop"
-          style={{ display: showScroll ? "flex" : "none",backgroundColor: theme === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)"}}
+          style={{ display: showScroll ? "flex" : "none", backgroundColor: mode === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)" }}
           onClick={scrollTop}
         >
-            <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
+          <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
         </div>
         {currentuid ? (
           <>

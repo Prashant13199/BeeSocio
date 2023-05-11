@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Feed } from "../../containers";
 import Suggestions from "../../containers/suggestions";
 import "./style.css";
@@ -6,25 +6,27 @@ import { Helmet } from "react-helmet";
 import Status from "../../containers/status";
 import { Link } from "react-router-dom";
 import { database } from "../../firebase";
-
 import ActiveUsers from "../../containers/ActiveUsers";
-import loadingIcon from '../../assets/loading.gif'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Home() {
+
+  useEffect(() => {
+    AOS.init({ duration: 800 })
+  }, [])
 
   const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
-  const [loading, setLoading] = useState(false)
-  const theme = localStorage.getItem("theme");
-  
+  const { mode } = useContext(ColorModeContext);
+
   useEffect(() => {
-    setLoading(true)
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setCurrentPhoto(snapshot.val().photo);
-        setLoading(false)
       }
     });
   }, []);
@@ -41,7 +43,7 @@ export default function Home() {
 
       <div
         className="home"
-        style={{ backgroundColor: theme === "light" ? "white" : "black", minHeight: "100vh" }}
+        style={{ backgroundColor: mode === "light" ? "white" : "black", minHeight: "100vh" }}
       >
         <div style={{ overflowY: "auto", minWidth: "700px", paddingTop: "10px" }}>
           <div className="status">
@@ -60,9 +62,9 @@ export default function Home() {
             }}
           >
             <Link to="/profile" activeClassName="is-active" exact={true}>
-              <div>
-                {!loading ? <img
-                  src={currentPhoto}
+              <div data-aos="fade-down">
+                <img
+                  src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
                   style={{
                     borderRadius: "10px",
                     height: "80px",
@@ -70,28 +72,22 @@ export default function Home() {
                     objectFit: "cover",
                   }}
                   alt="userphoto"
-                /> : <div style={{
-                  height: "80px",
-                  width: "80px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}>
-                  <img alt="" src={loadingIcon} height={'20px'} width={'20px'} />
-                  </div>}
+                />
               </div>
+
             </Link>
             <Link
               style={{
                 textDecoration: "none",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
               }}
               to="/profile"
               activeClassName="is-active"
               exact={true}
             >
-              <div style={{ marginLeft: "10px" }}>
+              <div style={{ marginLeft: "10px" }} data-aos="fade-left">
                 <div style={{ fontWeight: "bold", fontSize: "26px" }}>
-                  {currentUsername && currentUsername.length > 20 ? currentUsername.substring(0, 20).concat('...') : currentUsername}
+                  {currentUsername ? currentUsername.length > 20 ? currentUsername.substring(0, 20).concat('...') : currentUsername : 'Loading...'}
                 </div>
               </div>
             </Link>
@@ -109,14 +105,14 @@ export default function Home() {
             >
               Siya Developers
             </a>
-            <p style={{maxWidth: '300px'}}>
-              Download BeeSocio Mobile App <a style={{textDecoration: 'none'}} target="_blank" href="https://drive.google.com/file/d/1RO0QdqvLXWSDnfRqHloOUFpUpEFd6ulO/view?usp=share_link">.apk</a>
+            <p style={{ maxWidth: '300px' }}>
+              Download BeeSocio Mobile App <a style={{ textDecoration: 'none' }} target="_blank" href="https://drive.google.com/file/d/1RO0QdqvLXWSDnfRqHloOUFpUpEFd6ulO/view?usp=share_link">.apk</a>
             </p>
           </div>
         </div>
       </div>
-      <div className="home_mobile" style={{ backgroundColor: theme === "light" ? "white" : "black", marginTop: '10px' }}>
-        <div className={theme === "light" ? "statuslight" : "statusdark"}>
+      <div className="home_mobile" style={{ backgroundColor: mode === "light" ? "white" : "black", marginTop: '10px' }}>
+        <div className={mode === "light" ? "statuslight" : "statusdark"}>
           <Status />
         </div>
         <div className="feedscroll">

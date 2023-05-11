@@ -1,12 +1,13 @@
 import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { database } from "../../firebase";
 import empty from "../../assets/empty.png";
 import Post from "../post";
 import loadingIcon from '../../assets/loading.gif'
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function FeedTab() {
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
     const currentuid = localStorage.getItem("uid");
 
     const [posts, setPosts] = useState([]);
@@ -111,7 +112,7 @@ export default function FeedTab() {
                 }><img src={empty} alt=""
                     height={"90px"} /><div style={
                         {
-                            color: theme === "light" ? "black" : "white"
+                            color: mode === "light" ? "black" : "white"
                         }
                     }>No Posts</div>
                 </div>

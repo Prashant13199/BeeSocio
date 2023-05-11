@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { storage, database } from "../../firebase";
 import Compressor from "compressorjs";
@@ -7,6 +7,7 @@ import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
 import { WithContext as ReactTags } from "react-tag-input";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 const KeyCodes = {
   comma: 188,
@@ -27,7 +28,7 @@ export default function CreatePost({ handleClose }) {
   const [tagss, setTagss] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
   const [currentUsername, setCurrentUsername] = useState("");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
@@ -114,8 +115,8 @@ export default function CreatePost({ handleClose }) {
       }
     } else {
       Swal.fire({
-        background: theme === "light" ? "white" : "#1F1B24",
-        color: theme === "light" ? "black" : "white",
+        background: mode === "light" ? "white" : "#1F1B24",
+        color: mode === "light" ? "black" : "white",
         title: "Error!",
         text: "File not supported",
         icon: "warning",
@@ -230,8 +231,8 @@ export default function CreatePost({ handleClose }) {
           document.getElementById("createPost").value = "";
           handleClose();
           Swal.fire({
-            background: theme === "light" ? "white" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "white" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Post Added!",
             text: "Your post has been added.",
             icon: "success",
@@ -282,8 +283,8 @@ export default function CreatePost({ handleClose }) {
           setLink("");
           document.getElementById("image-preview").style.display = "none";
           Swal.fire({
-            background: theme === "light" ? "white" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "white" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Post Added!",
             text: "Your post has been added.",
             icon: "success",
@@ -305,7 +306,7 @@ export default function CreatePost({ handleClose }) {
             id="image-preview"
             alt="If not visible, try different link"
             style={{
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               height: "50vh",
               width: "100%",
               marginBottom: "20px",
@@ -335,8 +336,8 @@ export default function CreatePost({ handleClose }) {
               rows="1"
               style={{
                 backgroundColor:
-                  theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                color: theme === "light" ? "#1F1B24" : "white", marginTop: "10px"
+                  mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                color: mode === "light" ? "#1F1B24" : "white", marginTop: "10px"
               }}
               placeholder="enter location ..."
               value={venue}
@@ -347,8 +348,8 @@ export default function CreatePost({ handleClose }) {
               rows="1"
               style={{
                 backgroundColor:
-                  theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                color: theme === "light" ? "#1F1B24" : "white", marginTop: "10px"
+                  mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                color: mode === "light" ? "#1F1B24" : "white", marginTop: "10px"
               }}
               placeholder="enter caption ..."
               value={caption}
@@ -360,7 +361,7 @@ export default function CreatePost({ handleClose }) {
           <center>
             <div className="createPost__imageUpload">
               <label htmlFor="createPost" style={{ cursor: "pointer" }}>
-                <AddAPhotoIcon style={{ fontSize: "60px", color: theme === 'light' ? 'black' : 'white' }} />
+                <AddAPhotoIcon style={{ fontSize: "60px", color: mode === 'light' ? 'black' : 'white' }} />
               </label>
               <input
                 type="file"
@@ -370,7 +371,7 @@ export default function CreatePost({ handleClose }) {
               ></input>
             </div>
             <br />
-            <div style={{ color: theme === "light" ? "black" : "white" }}>or</div>
+            <div style={{ color: mode === "light" ? "black" : "white" }}>or</div>
             <br />
             <div className="commentInput">
               <input
@@ -379,10 +380,10 @@ export default function CreatePost({ handleClose }) {
                 value={link}
                 style={{
                   backgroundColor:
-                    theme === "light"
+                    mode === "light"
                       ? "rgba(248,249,250,1)"
                       : "rgba(33,37,41,1)",
-                  color: theme === "light" ? "#1F1B24" : "white",
+                  color: mode === "light" ? "#1F1B24" : "white",
                 }}
                 onKeyPress={(event) => {
                   if (event.key === "Enter") {

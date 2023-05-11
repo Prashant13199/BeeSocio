@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useContext } from "react";
 import { IconButton } from "@material-ui/core";
 import "./chat.css";
 import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
@@ -50,6 +50,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Forward from "./Forward";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ReplayIcon from '@mui/icons-material/Replay';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 function Chat() {
   let [audioURL, isRecording, startRecording, stopRecording, setAudioURL, audio] = useRecorder();
@@ -58,7 +59,7 @@ function Chat() {
   const { roomId } = useParams();
   const mounted = useRef(false);
   const currentuid = localStorage.getItem("uid");
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const textarea = document.querySelector("#autoresizing");
 
   const [show, setShow] = useState(false);
@@ -569,8 +570,8 @@ function Chat() {
   const removeRoom = async (roomId) => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Are you sure to delete?",
       text: "All users chat will be deleted!",
       icon: "warning",
@@ -597,8 +598,8 @@ function Chat() {
           if (uid) {
             database.ref(`/Users/${uid}/messages/${roomId}`).remove();
           }
-          if(group){
-            for(let i = 0; i < groupUsers.length; i++) {
+          if (group) {
+            for (let i = 0; i < groupUsers.length; i++) {
               database.ref(`/Users/${groupUsers[i]}/messages/${roomId}`).remove();
             }
           }
@@ -617,8 +618,8 @@ function Chat() {
         history.push("/message");
         Swal.fire({
           background:
-            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Deleted!",
           text: "Your Chat has been deleted.",
           icon: "success",
@@ -670,8 +671,8 @@ function Chat() {
     } else {
       Swal.fire({
         background:
-          theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-        color: theme === "light" ? "black" : "white",
+          mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+        color: mode === "light" ? "black" : "white",
         title: "Error!",
         text: "File not supported",
         icon: "warning",
@@ -928,8 +929,8 @@ function Chat() {
     if (msgData.uid === currentuid) {
       Swal.fire({
         background:
-          theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-        color: theme === "light" ? "black" : "white",
+          mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+        color: mode === "light" ? "black" : "white",
         title: "Are you sure to delete?",
         text: "You won't be able to revert this!",
         icon: "warning",
@@ -960,10 +961,10 @@ function Chat() {
               console.log("message Deleted");
               Swal.fire({
                 background:
-                  theme === "light"
+                  mode === "light"
                     ? "rgba(248,249,250,1)"
                     : "rgba(33,37,41,1)",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
                 title: "Message Deleted!",
                 text: "Your Message has been deleted.",
                 icon: "success",
@@ -1285,8 +1286,8 @@ function Chat() {
     $temp.remove();
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Success!",
       text: "Copied to clipboard",
       icon: "success",
@@ -1299,8 +1300,8 @@ function Chat() {
   const handleOnSelect = async (item) => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Confirm?",
       text: `Are you sure add ${convert_to_username(item.uid)}?`,
       icon: "warning",
@@ -1325,8 +1326,8 @@ function Chat() {
             });
             Swal.fire({
               background:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-              color: theme === "light" ? "black" : "white",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              color: mode === "light" ? "black" : "white",
               title: 'Success',
               text: `${item.name} added to group`,
               icon: "success",
@@ -1353,8 +1354,8 @@ function Chat() {
   const deleteGroupUser = async (user) => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: `Are you sure to remove ${convert_to_username(user)}?`,
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -1375,10 +1376,10 @@ function Chat() {
           .then(() => {
             Swal.fire({
               background:
-                theme === "light"
+                mode === "light"
                   ? "rgba(248,249,250,1)"
                   : "rgba(33,37,41,1)",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               title: "Removed!",
               text: "User removed from group",
               icon: "success",
@@ -1414,8 +1415,8 @@ function Chat() {
         storage.ref("userphoto").child(`${fileName}`).getDownloadURL().then((imageUrl) => {
           database.ref(`/Rooms/${roomId}`).update({ photo: imageUrl });
           Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Success!",
             text: "Group Photo Changed",
             icon: "success",
@@ -1425,8 +1426,8 @@ function Chat() {
         }).catch((e) => {
           console.log(e);
           Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Error!",
             text: e,
             icon: "error",
@@ -1447,8 +1448,8 @@ function Chat() {
         setLink("");
         document.getElementById("image-preview").style.display = "none";
         Swal.fire({
-          background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+          background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Success!",
           text: "User Photo Changed",
           icon: "success",
@@ -1458,8 +1459,8 @@ function Chat() {
       }).catch((e) => {
         console.log(e);
         Swal.fire({
-          background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+          background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+          color: mode === "light" ? "black" : "white",
           title: "Error!",
           text: e,
           icon: "error",
@@ -1500,8 +1501,8 @@ function Chat() {
       }
     } else {
       Swal.fire({
-        background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-        color: theme === "light" ? "black" : "white",
+        background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+        color: mode === "light" ? "black" : "white",
         title: "Error!",
         text: "File not supported",
         icon: "warning",
@@ -1514,8 +1515,8 @@ function Chat() {
   const changeGroupUsername = async () => {
     handleClose3()
     Swal.fire({
-      background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+      background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Change Username",
       input: "text",
       inputAttributes: {
@@ -1529,8 +1530,8 @@ function Chat() {
       if (result.isConfirmed) {
         database.ref(`/Rooms/${roomId}`).update({ groupName: result.value }).then(() => {
           Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Username Changed",
             timer: 800,
             icon: "success",
@@ -1539,8 +1540,8 @@ function Chat() {
           });
         }).catch((e) => {
           Swal.fire({
-            background: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "Error",
             timer: 1500,
             icon: "error",
@@ -1567,8 +1568,8 @@ function Chat() {
   const leaveGroup = async () => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "Confirm?",
       text: `Are you sure leave?`,
       icon: "warning",
@@ -1588,10 +1589,10 @@ function Chat() {
           history.push('/message')
           Swal.fire({
             background:
-              theme === "light"
+              mode === "light"
                 ? "rgba(248,249,250,1)"
                 : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+            color: mode === "light" ? "black" : "white",
             title: "Left!",
             text: "You left group",
             icon: "success",
@@ -1609,8 +1610,8 @@ function Chat() {
   const handleOnSelect_forward = (item) => {
     Swal.fire({
       background:
-        theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-      color: theme === "light" ? "black" : "white",
+        mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+      color: mode === "light" ? "black" : "white",
       title: "You are forwarding message to",
       text: `${item.name.toLowerCase()}?`,
       icon: "warning",
@@ -1653,8 +1654,8 @@ function Chat() {
             handleClose2()
             Swal.fire({
               background:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-              color: theme === "light" ? "black" : "white",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              color: mode === "light" ? "black" : "white",
               title: "Sent!",
               text: `Message forwarded to ${item.name}`,
               icon: "success",
@@ -1672,10 +1673,10 @@ function Chat() {
     }).then(() => {
       Swal.fire({
         background:
-          theme === "light"
+          mode === "light"
             ? "rgba(248,249,250,1)"
             : "rgba(33,37,41,1)",
-        color: theme === "light" ? "black" : "white",
+        color: mode === "light" ? "black" : "white",
         title: "Theme Changed!",
         text: "Your Theme has been applied.",
         icon: "success",
@@ -1691,10 +1692,10 @@ function Chat() {
       .then(() => {
         Swal.fire({
           background:
-            theme === "light"
+            mode === "light"
               ? "rgba(248,249,250,1)"
               : "rgba(33,37,41,1)",
-          color: theme === "light" ? "black" : "white",
+          color: mode === "light" ? "black" : "white",
           title: "Theme Changed!",
           text: "Your Theme has been Reset.",
           icon: "success",
@@ -1718,10 +1719,10 @@ function Chat() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Gifs & Stickers
           </Modal.Title>
           <IconButton onClick={handleClose}>
@@ -1731,7 +1732,7 @@ function Chat() {
         <Modal.Body
           style={{
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <Tabs
@@ -1795,7 +1796,7 @@ function Chat() {
           style={{
             padding: 0,
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }}
           className="noselect"
         >
@@ -1986,10 +1987,10 @@ function Chat() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             {username}
           </Modal.Title>
           <IconButton onClick={handleClose3}>
@@ -2002,7 +2003,7 @@ function Chat() {
             maxHeight: "70vh",
             overflow: "auto",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }}
         >
           <div style={{
@@ -2013,7 +2014,7 @@ function Chat() {
               height: "200px", width: "200px", objectFit: "cover", borderRadius: "10px", cursor: "pointer"
             }} />
             <h2 onClick={() => changeGroupUsername()} style={{
-              color: theme === "light" ? "black" : "white", cursor: "pointer", marginTop: "20px"
+              color: mode === "light" ? "black" : "white", cursor: "pointer", marginTop: "20px"
             }}>
               {username}
             </h2>
@@ -2026,11 +2027,11 @@ function Chat() {
             formatResult={formatResult}
             placeholder="Add New User"
             styling={{
-              backgroundColor: theme === "light" ? "white" : "black",
+              backgroundColor: mode === "light" ? "white" : "black",
               placeholderColor: "gray",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               hoverBackgroundColor:
-                theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
               height: "35px",
               borderRadius: "8px",
               border: "none",
@@ -2081,12 +2082,12 @@ function Chat() {
         <Modal.Header style={
           {
             padding: "5px 10px",
-            backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+            backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }
         }>
           <Modal.Title style={
             {
-              color: theme === "light" ? "black" : "white"
+              color: mode === "light" ? "black" : "white"
             }
           }>
             Upload Picture
@@ -2110,7 +2111,7 @@ function Chat() {
         </Modal.Header>
         <Modal.Body style={
           {
-            backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+            backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }
         }>
           <div className="createPost">
@@ -2118,7 +2119,7 @@ function Chat() {
               <div className="createPost__imagePreview">
                 <img id="image-preview" alt="If not visible, try different link"
                   style={{
-                    color: theme === "light" ? "black" : "white",
+                    color: mode === "light" ? "black" : "white",
                     height: "250px",
                     width: "100%",
                     marginBottom: "20px",
@@ -2146,7 +2147,7 @@ function Chat() {
                       <br />
                       <div style={
                         {
-                          color: theme === "light" ? "black" : "white"
+                          color: mode === "light" ? "black" : "white"
                         }
                       }>or</div>
                       <br />
@@ -2155,8 +2156,8 @@ function Chat() {
                           value={link}
                           style={
                             {
-                              backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                              color: theme === "light" ? "#1F1B24" : "white"
+                              backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                              color: mode === "light" ? "#1F1B24" : "white"
                             }
                           }
                           onKeyPress={
@@ -2231,10 +2232,10 @@ function Chat() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Seen
           </Modal.Title>
           <IconButton onClick={handleClose5}>
@@ -2245,7 +2246,7 @@ function Chat() {
           style={{
             padding: "10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }}
           className="noselect"
         >
@@ -2267,10 +2268,10 @@ function Chat() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Reacted
           </Modal.Title>
           <IconButton onClick={handleClose6}>
@@ -2281,7 +2282,7 @@ function Chat() {
           style={{
             padding: "10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }}
           className="noselect"
         >
@@ -2289,7 +2290,7 @@ function Chat() {
           {likeData.like && Object.entries(likeData.like).map(([k, v]) => {
             return <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <Like uid={k} key={k} />
-              <img src={v.id} className={theme === "light" ? "heartIconlight_modal" : "heartIcondark_modal"} alt="" onClick={() => {
+              <img src={v.id} className={mode === "light" ? "heartIconlight_modal" : "heartIcondark_modal"} alt="" onClick={() => {
                 removeLikeMsg(k, likeData.id)
               }} />
             </div>
@@ -2309,7 +2310,7 @@ function Chat() {
           style={{
             padding: 0,
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }}
         >
           <div style={{
@@ -2351,7 +2352,7 @@ function Chat() {
       >
         <Modal.Body style={{
           padding: 0,
-          backgroundColor: theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+          backgroundColor: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
         }}>
           <div style={{
             position: "relative", padding: 0
@@ -2377,10 +2378,10 @@ function Chat() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Forward To
           </Modal.Title>
           <IconButton onClick={handleClose9}>
@@ -2392,7 +2393,7 @@ function Chat() {
             height: "60vh",
             overflowY: "auto",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <ReactSearchAutocomplete
@@ -2402,11 +2403,11 @@ function Chat() {
             formatResult={formatResult}
             placeholder="Search user"
             styling={{
-              backgroundColor: theme === "light" ? "white" : "black",
+              backgroundColor: mode === "light" ? "white" : "black",
               placeholderColor: "gray",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               hoverBackgroundColor:
-                theme === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
               height: "35px",
               borderRadius: "10px",
               border: "none",
@@ -2427,10 +2428,10 @@ function Chat() {
           style={{
             padding: "5px 10px",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
-          <Modal.Title style={{ color: theme === "light" ? "black" : "white" }}>
+          <Modal.Title style={{ color: mode === "light" ? "black" : "white" }}>
             Chat Themes
           </Modal.Title>
           <div style={{ display: "flex" }}>
@@ -2447,7 +2448,7 @@ function Chat() {
             padding: 0,
             overflow: "scroll",
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
           }}
         >
           <div style={{
@@ -2475,7 +2476,7 @@ function Chat() {
           style={{
             padding: 0,
             backgroundColor:
-              theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
+              mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)"
           }}
           className="noselect"
         >
@@ -2522,8 +2523,8 @@ function Chat() {
         </Modal.Body>
       </Modal>
 
-      <div className="chat" id={chatTheme ? "" : theme==="light"?"chat_light":"chat_dark"} style={{ backgroundImage: chatTheme ? `url(${chatTheme})` : "", backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
-        <div className="chat__header" style={{ backgroundColor: theme === "light" ? "rgba(248,249,250,0.5)" : "rgba(33,37,41,0.5)" }}>
+      <div className="chat" id={chatTheme ? "" : mode === "light" ? "chat_light" : "chat_dark"} style={{ backgroundImage: chatTheme ? `url(${chatTheme})` : "", backgroundSize: "cover", backgroundRepeat: "no-repeat" }}>
+        <div className="chat__header" style={{ backgroundColor: mode === "light" ? "rgba(248,249,250,0.5)" : "rgba(33,37,41,0.5)" }}>
           <Link to="/message">
             <IconButton>
               <Badge
@@ -2531,7 +2532,7 @@ function Chat() {
                 color="primary"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               >
-                <ArrowBackIosIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
+                <ArrowBackIosIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
               </Badge>
             </IconButton>
           </Link>
@@ -2545,7 +2546,7 @@ function Chat() {
             {uid ? <Link
               style={{
                 textDecoration: "none",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
                 fontWeight: "600"
               }}
               to={`/userprofile/${uid}`}
@@ -2553,18 +2554,18 @@ function Chat() {
               {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
             </Link>
               :
-              <div onClick={handleShow3} style={{ cursor: "pointer", color: theme === "light" ? "black" : "white", fontWeight: "600" }}>
+              <div onClick={handleShow3} style={{ cursor: "pointer", color: mode === "light" ? "black" : "white", fontWeight: "600" }}>
                 {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
               </div>
             }
             {!group && <>
               {status ? (
-                <div style={{ color: theme === "light" ? "black" : "white", fontSize: "12px", display: "flex", opacity: 0.6 }}>
+                <div style={{ color: mode === "light" ? "black" : "white", fontSize: "12px", display: "flex", opacity: 0.6 }}>
                   <div className="chatonline"></div>
                   <div>Active now</div>
                 </div>
               ) : (
-                <div style={{ color: theme === "light" ? "black" : "white", fontSize: "12px", opacity: 0.6 }}>
+                <div style={{ color: mode === "light" ? "black" : "white", fontSize: "12px", opacity: 0.6 }}>
                   Active {timeDifference(new Date(), new Date(lastseen))}
                 </div>
               )}
@@ -2572,14 +2573,14 @@ function Chat() {
           </div>
           <div className="chat__headerRight">
             <IconButton onClick={handleShow11}>
-              <MoreHorizIcon style={{ color: theme === 'light' ? 'black' : 'white' }} />
+              <MoreHorizIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
             </IconButton>
           </div>
         </div>
-        <div className="chat__body" ref={messageEl} id={chatTheme ? "" : theme=== "light" ? "chat__body_light" : "chat__body_dark"}>
+        <div className="chat__body" ref={messageEl} id={chatTheme ? "" : mode === "light" ? "chat__body_light" : "chat__body_dark"}>
           {!fetching ? (messages1.length < totalMessageCount) &&
             <p className="chat_timeline" onClick={() => fetch()} id="fetchMore">
-              <div className={theme === "light" ? "datelight" : "datedark"} style={{ width: "180px", backgroundColor: theme === "light" ? "white" : "black", color: theme === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center", cursor: "pointer" }}>
+              <div className={mode === "light" ? "datelight" : "datedark"} style={{ width: "180px", backgroundColor: mode === "light" ? "white" : "black", color: mode === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center", cursor: "pointer" }}>
                 Load More Messages
               </div>
             </p> :
@@ -2591,7 +2592,7 @@ function Chat() {
             return <>
               <StickyBox style={{ zIndex: "2" }}>
                 <p className="chat_timeline">
-                  <div className={theme === "light" ? "datelight" : "datedark"} style={{ width: "140px", color: theme === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center" }}>{data}</div>
+                  <div className={mode === "light" ? "datelight" : "datedark"} style={{ width: "140px", color: mode === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center" }}>{data}</div>
                 </p>
               </StickyBox>
               {messages && messages.map(({ id, message }) => {
@@ -2609,7 +2610,7 @@ function Chat() {
                           <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: currentuid !== message.uid ? "block" : "none", borderRadius: "10px", minWidth: "20px", margin: "5px" }} />
                           <div className={`chat__message ${message.uid === currentuid && "chat__receiver"}`}
                             style={{
-                              color: theme === "light" ? "black" : "white", backgroundColor: theme === "light" ? message.uid === currentuid ? "#ffc8b8" : "#c8e1fd" : message.uid === currentuid ? "#844836" : "#274261",
+                              color: mode === "light" ? "black" : "white", backgroundColor: mode === "light" ? message.uid === currentuid ? "#ffc8b8" : "#c8e1fd" : message.uid === currentuid ? "#844836" : "#274261",
                             }}
                           >
                             <div className={message.uid === currentuid ? "emojiplate" : "emojiplateuser"}>
@@ -2662,7 +2663,7 @@ function Chat() {
                             {message.forwarded &&
                               <div>
                                 <i style={{
-                                  color: theme === "light" ? "darkgray" : "lightgray"
+                                  color: mode === "light" ? "darkgray" : "lightgray"
                                 }}>
                                   forwarded
                                 </i>
@@ -2694,7 +2695,7 @@ function Chat() {
                                 style={{
                                   cursor: "pointer",
                                   backgroundColor:
-                                    theme === "light"
+                                    mode === "light"
                                       ? message.uid === currentuid
                                         ? "#ffb098"
                                         : "#95c6ff"
@@ -2702,7 +2703,7 @@ function Chat() {
                                         ? "#4f1c0d"
                                         : "#193d66",
                                   padding: "5px",
-                                  color: theme === "light" ? "black" : "white",
+                                  color: mode === "light" ? "black" : "white",
                                 }}
                               >
                                 {message.replyto}
@@ -2764,7 +2765,7 @@ function Chat() {
                                         alt=""
                                         className="chat__img_reply"
                                         src={message.replypost}
-                                        
+
                                       />
                                     )}
                                   </>}
@@ -2775,7 +2776,7 @@ function Chat() {
                               style={{
                                 cursor: "pointer",
                                 backgroundColor:
-                                  theme === "light"
+                                  mode === "light"
                                     ? message.uid === currentuid
                                       ? "#ffb098"
                                       : "#95c6ff"
@@ -2783,7 +2784,7 @@ function Chat() {
                                       ? "#4f1c0d"
                                       : "#193d66",
                                 padding: "5px",
-                                color: theme === "light" ? "black" : "white",
+                                color: mode === "light" ? "black" : "white",
                               }}
                             >
                               {message.replyto}
@@ -2831,7 +2832,7 @@ function Chat() {
                                       }}
                                       alt=""
                                       src={message.photo}
-                                      
+
                                     />
                                   )}
                                 {message.photo.includes(".pdf") &&
@@ -2890,7 +2891,7 @@ function Chat() {
                             {message.post && <div>
                               <div style={{ margin: "5px" }}>
                                 <Link
-                                  style={{ textDecoration: "none", color: theme === "light" ? "black" : "white", display: "flex" }}
+                                  style={{ textDecoration: "none", color: mode === "light" ? "black" : "white", display: "flex" }}
                                   to={message.postuid === currentuid ? `/profile` : `/userprofile/${message.postuid}`}
                                 >
                                   <img src={convert_to_pic(message.postuid)} style={{
@@ -2912,7 +2913,7 @@ function Chat() {
                                       alt=""
                                       className="chatpost__img"
                                       src={message.post}
-                                      
+
                                     />
                                   )}
                                 </div>
@@ -2926,7 +2927,7 @@ function Chat() {
                                   : "chat__timestamp"
                               }
                               style={{
-                                color: theme === "light" ? "gray" : "lightgray",
+                                color: mode === "light" ? "gray" : "lightgray",
                                 display: message.edited ? "block" : "none",
                               }}
                             >
@@ -2939,7 +2940,7 @@ function Chat() {
                                   : "chat__timestamp"
                               }
                               style={{
-                                color: theme === "light" ? "gray" : "lightgray",
+                                color: mode === "light" ? "gray" : "lightgray",
                               }}
                             >
                               {time(message.timestamp)}
@@ -2959,14 +2960,14 @@ function Chat() {
                               style={{ display: message.like ? "block" : "none" }}
                             >
                               {message.like && Object.entries(message.like).map(([k, v]) => {
-                                return <img src={v.id} alt="" className={theme === "light" ? "heartIconlight" : "heartIcondark"} style={{ margin: "0px 1px" }} />
+                                return <img src={v.id} alt="" className={mode === "light" ? "heartIconlight" : "heartIcondark"} style={{ margin: "0px 1px" }} />
                               })}
                             </div>
                           </div>
                         </div>
                       </div>
                       {newMessage === id && messages1.length && messages1[messages1.length - 1].message.uid !== currentuid && messages1[messages1.length - 1].id !== newMessage && <p className="chat_timeline">
-                        <div className={theme === "light" ? "datelight" : "datedark"} style={{ width: "120px", color: theme === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center" }}>New Message</div>
+                        <div className={mode === "light" ? "datelight" : "datedark"} style={{ width: "120px", color: mode === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center" }}>New Message</div>
                       </p>}
                     </>
                   }
@@ -2984,8 +2985,8 @@ function Chat() {
               }}
             >
               <img alt="" src={photo} style={{
-                  height: "20px", width: "20px", objectFit: "cover", borderRadius: "50%", margin: "2px"
-                }}/>
+                height: "20px", width: "20px", objectFit: "cover", borderRadius: "50%", margin: "2px"
+              }} />
             </div>
           )}
           {seenGroup.length !== 0 && messages1.length && messages1[messages1.length - 1].message.uid === currentuid && (
@@ -3008,7 +3009,7 @@ function Chat() {
         </div>
         <div style={{ display: showScroll ? "block" : "none" }}>
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -3027,7 +3028,7 @@ function Chat() {
         </div>
         {showreply && (
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -3062,13 +3063,13 @@ function Chat() {
               {msgData.photo && !msgData.photo.includes(".mp3") && !msgData.message && (
                 <div>
                   <img src={msgData.photo} className="showreply_img" alt="" />
-                  <div style={{ color: theme === "light" ? "black" : "white", display: "grid", placeItems: "center" }}>{msgData.fname}</div>
+                  <div style={{ color: mode === "light" ? "black" : "white", display: "grid", placeItems: "center" }}>{msgData.fname}</div>
                 </div>
               )}
               {msgData.photo && msgData.photo.includes(".mp3") && !msgData.message && (
                 <div>
                   <audio preload="none" src={msgData.photo} controls></audio>
-                  <div style={{ color: theme === "light" ? "black" : "white", display: "grid", placeItems: "center" }}>{msgData.fname}</div>
+                  <div style={{ color: mode === "light" ? "black" : "white", display: "grid", placeItems: "center" }}>{msgData.fname}</div>
                 </div>
               )}
               {msgData.post && (
@@ -3081,7 +3082,7 @@ function Chat() {
                 <div
                   style={{
                     margin: "0px 10px",
-                    color: theme === "light" ? "black" : "white",
+                    color: mode === "light" ? "black" : "white",
                   }}
                 >
                   {msgData.message}
@@ -3100,7 +3101,7 @@ function Chat() {
         )}
         {showedit && (
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -3110,7 +3111,7 @@ function Chat() {
             }}
           >
             <div></div>
-            <div style={{ color: theme === "light" ? "black" : "white", alignItems: "center", justifyContent: "center", display: "flex" }}>
+            <div style={{ color: mode === "light" ? "black" : "white", alignItems: "center", justifyContent: "center", display: "flex" }}>
               <EditIcon color="primary" />
               &nbsp; Edit Mode
             </div>
@@ -3125,7 +3126,7 @@ function Chat() {
         )}
         <div style={{ display: isRecording ? "block" : "none" }}>
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -3140,7 +3141,7 @@ function Chat() {
                 alignItems: "center",
                 justifyContent: "center",
                 display: "flex",
-                color: theme === "light" ? "black" : "white",
+                color: mode === "light" ? "black" : "white",
               }}
             >
               Recording
@@ -3150,7 +3151,7 @@ function Chat() {
         </div>
         <div style={{ display: audioURL ? "block" : "none" }}>
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -3172,7 +3173,7 @@ function Chat() {
         </div>
         <div style={{ display: image ? "block" : "none" }}>
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -3188,14 +3189,14 @@ function Chat() {
                 <div
                   style={{
                     textAlign: "center",
-                    color: theme === "light" ? "black" : "white",
+                    color: mode === "light" ? "black" : "white",
                   }}
                 >
                   {mediaName}
                 </div>
               )}
             </div>
-            <IconButton style={{ height: "100%"}} onClick={() => {
+            <IconButton style={{ height: "100%" }} onClick={() => {
               handleMedia()
             }}>
               <CloseOutlinedIcon color="error" style={{ fontSize: "20px" }} />
@@ -3204,14 +3205,14 @@ function Chat() {
         </div>
         <div style={{ display: typing ? "block" : "none" }}>
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "center",
               margin: "5px 10px",
               padding: "0px 5px",
               borderRadius: "20px",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
             }}
           >
             {typinguser ? <i>{convert_to_username(typinguser)} is Typing...</i> : <i>{username} is Typing...</i>}
@@ -3219,24 +3220,24 @@ function Chat() {
         </div>
         <div style={{ display: progress !== 0 ? "block" : "none" }}>
           <div
-            className={theme === "light" ? "datelight" : "datedark"}
+            className={mode === "light" ? "datelight" : "datedark"}
             style={{
               display: "flex",
               justifyContent: "center",
               margin: "5px 10px",
               padding: "0px 5px",
               borderRadius: "20px",
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
             }}
           >
             Sending {progress}
           </div>
         </div>
-        <div className="chat__footer" id={theme === "light" ? "chat__footer_light" : "chat__footer_dark" }>
+        <div className="chat__footer" id={mode === "light" ? "chat__footer_light" : "chat__footer_dark"}>
           <div>
             <div className="createPost__imageUpload">
               <label htmlFor="fileInput" onClick={() => setShowmedia(true)}>
-                <AttachFileOutlinedIcon style={{ cursor: "pointer", color: theme==='light'?'black':'white' }} />
+                <AttachFileOutlinedIcon style={{ cursor: "pointer", color: mode === 'light' ? 'black' : 'white' }} />
               </label>
               <input
                 type="file"
@@ -3246,7 +3247,7 @@ function Chat() {
               />
             </div>
             <textarea
-              className={theme === "light" ? "textAreaLight" : "textAreaDark"}
+              className={mode === "light" ? "textAreaLight" : "textAreaDark"}
               data-autogrow="false"
               value={input}
               id="autoresizing"
@@ -3267,7 +3268,7 @@ function Chat() {
             />
 
             <IconButton onClick={handleShow} style={{ height: "100%", marginTop: "auto" }}>
-              <GifOutlinedIcon style={{color: theme==='light'?'black':'white'}} />
+              <GifOutlinedIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
             </IconButton>
 
             <IconButton onClick={() => {
@@ -3277,10 +3278,10 @@ function Chat() {
             }}
               style={{ display: input.length > 0 || image || audioURL ? "block" : "none", height: "100%", marginTop: "auto" }}
             >
-              <SendOutlinedIcon style={{color: theme==='light'?'black':'white'}} />
+              <SendOutlinedIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
             </IconButton>
             <IconButton onClick={isRecording ? stopRecording : startRecording} style={{ display: showreply || input.length > 0 || image ? "none" : "block", height: "100%", marginTop: "auto" }}>
-              {isRecording ? <StopIcon style={{color: theme==='light'?'black':'white'}} /> : <MicNoneIcon style={{color: theme==='light'?'black':'white'}} />}
+              {isRecording ? <StopIcon style={{ color: mode === 'light' ? 'black' : 'white' }} /> : <MicNoneIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />}
             </IconButton>
           </div>
         </div>

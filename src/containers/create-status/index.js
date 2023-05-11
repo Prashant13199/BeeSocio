@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./style.css";
 import { storage, database } from "../../firebase";
 import Compressor from "compressorjs";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function CreateStatus({ handleClose }) {
   const [compressedFile, setCompressedFile] = useState(null);
@@ -15,7 +16,7 @@ export default function CreateStatus({ handleClose }) {
   const currentuid = localStorage.getItem("uid");
   const [link, setLink] = useState("");
 
-  const theme = localStorage.getItem("theme");
+  const { mode } = useContext(ColorModeContext);
   const handleChange = (e) => {
     if (
       e.target.files[0] &&
@@ -52,8 +53,8 @@ export default function CreateStatus({ handleClose }) {
       }
     } else {
       Swal.fire({
-        background: theme === "light" ? "white" : "#1F1B24",
-        color: theme === "light" ? "black" : "white",
+        background: mode === "light" ? "white" : "#1F1B24",
+        color: mode === "light" ? "black" : "white",
         title: "Error!",
         text: "File not supported",
         icon: "warning",
@@ -127,8 +128,8 @@ export default function CreateStatus({ handleClose }) {
               document.getElementById("image-preview").style.display = "none";
               document.getElementById("fileInput").value = "";
               Swal.fire({
-                background: theme === "light" ? "white" : "#1F1B24",
-                color: theme === "light" ? "black" : "white",
+                background: mode === "light" ? "white" : "#1F1B24",
+                color: mode === "light" ? "black" : "white",
                 title: "Added to status!",
                 text: "Your status has been added.",
                 icon: "success",
@@ -153,8 +154,8 @@ export default function CreateStatus({ handleClose }) {
           handleClose();
           document.getElementById("image-preview").style.display = "none";
           Swal.fire({
-            background: theme === "light" ? "white" : "#1F1B24",
-            color: theme === "light" ? "black" : "white",
+            background: mode === "light" ? "white" : "#1F1B24",
+            color: mode === "light" ? "black" : "white",
             title: "Added to status!",
             text: "Your status has been added.",
             icon: "success",
@@ -175,7 +176,7 @@ export default function CreateStatus({ handleClose }) {
             id="image-preview"
             alt="If not visible, try different link"
             style={{
-              color: theme === "light" ? "black" : "white",
+              color: mode === "light" ? "black" : "white",
               height: "50vh",
               width: "100%",
               marginBottom: "20px",
@@ -193,7 +194,7 @@ export default function CreateStatus({ handleClose }) {
               >
 
                 <label htmlFor="fileInput" style={{ cursor: "pointer" }}>
-                  <AddAPhotoIcon style={{ fontSize: "60px", color: theme === 'light' ? 'black' : 'white' }} />
+                  <AddAPhotoIcon style={{ fontSize: "60px", color: mode === 'light' ? 'black' : 'white' }} />
                 </label>
 
                 <input
@@ -204,7 +205,7 @@ export default function CreateStatus({ handleClose }) {
                 ></input>
               </div>
               <br />
-              <div style={{ color: theme === "light" ? "black" : "white" }}>or</div>
+              <div style={{ color: mode === "light" ? "black" : "white" }}>or</div>
               <br />
               <div className="commentInput">
                 <input
@@ -213,10 +214,10 @@ export default function CreateStatus({ handleClose }) {
                   value={link}
                   style={{
                     backgroundColor:
-                      theme === "light"
+                      mode === "light"
                         ? "rgba(248,249,250,1)"
                         : "rgba(33,37,41,1)",
-                    color: theme === "light" ? "#1F1B24" : "white",
+                    color: mode === "light" ? "#1F1B24" : "white",
                   }}
                   onKeyPress={(event) => {
                     if (event.key === "Enter") {

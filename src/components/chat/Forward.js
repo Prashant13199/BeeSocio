@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { database } from "../../firebase";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
+import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Forward({ id, messageData, handleClose2, handleClose9 }) {
 
@@ -12,7 +13,7 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
     const [username, setUsername] = useState("");
     const [currentUsername, setCurrentUsername] = useState("");
     const [currentEmail, setCurrentEmail] = useState("");
-    const theme = localStorage.getItem("theme");
+    const { mode } = useContext(ColorModeContext);
 
     useEffect(() => {
         database.ref(`/Rooms/${id}`).on("value", (snapshot) => {
@@ -33,8 +34,8 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
     const sendPicMessage = async () => {
         Swal.fire({
             background:
-                theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-            color: theme === "light" ? "black" : "white",
+                mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+            color: mode === "light" ? "black" : "white",
             title: "You are forwarding message to",
             text: `${username.toLowerCase()}?`,
             icon: "warning",
@@ -74,8 +75,8 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
                                     handleClose9()
                                     Swal.fire({
                                         background:
-                                            theme === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
-                                        color: theme === "light" ? "black" : "white",
+                                            mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
+                                        color: mode === "light" ? "black" : "white",
                                         title: "Sent!",
                                         text: `Message forwarded to ${username}`,
                                         icon: "success",
@@ -103,7 +104,7 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
                 <a
                     className="users2__a"
 
-                    style={{ color: theme === "light" ? "black" : "white" }}
+                    style={{ color: mode === "light" ? "black" : "white" }}
                 >
                     {username && username.length > 15 ? username.substring(0, 15).concat('...') : username}
                 </a>
