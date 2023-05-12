@@ -1,3 +1,7 @@
+.App {
+  overflow-x: hidden;
+}
+
 .scrollTop {
   position: fixed;
   bottom: 30px;

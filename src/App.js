@@ -48,54 +48,56 @@ function App() {
   window.addEventListener("scroll", checkScrollTop);
 
   return (
-    <LoadingScreen
-      loading={loading}
-      bgColor={mode === "light" ? "#f1f1f1" : "black"}
-      spinnerColor="#9ee5f8"
-      textColor={mode === "light" ? "#676767" : "white"}
-      logoSrc={logo}
-      text="BeeSocio"
-    >
-      <BrowserRouter>
-        <div
-          className="scrollTop"
-          style={{ display: showScroll ? "flex" : "none", backgroundColor: mode === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)" }}
-          onClick={scrollTop}
-        >
-          <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
-        </div>
-        {currentuid ? (
-          <>
-            <NavbarHead />
+    <div className="App">
+      <LoadingScreen
+        loading={loading}
+        bgColor={mode === "light" ? "#f1f1f1" : "black"}
+        spinnerColor="#9ee5f8"
+        textColor={mode === "light" ? "#676767" : "white"}
+        logoSrc={logo}
+        text="BeeSocio"
+      >
+        <BrowserRouter>
+          <div
+            className="scrollTop"
+            style={{ display: showScroll ? "flex" : "none", backgroundColor: mode === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)" }}
+            onClick={scrollTop}
+          >
+            <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
+          </div>
+          {currentuid ? (
+            <>
+              <NavbarHead />
+              <Switch>
+                <Route path="/" component={Home} exact={true} />
+                <Route
+                  path="/singlefeed/:postid"
+                  component={SingleFeed}
+                  exact={true}
+                />
+                <Route path="/profile" component={Profile} exact={true} />
+                <Route
+                  path="/userprofile/:uid"
+                  component={UserProfile}
+                  exact={true}
+                />
+                <Route path="/activity" component={Activity} exact={true} />
+                <Route path="/search" component={Search} exact={true} />
+                <Route path="/message" component={Message} />
+                <Route path="*" component={Error} />
+              </Switch>
+            </>
+          ) : (
             <Switch>
-              <Route path="/" component={Home} exact={true} />
-              <Route
-                path="/singlefeed/:postid"
-                component={SingleFeed}
-                exact={true}
-              />
-              <Route path="/profile" component={Profile} exact={true} />
-              <Route
-                path="/userprofile/:uid"
-                component={UserProfile}
-                exact={true}
-              />
-              <Route path="/activity" component={Activity} exact={true} />
-              <Route path="/search" component={Search} exact={true} />
-              <Route path="/message" component={Message} />
+              <Route path="/" component={Login} exact={true} />
+              <Route path="/register" component={Register} />
+              <Route path="/forgotpassword" component={ForgotPassword} />
               <Route path="*" component={Error} />
             </Switch>
-          </>
-        ) : (
-          <Switch>
-            <Route path="/" component={Login} exact={true} />
-            <Route path="/register" component={Register} />
-            <Route path="/forgotpassword" component={ForgotPassword} />
-            <Route path="*" component={Error} />
-          </Switch>
-        )}
-      </BrowserRouter>
-    </LoadingScreen>
+          )}
+        </BrowserRouter>
+      </LoadingScreen>
+    </div>
   );
 }
 

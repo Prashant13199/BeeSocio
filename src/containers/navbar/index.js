@@ -394,7 +394,7 @@ export default function NavbarHead() {
                       <img
                         className={location && location.pathname === '/profile' ? mode === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
                         alt=""
-                        src={currentPhoto}
+                        src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
                       />
                     </IconButton>
                   </NavLink>
@@ -583,7 +583,7 @@ export default function NavbarHead() {
                       <img
                         className={location && location.pathname === '/profile' ? mode === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
                         alt=""
-                        src={currentPhoto}
+                        src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
                       />
                     </IconButton>
                   </NavLink>
