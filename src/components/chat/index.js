@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback, useContext } from "rea
 import { IconButton } from "@material-ui/core";
 import "./chat.css";
 import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import { storage, database } from "../../firebase";
+import { storage, database, auth } from "../../firebase";
 import Swal from "sweetalert2";
 import { Modal, Tab, Tabs } from "react-bootstrap";
 import Compressor from "compressorjs";
@@ -53,15 +53,14 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { ColorModeContext } from "../../services/ThemeContext";
 
 function Chat() {
+
   let [audioURL, isRecording, startRecording, stopRecording, setAudioURL, audio] = useRecorder();
   const messageEl = useRef(null);
   const history = useHistory();
   const { roomId } = useParams();
   const mounted = useRef(false);
-  const currentuid = localStorage.getItem("uid");
   const { mode } = useContext(ColorModeContext);
   const textarea = document.querySelector("#autoresizing");
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -158,7 +157,7 @@ function Chat() {
         if (snap.val().group === true) {
           {
             snap.val().users && Object.entries(snap.val().users).map(([k, v]) => {
-              if (v.id === currentuid) {
+              if (v.id === auth?.currentUser?.uid) {
                 grp.push(
                   snap.key
                 )
@@ -177,7 +176,7 @@ function Chat() {
       setTypingUser(snapshot.key)
     });
     groupUsers && groupUsers.map((user) => {
-      if (user !== currentuid) {
+      if (user !== auth?.currentUser?.uid) {
         database.ref(`/Rooms/${roomId}/${user}`).on("value", snapshot => {
           if (snapshot.val().typing === true) {
             setTyping(snapshot.val().typing)
@@ -253,7 +252,7 @@ function Chat() {
     database.ref(`/Rooms/${roomId}`).on('value', snapshot => {
       setChatTheme(snapshot.val().chatTheme)
     })
-    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setCurrentEmail(snapshot.val().email);
@@ -268,7 +267,7 @@ function Chat() {
       else if (snapshot.val()) {
         database
           .ref(
-            `/Users/${currentuid === snapshot.val().name1
+            `/Users/${auth?.currentUser?.uid === snapshot.val().name1
               ? snapshot.val().name2
               : snapshot.val().name1
             }/`
@@ -284,7 +283,7 @@ function Chat() {
           });
       }
     });
-  }, [currentuid, roomId]);
+  }, [auth?.currentUser?.uid, roomId]);
 
   useEffect(() => {
     database.ref("/Stickers").on("value", (snapshot) => {
@@ -312,7 +311,7 @@ function Chat() {
     database.ref("/Users").on("value", (snapshot) => {
       let itemsList = [];
       snapshot.forEach((snap) => {
-        if (snap.val().uid !== currentuid) {
+        if (snap.val().uid !== auth?.currentUser?.uid) {
           itemsList.push({
             id: snap.key,
             name: snap.val().username,
@@ -377,7 +376,7 @@ function Chat() {
         //   target.scroll({ top: target.scrollHeight });
       });
     }
-  }, [currentuid, roomId, group, uid]);
+  }, [auth?.currentUser?.uid, roomId, group, uid]);
 
   const fetchId = async (id) => {
     database
@@ -535,17 +534,17 @@ function Chat() {
   useEffect(() => {
     if (messages1.length !== 0) {
       if (
-        messages1[messages1.length - 1].message.uid !== currentuid &&
+        messages1[messages1.length - 1].message.uid !== auth?.currentUser?.uid &&
         mounted.current
       ) {
         if (uid) {
-          database.ref(`/Rooms/${roomId}/seen/${currentuid}`).set({ id: currentuid });
+          database.ref(`/Rooms/${roomId}/seen/${auth?.currentUser?.uid}`).set({ id: auth?.currentUser?.uid });
         }
         if (group) {
-          database.ref(`/Rooms/${roomId}/seenusers/${currentuid}`).set({ id: currentuid })
+          database.ref(`/Rooms/${roomId}/seenusers/${auth?.currentUser?.uid}`).set({ id: auth?.currentUser?.uid })
         }
         setTimeout(() => {
-          database.ref(`/Rooms/${roomId}/seenMsg/${currentuid}`).set({ id: messages1[messages1.length - 1].id });
+          database.ref(`/Rooms/${roomId}/seenMsg/${auth?.currentUser?.uid}`).set({ id: messages1[messages1.length - 1].id });
         }, 2000);
       }
     }
@@ -554,15 +553,15 @@ function Chat() {
   useEffect(() => {
     if (messages1.length !== 0) {
       if (
-        messages1[messages1.length - 1].message.uid !== currentuid &&
+        messages1[messages1.length - 1].message.uid !== auth?.currentUser?.uid &&
         mounted.current
       ) {
         setTimeout(() => {
-          database.ref(`/Rooms/${roomId}/seenMsg/${currentuid}`).set({ id: messages1[messages1.length - 1].id });
+          database.ref(`/Rooms/${roomId}/seenMsg/${auth?.currentUser?.uid}`).set({ id: messages1[messages1.length - 1].id });
         }, 2000);
       }
     }
-    database.ref(`/Rooms/${roomId}/seenMsg/${currentuid}`).on('value', snapshot => {
+    database.ref(`/Rooms/${roomId}/seenMsg/${auth?.currentUser?.uid}`).on('value', snapshot => {
       setNewMessage(snapshot.val().id)
     })
   }, [])
@@ -685,7 +684,7 @@ function Chat() {
   const sendMessage = async () => {
     setSeen([])
     setSeenGroup([])
-    database.ref(`/Rooms/${roomId}/${currentuid}`).set({ typing: false })
+    database.ref(`/Rooms/${roomId}/${auth?.currentUser?.uid}`).set({ typing: false })
     if (uid) {
       database.ref(`/Rooms/${roomId}/seen/${uid}`).remove()
     }
@@ -697,7 +696,7 @@ function Chat() {
         setShowreply(false);
         database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).update({
           message: input,
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           timestamp: Date.now(),
           replyid: msgData.id,
           replyto: msgData.message ? msgData.message : "",
@@ -714,14 +713,14 @@ function Chat() {
             console.log("message sent");
             if (uid) {
               database.ref(`/Users/${uid}/messages/${roomId}`).set({
-                id: currentuid,
+                id: auth?.currentUser?.uid,
                 text: `${currentUsername} sent text`,
               });
             }
             groupUsers && groupUsers.map((name) => {
-              if (name !== currentuid) {
+              if (name !== auth?.currentUser?.uid) {
                 database.ref(`/Users/${name}/messages/${roomId}`).set({
-                  id: currentuid,
+                  id: auth?.currentUser?.uid,
                   text: `${currentUsername} sent text in group ${username}`,
                 });
               }
@@ -790,7 +789,7 @@ function Chat() {
                       photo: imageUrl,
                       photoreply: true,
                       message: input,
-                      uid: currentuid,
+                      uid: auth?.currentUser?.uid,
                       timestamp: Date.now(),
                       replyto: msgData.message,
                       replyid: msgData.id,
@@ -811,7 +810,7 @@ function Chat() {
                 } else {
                   database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).set({
                     message: input,
-                    uid: currentuid,
+                    uid: auth?.currentUser?.uid,
                     timestamp: Date.now(),
                     photo: imageUrl,
                     fname: image.name,
@@ -820,14 +819,14 @@ function Chat() {
               });
               if (uid) {
                 database.ref(`/Users/${uid}/messages/${roomId}`).set({
-                  id: currentuid,
+                  id: auth?.currentUser?.uid,
                   text: `${currentUsername} sent media`,
                 });
               }
               groupUsers && groupUsers.map((name) => {
-                if (name !== currentuid) {
+                if (name !== auth?.currentUser?.uid) {
                   database.ref(`/Users/${name}/messages/${roomId}`).set({
-                    id: currentuid,
+                    id: auth?.currentUser?.uid,
                     text: `${currentUsername} sent media in group ${username}`,
                   });
                 }
@@ -846,20 +845,20 @@ function Chat() {
       } else {
         database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).set({
           message: input,
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           timestamp: Date.now(),
         }).then(async () => {
           console.log("message sent");
           if (uid) {
             database.ref(`/Users/${uid}/messages/${roomId}`).set({
-              id: currentuid,
+              id: auth?.currentUser?.uid,
               text: `${currentUsername} sent text`,
             });
           }
           groupUsers && groupUsers.map((name) => {
-            if (name !== currentuid) {
+            if (name !== auth?.currentUser?.uid) {
               database.ref(`/Users/${name}/messages/${roomId}`).set({
-                id: currentuid,
+                id: auth?.currentUser?.uid,
                 text: `${currentUsername} sent text in group ${username}`,
               });
             }
@@ -890,7 +889,7 @@ function Chat() {
             let mid = makeid(10);
             database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).set({
               message: input,
-              uid: currentuid,
+              uid: auth?.currentUser?.uid,
               timestamp: Date.now(),
               photo: imageUrl,
             }).then(async () => {
@@ -898,14 +897,14 @@ function Chat() {
               setProgress(0);
               if (uid) {
                 database.ref(`/Users/${uid}/messages/${roomId}`).set({
-                  id: currentuid,
+                  id: auth?.currentUser?.uid,
                   text: `${currentUsername} sent recording`,
                 });
               }
               groupUsers && groupUsers.map((name) => {
-                if (name !== currentuid) {
+                if (name !== auth?.currentUser?.uid) {
                   database.ref(`/Users/${name}/messages/${roomId}`).set({
-                    id: currentuid,
+                    id: auth?.currentUser?.uid,
                     text: `${currentUsername} sent recording in group ${username}`,
                   });
                 }
@@ -919,14 +918,14 @@ function Chat() {
       setInput("");
       resettextarea();
     }
-    database.ref(`/Rooms/${roomId}/seenMsg/${currentuid}`).set({ id: mid });
+    database.ref(`/Rooms/${roomId}/seenMsg/${auth?.currentUser?.uid}`).set({ id: mid });
     setTimeout(() => messageEl.current.scrollTo({
       top: messageEl.current.scrollHeight
     }), 0)
   };
 
   const deleteMsg = async () => {
-    if (msgData.uid === currentuid) {
+    if (msgData.uid === auth?.currentUser?.uid) {
       Swal.fire({
         background:
           mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
@@ -981,16 +980,16 @@ function Chat() {
   };
 
   const likeMessage = async (emojilink, id, uid) => {
-    if (uid !== currentuid) {
+    if (uid !== auth?.currentUser?.uid) {
       database.ref(`/Rooms/${roomId}`).update({
         timestamp: Date.now(),
       });
-      database.ref(`/RoomsMsg/${roomId}/messages/${id}/like/${currentuid}`).update({
+      database.ref(`/RoomsMsg/${roomId}/messages/${id}/like/${auth?.currentUser?.uid}`).update({
         id: emojilink,
       });
-      if (uid !== currentuid) {
+      if (uid !== auth?.currentUser?.uid) {
         database.ref(`/Users/${uid}/messages/${roomId}`).set({
-          id: currentuid,
+          id: auth?.currentUser?.uid,
           text: `${currentUsername} reacted to message`,
         });
       }
@@ -998,16 +997,16 @@ function Chat() {
   }
 
   const likeMsg = async (emojilink) => {
-    if (msgData.uid !== currentuid) {
+    if (msgData.uid !== auth?.currentUser?.uid) {
       database.ref(`/Rooms/${roomId}`).update({
         timestamp: Date.now(),
       });
-      database.ref(`/RoomsMsg/${roomId}/messages/${msgData.id}/like/${currentuid}`).update({
+      database.ref(`/RoomsMsg/${roomId}/messages/${msgData.id}/like/${auth?.currentUser?.uid}`).update({
         id: emojilink,
       });
-      if (msgData.uid !== currentuid) {
+      if (msgData.uid !== auth?.currentUser?.uid) {
         database.ref(`/Users/${uid}/messages/${roomId}`).set({
-          id: currentuid,
+          id: auth?.currentUser?.uid,
           text: `${currentUsername} reacted to message`,
         });
       }
@@ -1017,7 +1016,7 @@ function Chat() {
 
   useEffect(() => {
     database
-      .ref(`/Users/${currentuid}/messages`)
+      .ref(`/Users/${auth?.currentUser?.uid}/messages`)
       .orderByChild("timestamp")
       .on("value", (snapshot) => {
         let mnotificationList = [];
@@ -1073,7 +1072,7 @@ function Chat() {
     if (!showreply) {
       database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).set({
         gif: url,
-        uid: currentuid,
+        uid: auth?.currentUser?.uid,
         timestamp: Date.now(),
       });
     } else {
@@ -1081,7 +1080,7 @@ function Chat() {
       database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).update({
         gif: url,
         gifreply: true,
-        uid: currentuid,
+        uid: auth?.currentUser?.uid,
         timestamp: Date.now(),
         replyto: msgData.message,
         replyid: msgData.id,
@@ -1103,20 +1102,20 @@ function Chat() {
     }
     if (uid) {
       database.ref(`/Users/${uid}/messages/${roomId}`).set({
-        id: currentuid,
+        id: auth?.currentUser?.uid,
         text: `${currentUsername} sent gif`,
       });
     }
     groupUsers && groupUsers.map((name) => {
-      if (name !== currentuid) {
+      if (name !== auth?.currentUser?.uid) {
         database.ref(`/Users/${name}/messages/${roomId}`).set({
-          id: currentuid,
+          id: auth?.currentUser?.uid,
           text: `${currentUsername} sent gif in group ${username}`,
         });
       }
     })
     database.ref(`Rooms/${roomId}`).update({ timestamp: Date.now() });
-    database.ref(`/Rooms/${roomId}/seenMsg/${currentuid}`).set({ id: mid });
+    database.ref(`/Rooms/${roomId}/seenMsg/${auth?.currentUser?.uid}`).set({ id: mid });
     setTimeout(() => messageEl.current.scrollTo({
       top: messageEl.current.scrollHeight
     }), 0)
@@ -1134,7 +1133,7 @@ function Chat() {
     if (!showreply) {
       database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).set({
         sticker: url,
-        uid: currentuid,
+        uid: auth?.currentUser?.uid,
         timestamp: Date.now(),
       });
     } else {
@@ -1142,7 +1141,7 @@ function Chat() {
       database.ref(`/RoomsMsg/${roomId}/messages/${mid}`).update({
         sticker: url,
         stickerreply: true,
-        uid: currentuid,
+        uid: auth?.currentUser?.uid,
         timestamp: Date.now(),
         replyto: msgData.message,
         replyid: msgData.id,
@@ -1163,21 +1162,21 @@ function Chat() {
         });
     }
     groupUsers && groupUsers.map((name) => {
-      if (name !== currentuid) {
+      if (name !== auth?.currentUser?.uid) {
         database.ref(`/Users/${name}/messages/${roomId}`).set({
-          id: currentuid,
+          id: auth?.currentUser?.uid,
           text: `${currentUsername} sent sticker`,
         });
       }
     })
     if (uid) {
       database.ref(`/Users/${uid}/messages/${roomId}`).set({
-        id: currentuid,
+        id: auth?.currentUser?.uid,
         text: `${currentUsername} sent sticker`,
       });
     }
     database.ref(`Rooms/${roomId}`).update({ timestamp: Date.now(), });
-    database.ref(`/Rooms/${roomId}/seenMsg/${currentuid}`).set({ id: mid });
+    database.ref(`/Rooms/${roomId}/seenMsg/${auth?.currentUser?.uid}`).set({ id: mid });
     setTimeout(() => messageEl.current.scrollTo({
       top: messageEl.current.scrollHeight
     }), 0)
@@ -1267,12 +1266,12 @@ function Chat() {
 
   const handleTyping = (e) => {
     if (e.length > 0) {
-      database.ref(`/Rooms/${roomId}/${currentuid}`).update({
+      database.ref(`/Rooms/${roomId}/${auth?.currentUser?.uid}`).update({
         typing: true,
       });
 
     } else {
-      database.ref(`/Rooms/${roomId}/${currentuid}`).update({
+      database.ref(`/Rooms/${roomId}/${auth?.currentUser?.uid}`).update({
         typing: false,
       });
     }
@@ -1315,13 +1314,13 @@ function Chat() {
           .ref(`/Rooms/${roomId}/users/${item.uid}`).set({ id: item.uid, timestamp: Date.now() })
           .then(() => {
             database.ref(`/Users/${item.uid}/messages/${roomId}`).set({
-              id: currentuid,
+              id: auth?.currentUser?.uid,
               text: `${currentUsername} added you to group ${username}`,
             });
             let msgid = makeid(10)
             database.ref(`/RoomsMsg/${roomId}/messages/${msgid}`).set({
               message: `${currentUsername} added ${convert_to_username(item.uid)}`,
-              uid: currentuid,
+              uid: auth?.currentUser?.uid,
               timestamp: Date.now(),
             });
             Swal.fire({
@@ -1368,7 +1367,7 @@ function Chat() {
         let msgid = makeid(10)
         await database.ref(`/RoomsMsg/${roomId}/messages/${msgid}`).set({
           message: `${currentUsername} removed`,
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           timestamp: Date.now(),
         });
         await database.ref(`/Users/${user}/messages/${roomId}`).remove()
@@ -1554,7 +1553,7 @@ function Chat() {
   }
 
   const removeLikeMsg = async (like, id) => {
-    if (currentuid === like) {
+    if (auth?.currentUser?.uid === like) {
       database.ref(`/RoomsMsg/${roomId}/messages/${id}/like/${like}`).remove().then(() => {
         console.log("like removed")
         handleClose6()
@@ -1582,10 +1581,10 @@ function Chat() {
         let msgid = makeid(10)
         await database.ref(`/RoomsMsg/${roomId}/messages/${msgid}`).set({
           message: `${currentUsername} left`,
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           timestamp: Date.now(),
         });
-        await database.ref(`/Rooms/${roomId}/users/${currentuid}`).remove().then(() => {
+        await database.ref(`/Rooms/${roomId}/users/${auth?.currentUser?.uid}`).remove().then(() => {
           history.push('/message')
           Swal.fire({
             background:
@@ -1621,20 +1620,20 @@ function Chat() {
       confirmButtonText: "Yes, send",
     }).then((result) => {
       if (result.isConfirmed) {
-        var names = [item.uid, currentuid];
+        var names = [item.uid, auth?.currentUser?.uid];
         names.sort();
         let chatRoom = names.join("");
         database.ref(`/Rooms/${chatRoom}/seen/${item.uid}`).remove()
         database.ref(`/Rooms/${chatRoom}`).set({
           name1: item.uid,
-          name2: currentuid,
+          name2: auth?.currentUser?.uid,
           timestamp: Date.now(),
         });
         let mid = makeid(10);
         database.ref(`/RoomsMsg/${chatRoom}/messages/${mid}`).set({
           forwarded: true,
           post: msgData.postUrl ? msgData.postUrl : "",
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           email: currentEmail,
           timestamp: Date.now(),
           postuid: msgData.postuid ? msgData.postuid : "",
@@ -1646,7 +1645,7 @@ function Chat() {
         });
         database.ref(`/Rooms/${chatRoom}`).update({ timestamp: Date.now() });
         database.ref(`/Users/${item.uid}/messages/${chatRoom}`).set({
-          id: currentuid,
+          id: auth?.currentUser?.uid,
           text: `${currentUsername} forwarded you a message `,
         })
           .then(() => {
@@ -1801,7 +1800,7 @@ function Chat() {
           className="noselect"
         >
           <ListGroup>
-            {msgData.uid !== currentuid && !msgData.like && (
+            {msgData.uid !== auth?.currentUser?.uid && !msgData.like && (
               <ListGroup.Item
                 variant="secondary"
                 action
@@ -1909,7 +1908,7 @@ function Chat() {
                 Copy text
               </ListGroup.Item>
             )}
-            {msgData.uid === currentuid && (
+            {msgData.uid === auth?.currentUser?.uid && (
               <ListGroup.Item
                 variant="danger"
                 action
@@ -1929,7 +1928,7 @@ function Chat() {
             >
               Forward
             </ListGroup.Item>
-            {msgData.uid === currentuid && msgData.message && (
+            {msgData.uid === auth?.currentUser?.uid && msgData.message && (
               <ListGroup.Item
                 variant="info"
                 action
@@ -2020,7 +2019,7 @@ function Chat() {
             </h2>
           </div>
           <br />
-          {groupAdmin === currentuid && <><ReactSearchAutocomplete
+          {groupAdmin === auth?.currentUser?.uid && <><ReactSearchAutocomplete
             items={items}
             onSelect={handleOnSelect}
             onClear={handleClear}
@@ -2046,7 +2045,7 @@ function Chat() {
               }}>
                 Admin
               </div>}
-              {user !== currentuid && groupAdmin === currentuid && <Link style={{
+              {user !== auth?.currentUser?.uid && groupAdmin === auth?.currentUser?.uid && <Link style={{
                 cursor: "pointer", textDecoration: "none",
                 display: "flex", justifyContent: "center", alignItems: "center"
               }} onClick={() => deleteGroupUser(user)}>
@@ -2056,7 +2055,7 @@ function Chat() {
           })}
           <br />
 
-          {groupAdmin !== currentuid ? <Button onClick={leaveGroup}
+          {groupAdmin !== auth?.currentUser?.uid ? <Button onClick={leaveGroup}
             variant="danger"
             size="sm"
             style={{ width: "100%", height: "30px" }}>
@@ -2607,13 +2606,13 @@ function Chat() {
                         className="noselect"
                       >
                         <div style={{ display: "flex" }}>
-                          <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: currentuid !== message.uid ? "block" : "none", borderRadius: "10px", minWidth: "20px", margin: "5px" }} />
-                          <div className={`chat__message ${message.uid === currentuid && "chat__receiver"}`}
+                          <img alt="" src={convert_to_pic(message.uid)} style={{ height: "20px", width: "10px", objectFit: "cover", display: auth?.currentUser?.uid !== message.uid ? "block" : "none", borderRadius: "10px", minWidth: "20px", margin: "5px" }} />
+                          <div className={`chat__message ${message.uid === auth?.currentUser?.uid && "chat__receiver"}`}
                             style={{
-                              color: mode === "light" ? "black" : "white", backgroundColor: mode === "light" ? message.uid === currentuid ? "#ffc8b8" : "#c8e1fd" : message.uid === currentuid ? "#844836" : "#274261",
+                              color: mode === "light" ? "black" : "white", backgroundColor: mode === "light" ? message.uid === auth?.currentUser?.uid ? "#ffc8b8" : "#c8e1fd" : message.uid === auth?.currentUser?.uid ? "#844836" : "#274261",
                             }}
                           >
-                            <div className={message.uid === currentuid ? "emojiplate" : "emojiplateuser"}>
+                            <div className={message.uid === auth?.currentUser?.uid ? "emojiplate" : "emojiplateuser"}>
                               <div
                                 class="btn-group-sm mr-2"
                                 role="group"
@@ -2656,10 +2655,10 @@ function Chat() {
                                 </button>
                               </div>
                             </div>
-                            <ReplyIcon style={{ fontSize: "25px" }} className={message.uid === currentuid ? "replyicon" : "replyiconuser"} color="primary" onClick={(e) => {
+                            <ReplyIcon style={{ fontSize: "25px" }} className={message.uid === auth?.currentUser?.uid ? "replyicon" : "replyiconuser"} color="primary" onClick={(e) => {
                               setReplyIcon(id)
                             }} />
-                            <ExpandMoreIcon style={{ fontSize: "25px" }} className={message.uid === currentuid ? "moreoption" : "moreoptionuser"} color="primary" onClick={() => MessageData(id)} />
+                            <ExpandMoreIcon style={{ fontSize: "25px" }} className={message.uid === auth?.currentUser?.uid ? "moreoption" : "moreoptionuser"} color="primary" onClick={() => MessageData(id)} />
                             {message.forwarded &&
                               <div>
                                 <i style={{
@@ -2672,7 +2671,7 @@ function Chat() {
                             {message.statusreply &&
                               <>
                                 <div style={{ marginBottom: "5px" }}>
-                                  {message.uid === currentuid ? "You replied to status" : "Replied to your status"}
+                                  {message.uid === auth?.currentUser?.uid ? "You replied to status" : "Replied to your status"}
                                 </div>
                                 {message.statusphoto.includes(".mp4") ? (
                                   <video
@@ -2696,10 +2695,10 @@ function Chat() {
                                   cursor: "pointer",
                                   backgroundColor:
                                     mode === "light"
-                                      ? message.uid === currentuid
+                                      ? message.uid === auth?.currentUser?.uid
                                         ? "#ffb098"
                                         : "#95c6ff"
-                                      : message.uid === currentuid
+                                      : message.uid === auth?.currentUser?.uid
                                         ? "#4f1c0d"
                                         : "#193d66",
                                   padding: "5px",
@@ -2777,10 +2776,10 @@ function Chat() {
                                 cursor: "pointer",
                                 backgroundColor:
                                   mode === "light"
-                                    ? message.uid === currentuid
+                                    ? message.uid === auth?.currentUser?.uid
                                       ? "#ffb098"
                                       : "#95c6ff"
-                                    : message.uid === currentuid
+                                    : message.uid === auth?.currentUser?.uid
                                       ? "#4f1c0d"
                                       : "#193d66",
                                 padding: "5px",
@@ -2892,7 +2891,7 @@ function Chat() {
                               <div style={{ margin: "5px" }}>
                                 <Link
                                   style={{ textDecoration: "none", color: mode === "light" ? "black" : "white", display: "flex" }}
-                                  to={message.postuid === currentuid ? `/profile` : `/userprofile/${message.postuid}`}
+                                  to={message.postuid === auth?.currentUser?.uid ? `/profile` : `/userprofile/${message.postuid}`}
                                 >
                                   <img src={convert_to_pic(message.postuid)} style={{
                                     height: "25px", width: "25px", objectFit: "cover", borderRadius: "10px"
@@ -2922,7 +2921,7 @@ function Chat() {
                             }
                             <div
                               className={
-                                message.uid === currentuid
+                                message.uid === auth?.currentUser?.uid
                                   ? "chat__timestamp_right"
                                   : "chat__timestamp"
                               }
@@ -2935,7 +2934,7 @@ function Chat() {
                             </div>
                             <div
                               className={
-                                message.uid === currentuid
+                                message.uid === auth?.currentUser?.uid
                                   ? "chat__timestamp_right"
                                   : "chat__timestamp"
                               }
@@ -2947,7 +2946,7 @@ function Chat() {
                             </div>
                             <div
                               className={
-                                message.uid === currentuid
+                                message.uid === auth?.currentUser?.uid
                                   ? "msglike_receive"
                                   : "msglike"
                               }
@@ -2966,7 +2965,7 @@ function Chat() {
                           </div>
                         </div>
                       </div>
-                      {newMessage === id && messages1.length && messages1[messages1.length - 1].message.uid !== currentuid && messages1[messages1.length - 1].id !== newMessage && <p className="chat_timeline">
+                      {newMessage === id && messages1.length && messages1[messages1.length - 1].message.uid !== auth?.currentUser?.uid && messages1[messages1.length - 1].id !== newMessage && <p className="chat_timeline">
                         <div className={mode === "light" ? "datelight" : "datedark"} style={{ width: "120px", color: mode === "light" ? "black" : "white", borderRadius: "20px", padding: "2px", fontSize: "12px", textAlign: "center" }}>New Message</div>
                       </p>}
                     </>
@@ -2976,7 +2975,7 @@ function Chat() {
               })}
             </>
           })}
-          {seen && messages1.length && messages1[messages1.length - 1].message.uid === currentuid && (
+          {seen && messages1.length && messages1[messages1.length - 1].message.uid === auth?.currentUser?.uid && (
             <div
               style={{
                 display: "flex",
@@ -2989,7 +2988,7 @@ function Chat() {
               }} />
             </div>
           )}
-          {seenGroup.length !== 0 && messages1.length && messages1[messages1.length - 1].message.uid === currentuid && (
+          {seenGroup.length !== 0 && messages1.length && messages1[messages1.length - 1].message.uid === auth?.currentUser?.uid && (
             <div
               style={{
                 display: "flex",

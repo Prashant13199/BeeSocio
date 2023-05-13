@@ -7,9 +7,11 @@ import { database } from "../../firebase";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function UserProfile(props) {
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
     const { mode } = useContext(ColorModeContext);
     const [username, setUsername] = useState('User Profile')
 

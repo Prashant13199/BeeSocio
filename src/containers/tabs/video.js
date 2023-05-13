@@ -1,28 +1,27 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
 import loadingIcon from '../../assets/loading.gif'
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function VideoTab() {
-    const { mode } = useContext(ColorModeContext);
-    const currentuid = localStorage.getItem("uid");
 
+    const { mode } = useContext(ColorModeContext);
     const [videos, setVideos] = useState([]);
     const [lastKey, setLastKey] = useState("")
     const [totalVideos, setTotalVideos] = useState(0)
     const [fetching, setFetching] = useState(false)
 
     useEffect(() => {
-        database.ref(`Users/${currentuid}/Videos`).orderByChild("timestamp").on("value", (snapshot) => {
+        database.ref(`Users/${auth?.currentUser?.uid}/Videos`).orderByChild("timestamp").on("value", (snapshot) => {
             setTotalVideos(snapshot.numChildren())
         })
     }, [])
 
     useEffect(() => {
-        database.ref(`Users/${currentuid}/Videos`).orderByChild("timestamp").limitToLast(9).on("value", (snapshot) => {
+        database.ref(`Users/${auth?.currentUser?.uid}/Videos`).orderByChild("timestamp").limitToLast(9).on("value", (snapshot) => {
             let videoList = [];
             let flag = true;
             let key = ""
@@ -41,7 +40,7 @@ export default function VideoTab() {
 
     const fetch = () => {
         setFetching(true)
-        database.ref(`Users/${currentuid}/Videos`).orderByChild("timestamp").endBefore(lastKey).limitToLast(9).on("value", (snapshot) => {
+        database.ref(`Users/${auth?.currentUser?.uid}/Videos`).orderByChild("timestamp").endBefore(lastKey).limitToLast(9).on("value", (snapshot) => {
             let videoList = [];
             let flag = true;
             let key = ""

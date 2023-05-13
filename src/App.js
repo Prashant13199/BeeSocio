@@ -18,10 +18,10 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Error from "./pages/error";
 import { ColorModeContext } from './services/ThemeContext';
 import { useContext } from "react";
+import { auth } from "./firebase";
 
 function App() {
 
-  const currentuid = localStorage.getItem("uid");
   const { mode } = useContext(ColorModeContext);
 
   const [showScroll, setShowScroll] = useState(false);
@@ -42,7 +42,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 2000);
   }, []);
 
   window.addEventListener("scroll", checkScrollTop);
@@ -65,7 +65,7 @@ function App() {
           >
             <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
           </div>
-          {currentuid ? (
+          {auth?.currentUser?.uid ? (
             <>
               <NavbarHead />
               <Switch>

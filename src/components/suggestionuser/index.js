@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import "./style.css";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SuggestionUSer({ uid }) {
+
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [follow, setfollow] = useState([]);
-  const currentuid = localStorage.getItem("uid");
   const [currentusername, setCurrentUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
 
   let like = false;
   useEffect(() => {
-    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
@@ -44,17 +44,17 @@ export default function SuggestionUSer({ uid }) {
     });
   }, [uid]);
   for (var i = 0; i < follow.length; i++) {
-    if (follow[i].uid === currentuid) {
+    if (follow[i].uid === auth?.currentUser?.uid) {
       like = true;
     }
   }
   const handlefollow = async () => {
     if (like === false) {
       database
-        .ref(`/Users/${uid}/followers/${currentuid}`)
+        .ref(`/Users/${uid}/followers/${auth?.currentUser?.uid}`)
         .set({
-          id: currentuid,
-          uid: currentuid,
+          id: auth?.currentUser?.uid,
+          uid: auth?.currentUser?.uid,
         })
         .then(() => {
           console.log("following");
@@ -63,7 +63,7 @@ export default function SuggestionUSer({ uid }) {
           console.log(e);
         });
       database
-        .ref(`/Users/${currentuid}/following/${uid}`)
+        .ref(`/Users/${auth?.currentUser?.uid}/following/${uid}`)
         .set({
           id: uid,
           uid: uid,
@@ -75,13 +75,13 @@ export default function SuggestionUSer({ uid }) {
           console.log(e);
         });
 
-      database.ref(`/Users/${uid}/activity/${currentuid}`).set({
-        id: currentuid,
+      database.ref(`/Users/${uid}/activity/${auth?.currentUser?.uid}`).set({
+        id: auth?.currentUser?.uid,
         text: `started following you`,
         timestamp: Date.now(),
-        uid: currentuid,
+        uid: auth?.currentUser?.uid,
       });
-      database.ref(`/Users/${uid}/notification/${currentuid}`).set({
+      database.ref(`/Users/${uid}/notification/${auth?.currentUser?.uid}`).set({
         text: `${currentusername} started following you`,
       });
     } else {
@@ -99,7 +99,7 @@ export default function SuggestionUSer({ uid }) {
       }).then((result) => {
         if (result.isConfirmed) {
           database
-            .ref(`/Users/${uid}/followers/${currentuid}`)
+            .ref(`/Users/${uid}/followers/${auth?.currentUser?.uid}`)
             .remove()
             .then(() => {
               console.log("follow removed");
@@ -109,7 +109,7 @@ export default function SuggestionUSer({ uid }) {
               console.log(e);
             });
           database
-            .ref(`/Users/${currentuid}/following/${uid}`)
+            .ref(`/Users/${auth?.currentUser?.uid}/following/${uid}`)
             .remove()
             .then(() => {
               console.log("follow removed");
@@ -119,7 +119,7 @@ export default function SuggestionUSer({ uid }) {
               console.log(e);
             });
           database
-            .ref(`/Users/${uid}/activity/${currentuid}`)
+            .ref(`/Users/${uid}/activity/${auth?.currentUser?.uid}`)
             .remove()
             .then(() => {
               console.log("activity removed");
@@ -129,7 +129,7 @@ export default function SuggestionUSer({ uid }) {
               console.log(e);
             });
           database
-            .ref(`/Users/${uid}/notification/${currentuid}`)
+            .ref(`/Users/${uid}/notification/${auth?.currentUser?.uid}`)
             .remove()
             .then(() => {
               console.log("activity removed");
@@ -152,7 +152,7 @@ export default function SuggestionUSer({ uid }) {
       });
     }
   };
-  return currentuid !== uid && !like ? (
+  return auth?.currentUser?.uid !== uid && !like ? (
     <div
       style={{
         padding: "10px",

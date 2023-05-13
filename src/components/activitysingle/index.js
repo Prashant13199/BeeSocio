@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useContext } from "react";
 import "./style.css";
 import { timeDifference } from "../../services/timeDifference";
 import { Link } from "react-router-dom";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import Swal from "sweetalert2";
 import { useLongPress } from "use-long-press";
 import AOS from 'aos';
@@ -12,7 +12,6 @@ import { ColorModeContext } from "../../services/ThemeContext";
 export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid, id, comment, }) {
     const [photo, setPhoto] = useState("");
     const [username, setUsername] = useState("");
-    const currentuid = localStorage.getItem("uid");
     const { mode } = useContext(ColorModeContext);
 
     useEffect(() => {
@@ -24,7 +23,7 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
     const callback = useCallback((e, id) => {
         e.preventDefault(); Swal.fire({ background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)", color: mode === "light" ? "black" : "white", title: "Are you sure to delete?", text: "You won't be able to revert this!", icon: "warning", showCancelButton: true, confirmButtonColor: "#3085d6", cancelButtonColor: "#d33", confirmButtonText: "Yes, delete it!", }).then((result) => {
             if (result.isConfirmed) {
-                database.ref(`/Users/${currentuid}/activity/${id.context}`).remove().then(() => console.log("activity deleted")).catch((e) => console.log(e));
+                database.ref(`/Users/${auth?.currentUser?.uid}/activity/${id.context}`).remove().then(() => console.log("activity deleted")).catch((e) => console.log(e));
                 Swal.fire({
                     background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                     color: mode === "light" ? "black" : "white",
@@ -42,13 +41,13 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
     return (
         <Link to={postid ? `/singlefeed/${postid}` : `/userprofile/${uid}`} style={{ textDecoration: "none" }} className="noselect">
             <div className={mode === "light" ? "activitysinglelight" : "activitysingledark"} {...bind(id)}>
-                <div data-aos="fade-right" style={{ display: "flex" }}> <Link to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}>
+                <div data-aos="fade-right" style={{ display: "flex" }}> <Link to={uid === auth?.currentUser?.uid ? '/profile' : `/userprofile/${uid}`}>
                     <img src={photo ? photo : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`} className="activity__profilePic" alt="" />
                 </Link>
                     <div style={{ marginLeft: "10px" }}>
                         <div className="activity__center">
                             <span>
-                                <Link to={uid === currentuid ? '/profile' : `/userprofile/${uid}`} style={{ color: mode === "light" ? "black" : "white", fontWeight: "600", textDecoration: "none", }}>
+                                <Link to={uid === auth?.currentUser?.uid ? '/profile' : `/userprofile/${uid}`} style={{ color: mode === "light" ? "black" : "white", fontWeight: "600", textDecoration: "none", }}>
                                     {username ? username.length > 20 ? username.substring(0, 20).concat('...') : username : 'Loading...'} </Link> </span><span style={{ color: mode === "light" ? "black" : "white", }}>
                                 {text} {comment ? comment : ""} </span> </div>
                         <div className="activity__time"> {timeDifference(new Date(), new Date(timestamp))}

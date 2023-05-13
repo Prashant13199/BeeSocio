@@ -7,8 +7,8 @@ import { ColorModeContext } from "../../services/ThemeContext";
 import loadingIcon from '../../assets/loading.gif'
 
 export default function PostTabUser({ props }) {
-    const { mode } = useContext(ColorModeContext);
 
+    const { mode } = useContext(ColorModeContext);
     const [posts, setPosts] = useState([]);
     const [lastKey, setLastKey] = useState("")
     const [totalPosts, setTotalPosts] = useState(0)

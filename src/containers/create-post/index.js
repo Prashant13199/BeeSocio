@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
-import { storage, database } from "../../firebase";
+import { storage, database, auth } from "../../firebase";
 import Compressor from "compressorjs";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
@@ -17,7 +17,6 @@ const KeyCodes = {
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 export default function CreatePost({ handleClose }) {
-  const currentuid = localStorage.getItem("uid");
   const [compressedFile, setCompressedFile] = useState(null);
   const [caption, setCaption] = useState("");
   const [venue, setVenue] = useState("");
@@ -30,7 +29,7 @@ export default function CreatePost({ handleClose }) {
   const [currentUsername, setCurrentUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
   useEffect(() => {
-    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
@@ -41,7 +40,7 @@ export default function CreatePost({ handleClose }) {
     let users = [];
     database.ref(`/Users`).on("value", (snapshot) => {
       snapshot.forEach((snap) => {
-        if (snap.val().uid && snap.val().uid !== currentuid) {
+        if (snap.val().uid && snap.val().uid !== auth?.currentUser?.uid) {
           users.push({
             id: snap.val().uid,
             text: snap.val().username,
@@ -182,25 +181,25 @@ export default function CreatePost({ handleClose }) {
                 timestamp: Date.now(),
                 caption: caption,
                 photoUrl: imageUrl,
-                uid: currentuid,
+                uid: auth?.currentUser?.uid,
                 tagss: tagss,
                 venue: venue,
               });
               if (fileName.includes('.mp4')) {
-                database.ref(`Users/${currentuid}/Videos/${imageName}`).set({
+                database.ref(`Users/${auth?.currentUser?.uid}/Videos/${imageName}`).set({
                   timestamp: Date.now(),
                   caption: caption,
                   photoUrl: imageUrl,
-                  uid: currentuid,
+                  uid: auth?.currentUser?.uid,
                   tagss: tagss,
                   venue: venue,
                 });
               } else {
-                database.ref(`Users/${currentuid}/Posts/${imageName}`).set({
+                database.ref(`Users/${auth?.currentUser?.uid}/Posts/${imageName}`).set({
                   timestamp: Date.now(),
                   caption: caption,
                   photoUrl: imageUrl,
-                  uid: currentuid,
+                  uid: auth?.currentUser?.uid,
                   tagss: tagss,
                   venue: venue,
                 });
@@ -210,7 +209,7 @@ export default function CreatePost({ handleClose }) {
                   .ref(`/Users/${tagss[i]}/activity/${imageName}`)
                   .update({
                     text: `tagged you in a post`,
-                    uid: currentuid,
+                    uid: auth?.currentUser?.uid,
                     id: imageName,
                     timestamp: Date.now(),
                     photoUrl: imageUrl,
@@ -220,7 +219,7 @@ export default function CreatePost({ handleClose }) {
                   .ref(`/Users/${tagss[i]}/notification/${imageName}`)
                   .update({
                     text: `${currentUsername} tagged you in a post`,
-                    id: currentuid,
+                    id: auth?.currentUser?.uid,
                   });
               }
             });
@@ -243,11 +242,11 @@ export default function CreatePost({ handleClose }) {
       );
     } else if (link) {
       imageName = makeid(10);
-      database.ref(`Users/${currentuid}/Posts/${imageName}`).set({
+      database.ref(`Users/${auth?.currentUser?.uid}/Posts/${imageName}`).set({
         timestamp: Date.now(),
         caption: caption,
         photoUrl: link,
-        uid: currentuid,
+        uid: auth?.currentUser?.uid,
         tagss: tagss,
         venue: venue,
       });
@@ -257,7 +256,7 @@ export default function CreatePost({ handleClose }) {
           timestamp: Date.now(),
           caption: caption,
           photoUrl: link,
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           tagss: tagss,
           venue: venue,
         })
@@ -265,7 +264,7 @@ export default function CreatePost({ handleClose }) {
           for (let i = 0; i < tagss.length; i++) {
             database.ref(`/Users/${tagss[i]}/activity/${imageName}`).update({
               text: `tagged you in a post`,
-              uid: currentuid,
+              uid: auth?.currentUser?.uid,
               id: imageName,
               timestamp: Date.now(),
               photoUrl: link,
@@ -275,7 +274,7 @@ export default function CreatePost({ handleClose }) {
               .ref(`/Users/${tagss[i]}/notification/${imageName}`)
               .update({
                 text: `${currentUsername} tagged you in a post`,
-                id: currentuid,
+                id: auth?.currentUser?.uid,
               });
           }
           setImage(null);

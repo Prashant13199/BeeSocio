@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Button } from "react-bootstrap";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Follow({ uid }) {
-  const currentuid = localStorage.getItem("uid");
+
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
@@ -32,7 +32,7 @@ export default function Follow({ uid }) {
     }).then((result) => {
       if (result.isConfirmed) {
         database
-          .ref(`/Users/${uid}/followers/${currentuid}`)
+          .ref(`/Users/${uid}/followers/${auth?.currentUser?.uid}`)
           .remove()
           .then(() => {
             console.log("follow removed");
@@ -41,7 +41,7 @@ export default function Follow({ uid }) {
             console.log(e);
           });
         database
-          .ref(`/Users/${currentuid}/following/${uid}`)
+          .ref(`/Users/${auth?.currentUser?.uid}/following/${uid}`)
           .remove()
           .then(() => {
             console.log("follow removed");
@@ -49,7 +49,7 @@ export default function Follow({ uid }) {
           .catch((e) => {
             console.log(e);
           });
-        database.ref(`/Users/${uid}/activity/${currentuid}`).remove()
+        database.ref(`/Users/${uid}/activity/${auth?.currentUser?.uid}`).remove()
           .then(() => {
             console.log("activity removed");
           })
@@ -57,7 +57,7 @@ export default function Follow({ uid }) {
             console.log(e);
           });
         database
-          .ref(`/Users/${uid}/notification/${currentuid}`)
+          .ref(`/Users/${uid}/notification/${auth?.currentUser?.uid}`)
           .remove()
           .then(() => {
             console.log("notification removed");

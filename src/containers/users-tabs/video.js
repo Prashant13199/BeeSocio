@@ -7,8 +7,8 @@ import { ColorModeContext } from "../../services/ThemeContext";
 import loadingIcon from '../../assets/loading.gif'
 
 export default function VideoTabUser({ props }) {
-    const { mode } = useContext(ColorModeContext);
 
+    const { mode } = useContext(ColorModeContext);
     const [videos, setVideos] = useState([]);
     const [lastKey, setLastKey] = useState("")
     const [totalVideos, setTotalVideos] = useState(0)

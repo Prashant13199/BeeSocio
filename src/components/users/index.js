@@ -1,18 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
 import { ColorModeContext } from "../../services/ThemeContext";
 
-export default function Users2({
-  uid,
-  postUrl,
-  postuid,
-  postid,
-}) {
-  const currentuid = localStorage.getItem("uid");
+export default function Users2({ uid, postUrl, postuid, postid }) {
+
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [currentUsername, setCurrentUsername] = useState("");
@@ -25,7 +20,7 @@ export default function Users2({
     });
   }, [uid]);
   useEffect(() => {
-    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setCurrentEmail(snapshot.val().email);
@@ -46,18 +41,18 @@ export default function Users2({
       confirmButtonText: "Yes, send",
     }).then((result) => {
       if (result.isConfirmed) {
-        var names = [uid, currentuid];
+        var names = [uid, auth?.currentUser?.uid];
         names.sort();
         let chatRoom = names.join("");
         database.ref(`/Rooms/${chatRoom}`).set({
           name1: uid,
-          name2: currentuid,
+          name2: auth?.currentUser?.uid,
           timestamp: Date.now(),
         });
         let mid = makeid(10);
         database.ref(`/RoomsMsg/${chatRoom}/messages/${mid}`).set({
           post: postUrl,
-          uid: currentuid,
+          uid: auth?.currentUser?.uid,
           email: currentEmail,
           timestamp: Date.now(),
           postuid: postuid,

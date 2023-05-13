@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import "./style.css";
 import { makeid } from "../../services/makeid";
 import { MentionsInput, Mention } from 'react-mentions'
@@ -7,7 +7,7 @@ import { Button } from "react-bootstrap";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply }) {
-  const currentuid = localStorage.getItem("uid");
+
   const [currentUsername, setCurrentUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
   const [commentReply, setCommentReply] = useState("");
@@ -17,7 +17,7 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
     database.ref("/Users").on("value", (snapshot) => {
       let itemsList = [];
       snapshot.forEach((snap) => {
-        if (snap.val().uid !== currentuid) {
+        if (snap.val().uid !== auth?.currentUser?.uid) {
           itemsList.push({
             id: snap.val().uid,
             display: snap.val().username,
@@ -29,7 +29,7 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
   }, []);
 
   useEffect(() => {
-    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
@@ -56,13 +56,13 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
           .ref(`/Posts/${id}/comments/${idc}/reply/${replyid}`)
           .set({
             text: commentReply,
-            uid: currentuid,
+            uid: auth?.currentUser?.uid,
             id: idc,
             timestamp: Date.now(),
           })
           .then(() => {
 
-            if (uid !== currentuid) {
+            if (uid !== auth?.currentUser?.uid) {
               let idcc = makeid(10);
               database.ref(`/Users/${uid}/activity/${idcc}`).set({
                 id: idcc,
@@ -70,7 +70,7 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
                 timestamp: Date.now(),
                 postid: id,
                 comment: newComment,
-                uid: currentuid,
+                uid: auth?.currentUser?.uid,
                 photoUrl: photoURL,
               });
               database.ref(`/Users/${uid}/notification/${idcc}`).set({
@@ -85,7 +85,7 @@ export default function CommentReply({ id, uid, photoURL, idc, handleCloseReply 
                 timestamp: Date.now(),
                 postid: id,
                 comment: newComment,
-                uid: currentuid,
+                uid: auth?.currentUser?.uid,
                 photoUrl: photoURL,
               });
               database.ref(`/Users/${mentionedUser}/notification/${idcc}`).set({

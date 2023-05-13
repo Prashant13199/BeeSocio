@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import { Helmet } from "react-helmet";
 import ActivitySingle from "../../components/activitysingle";
 import { ColorModeContext } from "../../services/ThemeContext";
@@ -8,7 +8,7 @@ import loadingIcon from '../../assets/loading.gif'
 import { date } from "../../services/date";
 
 export default function Activity() {
-  const currentuid = localStorage.getItem("uid");
+
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const { mode } = useContext(ColorModeContext);
@@ -22,14 +22,14 @@ export default function Activity() {
   }, []);
   useEffect(() => {
     database
-      .ref(`/Users/${currentuid}/activity`)
+      .ref(`/Users/${auth?.currentUser?.uid}/activity`)
       .on("value", (snapshot) => {
         setTotalActivity(snapshot.numChildren())
       })
   }, [])
   useEffect(() => {
     database
-      .ref(`/Users/${currentuid}/activity`)
+      .ref(`/Users/${auth?.currentUser?.uid}/activity`)
       .orderByChild("timestamp").limitToLast(10)
       .on("value", (snapshot) => {
         let flag = true
@@ -76,7 +76,7 @@ export default function Activity() {
   const fetchMore = () => {
     setFetching(true)
     database
-      .ref(`/Users/${currentuid}/activity`)
+      .ref(`/Users/${auth?.currentUser?.uid}/activity`)
       .orderByChild("timestamp").endBefore(lastKey).limitToLast(10)
       .on("value", (snapshot) => {
         let mySet = new Set()

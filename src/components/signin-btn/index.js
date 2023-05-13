@@ -14,7 +14,6 @@ export default function SignInBtn() {
     if (userBySignIn) {
       database.ref(`/Users/${userBySignIn.uid}`).on("value", (snapshot) => {
         if (snapshot.val()) {
-          localStorage.setItem("uid", userBySignIn.uid);
           setLoading(false);
           window.location.replace('/')
         } else {
@@ -29,7 +28,6 @@ export default function SignInBtn() {
               timestamp: Date.now(),
             })
             .then(() => {
-              localStorage.setItem("uid", userBySignIn.uid);
               setLoading(false);
               window.location.replace('/')
             })

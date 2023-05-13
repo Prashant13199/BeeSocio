@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
@@ -8,7 +8,6 @@ import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Forward({ id, messageData, handleClose2, handleClose9 }) {
 
-    const currentuid = localStorage.getItem("uid");
     const [photo, setPhoto] = useState("");
     const [username, setUsername] = useState("");
     const [currentUsername, setCurrentUsername] = useState("");
@@ -23,7 +22,7 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
     }, []);
 
     useEffect(() => {
-        database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+        database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
             if (snapshot.val()) {
                 setCurrentUsername(snapshot.val().username);
                 setCurrentEmail(snapshot.val().email);
@@ -52,7 +51,7 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
                 database.ref(`/RoomsMsg/${id}/messages/${mid}`).set({
                     forwarded: true,
                     post: messageData.postUrl ? messageData.postUrl : "",
-                    uid: currentuid,
+                    uid: auth?.currentUser?.uid,
                     email: currentEmail,
                     timestamp: Date.now(),
                     postuid: messageData.postuid ? messageData.postuid : "",
@@ -65,7 +64,7 @@ export default function Forward({ id, messageData, handleClose2, handleClose9 })
                 database.ref(`/Rooms/${id}`).update({ timestamp: Date.now() });
                 database.ref(`/Rooms/${id}/users`).on('value', snapshot => {
                     snapshot.forEach((snap) => {
-                        if (snap.key !== currentuid) {
+                        if (snap.key !== auth?.currentUser?.uid) {
                             database.ref(`/Users/${snap.key}/messages/${id}`).set({
                                 id: snap.key,
                                 text: `${currentUsername} forwarded message in ${username} group`,

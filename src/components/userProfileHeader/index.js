@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -30,7 +30,6 @@ export default function UserProfileHeader(props) {
     const [follow, setfollow] = useState([]);
     const [cfollowing, setcfollowing] = useState([]);
     let like = false;
-    const currentuid = localStorage.getItem("uid");
     const [currentUsername, setCurrentUsername] = useState("");
     const [username, setUsername] = useState("");
     const [bio, setBio] = useState("");
@@ -45,7 +44,7 @@ export default function UserProfileHeader(props) {
     }, [])
 
     useEffect(() => {
-        database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+        database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
             if (snapshot.val()) {
                 setCurrentUsername(snapshot.val().username);
             }
@@ -89,7 +88,7 @@ export default function UserProfileHeader(props) {
     }, [props]);
 
     for (var i = 0; i < follow.length; i++) {
-        if (follow[i].uid === currentuid) {
+        if (follow[i].uid === auth?.currentUser?.uid) {
             like = true;
         }
     }
@@ -97,23 +96,23 @@ export default function UserProfileHeader(props) {
     const handlefollow = async () => {
         if (like === false) {
             database.ref(`/Users/${props.uid
-                }/followers/${currentuid}`).set({ id: currentuid, uid: currentuid }).then(() => {
+                }/followers/${auth?.currentUser?.uid}`).set({ id: auth?.currentUser?.uid, uid: auth?.currentUser?.uid }).then(() => {
                     console.log("following");
                 }).catch((e) => {
                     console.log(e);
                 });
-            database.ref(`/Users/${currentuid}/following/${props.uid
+            database.ref(`/Users/${auth?.currentUser?.uid}/following/${props.uid
                 }`).set({ id: props.uid, uid: props.uid }).then(() => {
                     console.log("following");
                 }).catch((e) => {
                     console.log(e);
                 });
             database.ref(`/Users/${props.uid
-                }/notifications/${currentuid}`).set({ id: currentuid, text: `${currentUsername} started following you`, timestamp: Date.now(), uid: currentuid });
+                }/notifications/${auth?.currentUser?.uid}`).set({ id: auth?.currentUser?.uid, text: `${currentUsername} started following you`, timestamp: Date.now(), uid: auth?.currentUser?.uid });
             database.ref(`/Users/${props.uid
-                }/activity/${currentuid}`).set({ id: currentuid, uid: currentuid, text: `started following you`, timestamp: Date.now() });
+                }/activity/${auth?.currentUser?.uid}`).set({ id: auth?.currentUser?.uid, uid: auth?.currentUser?.uid, text: `started following you`, timestamp: Date.now() });
             database.ref(`/Users/${props.uid
-                }/notification/${currentuid}`).set({ text: `${currentUsername} started following you` });
+                }/notification/${auth?.currentUser?.uid}`).set({ text: `${currentUsername} started following you` });
         } else {
             Swal.fire({
                 background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
@@ -128,13 +127,13 @@ export default function UserProfileHeader(props) {
             }).then((result) => {
                 if (result.isConfirmed) {
                     database.ref(`/Users/${props.uid
-                        }/followers/${currentuid}`).remove().then(() => {
+                        }/followers/${auth?.currentUser?.uid}`).remove().then(() => {
                             console.log("follow removed");
                             like = false;
                         }).catch((e) => {
                             console.log(e);
                         });
-                    database.ref(`/Users/${currentuid}/following/${props.uid
+                    database.ref(`/Users/${auth?.currentUser?.uid}/following/${props.uid
                         }`).remove().then(() => {
                             console.log("follow removed");
                             like = false;
@@ -142,14 +141,14 @@ export default function UserProfileHeader(props) {
                             console.log(e);
                         });
                     database.ref(`/Users/${props.uid
-                        }/activity/${currentuid}`).remove().then(() => {
+                        }/activity/${auth?.currentUser?.uid}`).remove().then(() => {
                             console.log("activity removed");
                             like = false;
                         }).catch((e) => {
                             console.log(e);
                         });
                     database.ref(`/Users/${props.uid
-                        }/notification/${currentuid}`).remove().then(() => {
+                        }/notification/${auth?.currentUser?.uid}`).remove().then(() => {
                             console.log("activity removed");
                             like = false;
                         }).catch((e) => {
@@ -169,11 +168,11 @@ export default function UserProfileHeader(props) {
         }
     };
     const sendMessage = async () => {
-        if (props.uid !== currentuid) {
-            var names = [props.uid, currentuid];
+        if (props.uid !== auth?.currentUser?.uid) {
+            var names = [props.uid, auth?.currentUser?.uid];
             names.sort();
             let chatRoom = names.join("");
-            database.ref(`Rooms/${chatRoom}`).set({ name1: props.uid, name2: currentuid }).then(() => {
+            database.ref(`Rooms/${chatRoom}`).set({ name1: props.uid, name2: auth?.currentUser?.uid }).then(() => {
                 history.push(`/message/rooms/${names.join("")
                     }`);
             }).catch((e) => {

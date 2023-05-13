@@ -7,8 +7,8 @@ import Post from "../post";
 import loadingIcon from '../../assets/loading.gif'
 
 export default function FeedTabUser({ props }) {
-    const { mode } = useContext(ColorModeContext);
 
+    const { mode } = useContext(ColorModeContext);
     const [posts, setPosts] = useState([]);
     const [lastKey, setLastKey] = useState("")
     const [totalPosts, setTotalPosts] = useState(0)

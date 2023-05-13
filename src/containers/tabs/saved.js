@@ -1,28 +1,27 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
 import loadingIcon from '../../assets/loading.gif'
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SavedTab() {
-    const { mode } = useContext(ColorModeContext);
-    const currentuid = localStorage.getItem("uid");
 
+    const { mode } = useContext(ColorModeContext);
     const [savedposts, setSavedPosts] = useState([]);
     const [lastKey, setLastKey] = useState("")
     const [totalSaved, setTotalSaved] = useState(0)
     const [fetching, setFetching] = useState(false)
 
     useEffect(() => {
-        database.ref(`Users/${currentuid}/saved`).orderByChild("timestamp").on("value", (snapshot) => {
+        database.ref(`Users/${auth?.currentUser?.uid}/saved`).orderByChild("timestamp").on("value", (snapshot) => {
             setTotalSaved(snapshot.numChildren())
         })
     }, [])
 
     useEffect(() => {
-        database.ref(`Users/${currentuid}/saved`).orderByChild("timestamp").limitToLast(9).on("value", (snapshot) => {
+        database.ref(`Users/${auth?.currentUser?.uid}/saved`).orderByChild("timestamp").limitToLast(9).on("value", (snapshot) => {
             let saveList = [];
             let flag = true;
             let key = ""
@@ -42,7 +41,7 @@ export default function SavedTab() {
 
     const fetch = () => {
         setFetching(true)
-        database.ref(`Users/${currentuid}/saved`).orderByChild("timestamp").endBefore(lastKey).limitToLast(9).on("value", (snapshot) => {
+        database.ref(`Users/${auth?.currentUser?.uid}/saved`).orderByChild("timestamp").endBefore(lastKey).limitToLast(9).on("value", (snapshot) => {
             let saveList = [];
             let flag = true;
             let key = ""

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./sidebarchat.css";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { time } from "../../services/time";
@@ -12,7 +12,6 @@ import { ColorModeContext } from "../../services/ThemeContext";
 
 function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
 
-  const currentuid = localStorage.getItem("uid");
   const location = useLocation();
   const [messages, setMessages] = useState("");
   const [photo, setPhoto] = useState("");
@@ -46,7 +45,7 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
         });
     } else {
       database
-        .ref(`/Users/${currentuid === name1 ? name2 : name1}`)
+        .ref(`/Users/${auth?.currentUser?.uid === name1 ? name2 : name1}`)
         .on("value", (snapshot) => {
           if (snapshot.val() !== null) {
             setPhoto(snapshot.val().photo);
@@ -72,9 +71,9 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
     var names = [name1, name2];
     names.sort();
     setRoomName(names.join(""));
-  }, [id, currentuid, name1, name2]);
+  }, [id, auth?.currentUser?.uid, name1, name2]);
   useEffect(() => {
-    database.ref(`/Users/${currentuid}/messages`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/messages`).on("value", (snapshot) => {
       let mNotification = [];
       snapshot.forEach((snap) => {
         mNotification.push({
@@ -89,7 +88,7 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
   const [mnotifications, setmNotification] = useState([]);
 
   const removeNotification = async () => {
-    database.ref(`/Users/${currentuid}/messages/${id}`).remove();
+    database.ref(`/Users/${auth?.currentUser?.uid}/messages/${id}`).remove();
   };
   const handleLink = () => {
     removeNotification()
@@ -137,35 +136,35 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
                 )}
               {messages[0]?.message && messages[0]?.statusreply && (
                 <div style={{ color: "gray" }}>
-                  {messages[0]?.uid !== currentuid
+                  {messages[0]?.uid !== auth?.currentUser?.uid
                     ? "Replied to status"
                     : "You replied to a status"}
                 </div>
               )}
               {messages[0]?.photo && (
                 <div style={{ color: "gray" }}>
-                  {messages[0]?.uid !== currentuid
+                  {messages[0]?.uid !== auth?.currentUser?.uid
                     ? "Sent a media"
                     : "You sent a media"}
                 </div>
               )}
               {messages[0]?.sticker && (
                 <div style={{ color: "gray" }}>
-                  {messages[0]?.uid !== currentuid
+                  {messages[0]?.uid !== auth?.currentUser?.uid
                     ? "Sent a sticker"
                     : "You sent a sticker"}
                 </div>
               )}
               {messages[0]?.gif && (
                 <div style={{ color: "gray" }}>
-                  {messages[0]?.uid !== currentuid
+                  {messages[0]?.uid !== auth?.currentUser?.uid
                     ? "Sent a gif"
                     : "You sent a gif"}
                 </div>
               )}
               {messages[0]?.post && (
                 <div style={{ color: "gray" }}>
-                  {messages[0]?.uid !== currentuid
+                  {messages[0]?.uid !== auth?.currentUser?.uid
                     ? "Sent a post"
                     : "You sent a post"}
                 </div>

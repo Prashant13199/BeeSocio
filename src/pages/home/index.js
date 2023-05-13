@@ -5,7 +5,7 @@ import "./style.css";
 import { Helmet } from "react-helmet";
 import Status from "../../containers/status";
 import { Link } from "react-router-dom";
-import { database } from "../../firebase";
+import { database, auth } from "../../firebase";
 import ActiveUsers from "../../containers/ActiveUsers";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -17,13 +17,12 @@ export default function Home() {
     AOS.init({ duration: 800 })
   }, [])
 
-  const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
   const { mode } = useContext(ColorModeContext);
 
   useEffect(() => {
-    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setCurrentPhoto(snapshot.val().photo);
