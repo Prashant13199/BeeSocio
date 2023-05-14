@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./sidebar.css";
 import SidebarChat from "../sidebarchat";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
@@ -16,8 +16,8 @@ import { ColorModeContext } from "../../services/ThemeContext";
 import { makeid } from '../../services/makeid.js'
 
 function Sidebar() {
-
   let history = useHistory();
+  const currentuid = localStorage.getItem("uid");
   const [rooms, setRooms] = useState([]);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ function Sidebar() {
     database.ref(`/Rooms/${id}/users`).on('value', snapshot => {
       if (snapshot.val() !== undefined) {
         snapshot.forEach((snap1) => {
-          if (snap1.key === auth?.currentUser?.uid) {
+          if (snap1.key === currentuid) {
             user = true
           }
         })
@@ -64,8 +64,8 @@ function Sidebar() {
             }
           }
           else if (
-            snap.val().name1 === auth?.currentUser?.uid ||
-            snap.val().name2 === auth?.currentUser?.uid
+            snap.val().name1 === currentuid ||
+            snap.val().name2 === currentuid
           ) {
             roomList.push({
               id: snap.key,
@@ -84,7 +84,7 @@ function Sidebar() {
     database.ref("/Users").on("value", (snapshot) => {
       let itemsList = [];
       snapshot.forEach((snap) => {
-        if (snap.val().uid !== auth?.currentUser?.uid) {
+        if (snap.val().uid !== currentuid) {
           itemsList.push({
             id: snap.key,
             name: snap.val().username,
@@ -97,15 +97,15 @@ function Sidebar() {
   }, []);
 
   const createChat = async (roomName) => {
-    if (roomName !== auth?.currentUser?.uid) {
-      var names = [roomName, auth?.currentUser?.uid];
+    if (roomName !== currentuid) {
+      var names = [roomName, currentuid];
       names.sort();
       let chatRoom = names.join("");
       database
         .ref(`/Rooms/${chatRoom}`)
         .set({
           name1: roomName,
-          name2: auth?.currentUser?.uid,
+          name2: currentuid,
           timestamp: Date.now(),
         })
         .then(() => {
@@ -135,15 +135,15 @@ function Sidebar() {
           .ref(`/Rooms/${chatRoom}`)
           .set({
             groupName: result.value,
-            createdBy: auth?.currentUser?.uid,
+            createdBy: currentuid,
             group: true,
             timestamp: Date.now(),
             photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}`,
           })
           .then(() => {
             database
-              .ref(`/Rooms/${chatRoom}/users/${auth?.currentUser?.uid}`)
-              .set({ id: auth?.currentUser?.uid, timestamp: Date.now() })
+              .ref(`/Rooms/${chatRoom}/users/${currentuid}`)
+              .set({ id: currentuid, timestamp: Date.now() })
             history.push(`/message/rooms/${chatRoom}`);
           });
       }

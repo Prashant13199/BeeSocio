@@ -3,7 +3,7 @@ import "./style.css";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SinglePost from "../../containers/single-post";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { IconButton } from "@mui/material";
@@ -12,6 +12,7 @@ import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SavedPost({ id, photoURL }) {
 
+    const currentuid = localStorage.getItem("uid");
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -30,7 +31,7 @@ export default function SavedPost({ id, photoURL }) {
     }, [])
 
     const removeSaved = () => {
-        database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}`).remove()
+        database.ref(`/Users/${currentuid}/saved/${id}`).remove()
     }
 
     return (

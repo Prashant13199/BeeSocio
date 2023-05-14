@@ -1,27 +1,28 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import empty from "../../assets/empty.png";
 import Post from "../post";
 import loadingIcon from '../../assets/loading.gif'
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function FeedTab() {
-
     const { mode } = useContext(ColorModeContext);
+    const currentuid = localStorage.getItem("uid");
+
     const [posts, setPosts] = useState([]);
     const [lastKey, setLastKey] = useState("")
     const [totalPosts, setTotalPosts] = useState(0)
     const [fetching, setFetching] = useState(false)
 
     useEffect(() => {
-        database.ref(`Users/${auth?.currentUser?.uid}/Posts`).orderByChild("timestamp").on("value", (snapshot) => {
+        database.ref(`Users/${currentuid}/Posts`).orderByChild("timestamp").on("value", (snapshot) => {
             setTotalPosts(snapshot.numChildren())
         })
     }, [])
 
     useEffect(() => {
-        database.ref(`Users/${auth?.currentUser?.uid}/Posts`).orderByChild("timestamp").limitToLast(5).on("value", (snapshot) => {
+        database.ref(`Users/${currentuid}/Posts`).orderByChild("timestamp").limitToLast(5).on("value", (snapshot) => {
             let postList = [];
             let flag = true;
             let key = ""
@@ -40,7 +41,7 @@ export default function FeedTab() {
 
     const fetch = () => {
         setFetching(true)
-        database.ref(`Users/${auth?.currentUser?.uid}/Posts`).orderByChild("timestamp").endBefore(lastKey).limitToLast(5).on("value", (snapshot) => {
+        database.ref(`Users/${currentuid}/Posts`).orderByChild("timestamp").endBefore(lastKey).limitToLast(5).on("value", (snapshot) => {
             let postList = [];
             let flag = true;
             let key = ""

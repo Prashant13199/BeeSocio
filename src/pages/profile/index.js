@@ -3,7 +3,7 @@ import ProfileHeader from "../../components/profileHeader/profileHeader";
 import { MyFeed } from "../../containers";
 import "./style.css";
 import { Helmet } from "react-helmet";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Profile() {
@@ -11,10 +11,11 @@ export default function Profile() {
         window.scrollTo(0, 0);
     }, []);
     const { mode } = useContext(ColorModeContext);
+    const currentuid = localStorage.getItem('uid')
     const [username, setUsername] = useState('Profile')
 
     useEffect(() => {
-        database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
             if (snapshot.val()) {
                 setUsername(snapshot.val().username);
             }

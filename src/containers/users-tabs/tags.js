@@ -6,8 +6,8 @@ import empty from "../../assets/empty.png";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function TagTabUser({ props }) {
-
     const { mode } = useContext(ColorModeContext);
+
     const [tags, setTags] = useState([]);
 
     useEffect(() => {

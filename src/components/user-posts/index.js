@@ -8,16 +8,22 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ColorModeContext } from "../../services/ThemeContext";
 
-export default function UserPost({ uid, id, photoURL, caption, timestamp, tagss, venue }) {
+export default function UserPost({
+    uid,
+    id,
+    photoURL,
+    caption,
+    timestamp,
+    tagss,
+    venue
+}) {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const { mode } = useContext(ColorModeContext);
-
     useEffect(() => {
         AOS.init({ duration: 800 })
     }, [])
-
     return (
         <>
             <Modal show={show}

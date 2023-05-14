@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import "./style.css";
 import ActiveUsersSingle from "../../components/ActiveUsersSingle";
 import loadingIcon from '../../assets/loading.gif'
@@ -10,13 +10,14 @@ export default function ActiveUsers() {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const currentuid = localStorage.getItem('uid');
 
   useEffect(() => {
     AOS.init({ duration: 800 })
   }, [])
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/following`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/following`).on("value", (snapshot) => {
       let usersList = [];
       snapshot.forEach((snap) => {
         usersList.push({ id: snap.val().uid, uid: snap.val().uid })

@@ -25,6 +25,8 @@ export default function Login() {
       .then((user) => {
         setLoading(false);
         if (user.user.emailVerified) {
+          localStorage.setItem("uid", user.user.uid);
+          localStorage.setItem("theme", "light");
           window.location.reload();
         } else {
           Swal.fire({

@@ -37,6 +37,7 @@ export default function ProfileHeader() {
     const handleShow4 = () => setShow4(true);
     const [follow, setfollow] = useState([]);
     const [cfollowing, setcfollowing] = useState([]);
+    const currentuid = localStorage.getItem("uid");
     const [currentusername, setCurrentUsername] = useState("");
     const [currentPhoto, setCurrentPhoto] = useState("");
     const [currentBio, setCurrentBio] = useState("");
@@ -59,7 +60,7 @@ export default function ProfileHeader() {
     }, [])
 
     useEffect(() => {
-        database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
             if (snapshot.val()) {
                 setCurrentUsername(snapshot.val().username);
                 setCurrentPhoto(snapshot.val().photo);
@@ -68,7 +69,7 @@ export default function ProfileHeader() {
             }
         });
 
-        database.ref(`/Users/${auth?.currentUser?.uid}/followers`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/followers`).on("value", (snapshot) => {
             let followList = [];
             snapshot.forEach((snap) => {
                 followList.push({ id: snap.key, uid: snap.val().uid });
@@ -76,13 +77,13 @@ export default function ProfileHeader() {
 
             setfollow(followList)
         })
-        database.ref(`/Users/${auth?.currentUser?.uid}/Posts`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/Posts`).on("value", (snapshot) => {
             setPostCount(snapshot.numChildren());
         });
-        database.ref(`/Users/${auth?.currentUser?.uid}/Videos`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/Videos`).on("value", (snapshot) => {
             setVideoCount(snapshot.numChildren());
         });
-        database.ref(`/Users/${auth?.currentUser?.uid}/following`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/following`).on("value", (snapshot) => {
             let followingList = [];
             snapshot.forEach((snap) => {
                 followingList.push({ id: snap.key, uid: snap.val().uid });
@@ -106,7 +107,7 @@ export default function ProfileHeader() {
             showLoaderOnConfirm: true
         }).then((result) => {
             if (result.isConfirmed) {
-                database.ref(`/Users/${auth?.currentUser?.uid}`).update({ bio: result.value }).then(() => {
+                database.ref(`/Users/${currentuid}`).update({ bio: result.value }).then(() => {
                     Swal.fire({
                         background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                         color: mode === "light" ? "black" : "white",
@@ -145,7 +146,7 @@ export default function ProfileHeader() {
             showLoaderOnConfirm: true
         }).then((result) => {
             if (result.isConfirmed) {
-                database.ref(`/Users/${auth?.currentUser?.uid}`).update({ website: result.value }).then(() => {
+                database.ref(`/Users/${currentuid}`).update({ website: result.value }).then(() => {
                     Swal.fire({
                         background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                         color: mode === "light" ? "black" : "white",
@@ -194,7 +195,7 @@ export default function ProfileHeader() {
                 });
                 if (!flag) {
                     flag = false;
-                    database.ref(`/Users/${auth?.currentUser?.uid}`).update({ username: result.value.replaceAll(" ", "") }).then(() => {
+                    database.ref(`/Users/${currentuid}`).update({ username: result.value.replaceAll(" ", "") }).then(() => {
                         Swal.fire({
                             background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                             color: mode === "light" ? "black" : "white",
@@ -252,7 +253,7 @@ export default function ProfileHeader() {
                 } catch (e) {
                     console.log(e);
                 }
-                database.ref(`/Users/${auth?.currentUser?.uid}`).update({ photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}` }).then(() => {
+                database.ref(`/Users/${currentuid}`).update({ photo: `https://api.dicebear.com/6.x/thumbs/png?seed=${avatarArray[Math.ceil(Math.random() * 10)]}` }).then(() => {
                     Swal.fire({
                         background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                         color: mode === "light" ? "black" : "white",
@@ -279,9 +280,10 @@ export default function ProfileHeader() {
         }).then((result) => {
             if (result.isConfirmed) {
                 history.push('/')
-                database.ref(`/Users/${auth?.currentUser?.uid}`).update({ status: false, lastseen: Date.now() }).then(() => {
+                database.ref(`/Users/${currentuid}`).update({ status: false, lastseen: Date.now() }).then(() => {
                     console.log("Status changed to offline")
                 }).then(() => {
+                    localStorage.clear();
                     auth.signOut().then(() => {
                         console.log("LoggedOut");
                         window.location.reload();
@@ -334,7 +336,7 @@ export default function ProfileHeader() {
 
     const handleUpload = () => {
         if (image && !link) {
-            var imageName = auth?.currentUser?.uid;
+            var imageName = currentuid;
             if (image.name.toLowerCase().includes(".jpg") || image.name.toLowerCase().includes(".png") || image.name.toLowerCase().includes(".jpeg")) {
                 fileName = `${imageName}.jpg`;
             } else if (image.name.toLowerCase().includes(".gif")) {
@@ -350,7 +352,7 @@ export default function ProfileHeader() {
                 console.log(error);
             }, () => {
                 storage.ref("userphoto").child(`${fileName}`).getDownloadURL().then((imageUrl) => {
-                    database.ref(`/Users/${auth?.currentUser?.uid}`).update({ photo: imageUrl });
+                    database.ref(`/Users/${currentuid}`).update({ photo: imageUrl });
                     Swal.fire({
                         background: mode === "light" ? "rgba(248,249,250,1)" : "rgba(33,37,41,1)",
                         color: mode === "light" ? "black" : "white",
@@ -379,7 +381,7 @@ export default function ProfileHeader() {
                 document.getElementById("fileInputProfile").value = "";
             });
         } else if (link) {
-            database.ref(`/Users/${auth?.currentUser?.uid}`).update({ photo: link }).then(() => {
+            database.ref(`/Users/${currentuid}`).update({ photo: link }).then(() => {
                 setImage(null);
                 handleClose2();
                 setLink("");

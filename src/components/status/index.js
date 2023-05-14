@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { storage, database, auth } from "../../firebase";
+import { storage, database } from "../../firebase";
 import "./style.css";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -53,6 +53,8 @@ export default function SingleStatus({
   };
   const handleClose2 = () => setShow2(false);
   const handleShow2 = () => setShow2(true);
+
+  const currentuid = localStorage.getItem("uid");
   const { mode } = useContext(ColorModeContext);
   let like = false;
 
@@ -63,7 +65,7 @@ export default function SingleStatus({
   }, [])
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
@@ -88,9 +90,9 @@ export default function SingleStatus({
   }, [uid]);
 
   const addview = () => {
-    database.ref(`/Status/${id}/seen/${auth?.currentUser?.uid}`).set({
-      id: auth?.currentUser?.uid,
-      uid: auth?.currentUser?.uid,
+    database.ref(`/Status/${id}/seen/${currentuid}`).set({
+      id: currentuid,
+      uid: currentuid,
     });
     setView(true);
   };
@@ -114,14 +116,14 @@ export default function SingleStatus({
   useEffect(() => {
     database.ref(`/Status/${id}/seen`).on("value", (snapshot) => {
       snapshot.forEach((snap) => {
-        if (snap.key === auth?.currentUser?.uid) {
+        if (snap.key === currentuid) {
           setView(true);
         }
       });
     });
   });
   for (let i = 0; i < likes.length; i++) {
-    if (likes[i].uid === auth?.currentUser?.uid) {
+    if (likes[i].uid === currentuid) {
       like = true;
     }
   }
@@ -129,21 +131,21 @@ export default function SingleStatus({
     if (like === false) {
       var idl = makeid(10);
       database
-        .ref(`/Status/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Status/${id}/likes/${id}${currentuid}`)
         .set({
           id: idl,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
-          database.ref(`/Users/${uid}/activity/${id}${auth?.currentUser?.uid}`).set({
+          database.ref(`/Users/${uid}/activity/${id}${currentuid}`).set({
             id: id,
             text: `liked your status`,
             timestamp: Date.now(),
-            uid: auth?.currentUser?.uid,
+            uid: currentuid,
             postid: id,
             photoUrl: statusImg,
           });
-          database.ref(`/Users/${uid}/notification/${id}${auth?.currentUser?.uid}`).set({
+          database.ref(`/Users/${uid}/notification/${id}${currentuid}`).set({
             id: id,
             text: `${currentUsername} liked your status`,
             timestamp: Date.now(),
@@ -154,11 +156,11 @@ export default function SingleStatus({
         });
     } else {
       database
-        .ref(`/Status/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Status/${id}/likes/${id}${currentuid}`)
         .remove()
         .then(() => {
-          database.ref(`/Users/${uid}/activity/${id}${auth?.currentUser?.uid}`).remove()
-          database.ref(`/Users/${uid}/notification/${id}${auth?.currentUser?.uid}`).remove()
+          database.ref(`/Users/${uid}/activity/${id}${currentuid}`).remove()
+          database.ref(`/Users/${uid}/notification/${id}${currentuid}`).remove()
           console.log("like removed");
           like = false;
         })
@@ -188,18 +190,18 @@ export default function SingleStatus({
   const addmsgreply = () => {
     if (statusreply !== null) {
       if (statusreply.trim()) {
-        var names = [uid, auth?.currentUser?.uid];
+        var names = [uid, currentuid];
         names.sort();
         let chatRoom = names.join("");
         database.ref(`Rooms/${chatRoom}`).set({
           name1: uid,
-          name2: auth?.currentUser?.uid,
+          name2: currentuid,
           timestamp: Date.now(),
         });
         let mmid = makeid(10);
         database.ref(`/RoomsMsg/${chatRoom}/messages/${mmid}`).set({
           message: statusreply,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           timestamp: Date.now(),
           statusreply: true,
           statusphoto: statusImg,
@@ -209,7 +211,7 @@ export default function SingleStatus({
           timestamp: Date.now(),
         });
         database.ref(`/Users/${uid}/messages/${chatRoom}`).set({
-          id: auth?.currentUser?.uid,
+          id: currentuid,
           text: `${currentUsername} replied to your status`,
         });
         Swal.fire({
@@ -339,10 +341,10 @@ export default function SingleStatus({
             </div>
             <div className="status__headerRight">
               {statusview.length !== 0 &&
-                <IconButton onClick={handleShow2} style={{ display: auth?.currentUser?.uid === uid ? "block" : "none" }}>
+                <IconButton onClick={handleShow2} style={{ display: currentuid === uid ? "block" : "none" }}>
                   <VisibilityIcon color="primary" />
                 </IconButton>}
-              <IconButton onClick={deletePost} style={{ display: auth?.currentUser?.uid === uid ? "block" : "none" }} >
+              <IconButton onClick={deletePost} style={{ display: currentuid === uid ? "block" : "none" }} >
                 <DeleteIcon color="primary" />
               </IconButton>
               <IconButton onClick={handleClose}>
@@ -400,7 +402,7 @@ export default function SingleStatus({
               style={{
                 position: "absolute",
                 right: 0,
-                bottom: auth?.currentUser?.uid !== uid ? "50px" : 0,
+                bottom: currentuid !== uid ? "50px" : 0,
                 backgroundColor: "rgba(0, 0, 0, 0.3)"
               }}
             >
@@ -421,7 +423,7 @@ export default function SingleStatus({
               </Link>
             </div>
           </div>
-          {auth?.currentUser?.uid !== uid && <div className="status__reply">
+          {currentuid !== uid && <div className="status__reply">
             <div style={{ display: "flex", alignItems: "center" }}>
               <div className="status__likeBtn" onClick={handleStatusLike}>
                 {like ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon color="primary" />}

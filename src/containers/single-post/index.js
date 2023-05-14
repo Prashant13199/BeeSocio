@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import Comment from "../../components/comment";
 import Like from "../../components/like";
-import { storage, database, auth } from "../../firebase";
+import { storage, database } from "../../firebase";
 import CommentInput from "../../components/comment-input";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -57,6 +57,7 @@ export default function SinglePost({
   const [comments, setComments] = useState([]);
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState();
+  const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
   const { mode } = useContext(ColorModeContext);
@@ -73,7 +74,7 @@ export default function SinglePost({
         if (snap.val().group === true) {
           {
             snap.val().users && Object.entries(snap.val().users).map(([k, v]) => {
-              if (v.id === auth?.currentUser?.uid) {
+              if (v.id === currentuid) {
                 grp.push(
                   snap.key
                 )
@@ -87,20 +88,20 @@ export default function SinglePost({
   }, [])
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}/`).on("value", snapshot => {
+    database.ref(`/Users/${currentuid}/saved/${id}/`).on("value", snapshot => {
       if (snapshot.val()) {
         setBookmarkpost(true)
       } else {
         setBookmarkpost(false)
       }
     })
-  }, [auth?.currentUser?.uid, id])
+  }, [currentuid, id])
 
   const handlebookmark = async () => {
     if (bookmarkpost) {
-      database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}`).remove()
+      database.ref(`/Users/${currentuid}/saved/${id}`).remove()
     } else {
-      database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}`).set({
+      database.ref(`/Users/${currentuid}/saved/${id}`).set({
         id: id,
         photoUrl: photoURL,
         timestamp: Date.now(),
@@ -111,7 +112,7 @@ export default function SinglePost({
   }
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setCurrentPhoto(snapshot.val().photo);
@@ -186,7 +187,7 @@ export default function SinglePost({
   }, [id]);
 
   for (var i = 0; i < likes.length; i++) {
-    if (likes[i].uid === auth?.currentUser?.uid) {
+    if (likes[i].uid === currentuid) {
       like = true;
     }
   }
@@ -195,10 +196,10 @@ export default function SinglePost({
     if (like === false) {
       var idl = makeid(10);
       database
-        .ref(`/Posts/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${id}/likes/${id}${currentuid}`)
         .set({
           id: idl,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
           console.log("like added");
@@ -206,7 +207,7 @@ export default function SinglePost({
         .catch((e) => {
           console.log(e);
         });
-      if (uid !== auth?.currentUser?.uid) {
+      if (uid !== currentuid) {
         database.ref(`/Users/${uid}/activity/${id}`).set({
           id: id,
           text:
@@ -215,7 +216,7 @@ export default function SinglePost({
               : ` and ${likes.length} others liked your post`,
           timestamp: Date.now(),
           postid: id,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           photoUrl: photoURL,
         });
         database.ref(`/Users/${uid}/notification/${id}`).set({
@@ -229,7 +230,7 @@ export default function SinglePost({
       }
     } else {
       database
-        .ref(`/Posts/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${id}/likes/${id}${currentuid}`)
         .remove()
         .then(() => {
           console.log("like removed");
@@ -265,8 +266,8 @@ export default function SinglePost({
           console.log(e);
         }
         if (photoURL.includes('mp4')) {
-          if (uid === auth?.currentUser?.uid) {
-            database.ref(`/Users/${auth?.currentUser?.uid}/Videos/${id}`).remove().then(() => {
+          if (uid === currentuid) {
+            database.ref(`/Users/${currentuid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
@@ -278,8 +279,8 @@ export default function SinglePost({
           }
 
         } else {
-          if (uid === auth?.currentUser?.uid) {
-            database.ref(`/Users/${auth?.currentUser?.uid}/Posts/${id}`).remove().then(() => {
+          if (uid === currentuid) {
+            database.ref(`/Users/${currentuid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
@@ -322,7 +323,7 @@ export default function SinglePost({
       .set({
         timestamp: Date.now(),
         statusImg: photoURL,
-        uid: auth?.currentUser?.uid,
+        uid: currentuid,
         postuid: uid,
       })
       .then(() => {
@@ -353,27 +354,27 @@ export default function SinglePost({
       confirmButtonText: "Yes, send",
     }).then((result) => {
       if (result.isConfirmed) {
-        var names = [item.uid, auth?.currentUser?.uid];
+        var names = [item.uid, currentuid];
         names.sort();
         let chatRoom = names.join("");
         database.ref(`/Rooms/${chatRoom}`).set({
           name1: item.uid,
-          name2: auth?.currentUser?.uid,
+          name2: currentuid,
           timestamp: Date.now(),
         });
         let mid = makeid(10);
         database.ref(`/RoomsMsg/${chatRoom}/messages/${mid}`).set({
           post: photoURL,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           timestamp: Date.now(),
           postid: id,
           postuid: uid,
         });
         database.ref(`/Rooms/${chatRoom}`).update({ timestamp: Date.now() });
         database
-          .ref(`/Users/${item.uid}/messages/${auth?.currentUser?.uid}`)
+          .ref(`/Users/${item.uid}/messages/${currentuid}`)
           .set({
-            id: auth?.currentUser?.uid,
+            id: currentuid,
             text: `${currentUsername} sent you a post`,
           })
           .then(() => {
@@ -396,10 +397,10 @@ export default function SinglePost({
     if (!like) {
       var idl = makeid(10);
       database
-        .ref(`/Posts/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${id}/likes/${id}${currentuid}`)
         .set({
           id: idl,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
           console.log("like added");
@@ -407,7 +408,7 @@ export default function SinglePost({
         .catch((e) => {
           console.log(e);
         });
-      if (uid !== auth?.currentUser?.uid) {
+      if (uid !== currentuid) {
         database.ref(`/Users/${uid}/activity/${id}`).set({
           id: id,
           text:
@@ -416,7 +417,7 @@ export default function SinglePost({
               : ` and ${likes.length} others liked your post`,
           timestamp: Date.now(),
           postid: id,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           photoUrl: photoURL,
         });
         database.ref(`/Users/${uid}/notification/${id}`).set({
@@ -659,7 +660,7 @@ export default function SinglePost({
           })}
           {users ? (
             users.map((user) =>
-              user.uid !== auth?.currentUser?.uid ? (
+              user.uid !== currentuid ? (
                 <Users2
                   uid={user.uid}
                   key={user.id}
@@ -697,7 +698,7 @@ export default function SinglePost({
                 tags
               </ListGroup.Item>
             )}
-            {(auth?.currentUser?.uid === uid) && (
+            {(currentuid === uid) && (
               <ListGroup.Item
                 action
                 variant="danger"
@@ -755,7 +756,7 @@ export default function SinglePost({
                       color: "white",
                       fontWeight: "bold",
                     }}
-                    to={uid !== auth?.currentUser?.uid ? `/userprofile/${uid}` : '/profile'}
+                    to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}
                     activeClassName="is-active"
                     exact={true}
                   >
@@ -814,7 +815,7 @@ export default function SinglePost({
           </IconButton>
 
           <IconButton onClick={handleShow5} style={{
-            display: (uid === auth?.currentUser?.uid || tagss || superUser) ? "block" : "none"
+            display: (uid === currentuid || tagss || superUser) ? "block" : "none"
           }}>
             <MoreHorizIcon style={{ fontSize: '30px' }} sx={{ color: 'white' }} />
           </IconButton>

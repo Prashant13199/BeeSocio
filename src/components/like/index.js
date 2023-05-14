@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import { Link } from "react-router-dom";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ColorModeContext } from "../../services/ThemeContext";
@@ -11,8 +11,9 @@ export default function Like({ uid }) {
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [status, setStatus] = useState(false);
-  const { mode } = useContext(ColorModeContext);
+  const currentuid = localStorage.getItem("uid");
 
+  const { mode } = useContext(ColorModeContext);
   useEffect(() => {
     database.ref(`/Users/${uid}`).on("value", (snapshot) => {
       if (snapshot.val()) {
@@ -41,7 +42,7 @@ export default function Like({ uid }) {
           color: mode === "light" ? "black" : "white",
           marginLeft: "10px"
         }}
-        to={uid === auth?.currentUser?.uid ? '/profile' : `/userprofile/${uid}`}
+        to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}
         activeClassName="is-active"
         exact={true}
       >

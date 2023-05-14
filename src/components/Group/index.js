@@ -1,35 +1,37 @@
 import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
 import { Button } from "react-bootstrap";
 import { ColorModeContext } from "../../services/ThemeContext";
 
-export default function Group({ id, postUrl, postuid, postid }) {
-
+export default function Group({
+    id,
+    postUrl,
+    postuid,
+    postid,
+}) {
+    const currentuid = localStorage.getItem("uid");
     const [photo, setPhoto] = useState("");
     const [username, setUsername] = useState("");
     const [currentUsername, setCurrentUsername] = useState("");
     const [currentEmail, setCurrentEmail] = useState("");
     const { mode } = useContext(ColorModeContext);
-
     useEffect(() => {
         database.ref(`/Rooms/${id}`).on("value", (snapshot) => {
             setPhoto(snapshot.val().photo);
             setUsername(snapshot.val().groupName);
         });
     }, []);
-
     useEffect(() => {
-        database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+        database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
             if (snapshot.val()) {
                 setCurrentUsername(snapshot.val().username);
                 setCurrentEmail(snapshot.val().email);
             }
         });
     }, []);
-
     const sendPicMessage = async () => {
         Swal.fire({
             background:
@@ -47,7 +49,7 @@ export default function Group({ id, postUrl, postuid, postid }) {
                 let mid = makeid(10);
                 database.ref(`/RoomsMsg/${id}/messages/${mid}`).set({
                     post: postUrl,
-                    uid: auth?.currentUser?.uid,
+                    uid: currentuid,
                     email: currentEmail,
                     timestamp: Date.now(),
                     postuid: postuid,
@@ -56,7 +58,7 @@ export default function Group({ id, postUrl, postuid, postid }) {
                 database.ref(`/Rooms/${id}`).update({ timestamp: Date.now() });
                 database.ref(`/Rooms/${id}/users`).on('value', snapshot => {
                     snapshot.forEach((snap) => {
-                        if (snap.key !== auth?.currentUser?.uid) {
+                        if (snap.key !== currentuid) {
                             database.ref(`/Users/${snap.key}/messages/${id}`).set({
                                 id: snap.key,
                                 text: `${currentUsername} sent post in ${username} group`,
@@ -81,7 +83,6 @@ export default function Group({ id, postUrl, postuid, postid }) {
             }
         });
     };
-
     return (
         <div style={{ margin: "10px 0px", display: "flex", justifyContent: "space-between" }}>
             <div>

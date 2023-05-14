@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { database, storage, auth } from "../../firebase";
+import { database, storage } from "../../firebase";
 import "./style.css";
 import SingleStatus from "../../components/status";
 import { Modal } from "react-bootstrap";
@@ -11,7 +11,7 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Status() {
-
+  const currentuid = localStorage.getItem("uid");
   const [status1, setStatus1] = useState([]);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -21,7 +21,7 @@ export default function Status() {
   const { mode } = useContext(ColorModeContext);
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentPhoto(snapshot.val().photo);
       }
@@ -74,7 +74,7 @@ export default function Status() {
   }, []);
   useEffect(() => {
     database
-      .ref(`/Users/${auth?.currentUser?.uid}/following`)
+      .ref(`/Users/${currentuid}/following`)
       .orderByChild("timestamp")
       .on("value", (snapshot) => {
         let followList = [];
@@ -139,7 +139,7 @@ export default function Status() {
         {status1.map((stat) => {
           if (following.length === 0) {
             return (
-              stat.uid === auth?.currentUser?.uid && (
+              stat.uid === currentuid && (
                 <SingleStatus
                   statusImg={stat.statusImg}
                   uid={stat.uid}
@@ -154,7 +154,7 @@ export default function Status() {
             );
           } else {
             for (let i = 0; i < following.length; i++) {
-              if ((stat.uid === following[i].uid) | (stat.uid === auth?.currentUser?.uid)) {
+              if ((stat.uid === following[i].uid) | (stat.uid === currentuid)) {
                 return (
                   <SingleStatus
                     statusImg={stat.statusImg}

@@ -7,7 +7,6 @@ import loadingIcon from '../../assets/loading.gif'
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SingleFeed(props) {
-
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { mode } = useContext(ColorModeContext);
@@ -17,7 +16,6 @@ export default function SingleFeed(props) {
       window.scrollTo(0, 0);
     }, 0);
   }, []);
-
   useEffect(() => {
     database
       .ref(`Posts/${props.match.params.postid}/`)

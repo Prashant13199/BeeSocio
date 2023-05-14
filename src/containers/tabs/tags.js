@@ -1,22 +1,21 @@
 import { Grid } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import UserPost from "../../components/user-posts";
 import empty from "../../assets/empty.png";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function TagTab() {
-
     const { mode } = useContext(ColorModeContext);
+    const currentuid = localStorage.getItem("uid");
     const [tags, setTags] = useState([]);
-
     useEffect(() => {
         database.ref(`Posts`).orderByChild("timestamp").limitToLast(6).on("value", (snapshot) => {
             let tagList = []
             snapshot.forEach((snap) => {
                 if (snap.val().tagss) {
                     for (let i = 0; i < snap.val().tagss.length; i++) {
-                        if (snap.val().tagss[i] === auth?.currentUser?.uid) {
+                        if (snap.val().tagss[i] === currentuid) {
                             tagList.push({ id: snap.key, post: snap.val() })
                         }
                     }

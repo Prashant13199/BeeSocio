@@ -3,7 +3,7 @@ import "./style.css";
 import { NavLink } from "react-router-dom";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Badge, IconButton } from "@mui/material";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useHistory } from "react-router-dom";
 import icon from "../../bee.png";
@@ -33,29 +33,42 @@ export default function NavbarHead() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   let history = useHistory();
-
+  const currentuid = localStorage.getItem("uid");
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [currentUsername, setCurrentUsername] = useState("");
   const [username, setUsername] = useState("");
   const audio = new Audio(audio1);
   const [items, setItems] = useState([]);
+  const [fetchedUid, setFetchedUid] = useState("");
   const [mnotifications, setmNotification] = useState([]);
   const [notifications, setNotification] = useState([]);
   const { toggleColorMode, mode } = useContext(ColorModeContext);
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
+      if (snapshot.val()) {
+        setFetchedUid(snapshot.val().uid);
+      } else {
+        console.log("Error occured in fetching data");
+        localStorage.clear();
+        window.location.reload();
+      }
+    });
+  }, [])
+
+  useEffect(() => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentPhoto(snapshot.val().photo);
         setCurrentUsername(snapshot.val().username);
       }
     });
-    if (auth?.currentUser?.uid) {
-      database.ref(`/Users/${auth?.currentUser?.uid}`).update({
+    if (fetchedUid) {
+      database.ref(`/Users/${fetchedUid}`).update({
         status: true,
       });
     }
-  }, [auth?.currentUser?.uid]);
+  }, [fetchedUid, currentuid]);
 
   useEffect(() => {
     database.ref(`/Users/${location && location.pathname.split('/')[2]}/`).on("value", (snapshot) => {
@@ -67,35 +80,35 @@ export default function NavbarHead() {
 
   useEffect(() => {
     window.addEventListener("blur", () => {
-      if (auth?.currentUser?.uid && isMobile) {
-        database.ref(`/Users/${auth?.currentUser?.uid}`).update({
+      if (fetchedUid && isMobile) {
+        database.ref(`/Users/${fetchedUid}`).update({
           status: false,
           lastseen: Date.now(),
         });
       }
     });
     window.addEventListener("focus", () => {
-      if (auth?.currentUser?.uid) {
-        database.ref(`/Users/${auth?.currentUser?.uid}`).update({
+      if (fetchedUid) {
+        database.ref(`/Users/${fetchedUid}`).update({
           status: true,
         });
       }
     });
     window.addEventListener("beforeunload", () => {
-      if (auth?.currentUser?.uid) {
-        database.ref(`/Users/${auth?.currentUser?.uid}`).update({
+      if (fetchedUid) {
+        database.ref(`/Users/${fetchedUid}`).update({
           status: false,
           lastseen: Date.now(),
         });
       }
     });
-  }, [auth?.currentUser?.uid]);
+  }, [fetchedUid]);
 
   useEffect(() => {
     database.ref("/Users").on("value", (snapshot) => {
       let itemsList = [];
       snapshot.forEach((snap) => {
-        if (snap.val().uid !== auth?.currentUser?.uid) {
+        if (snap.val().uid !== currentuid) {
           itemsList.push({
             id: snap.key,
             name: snap.val().username,
@@ -108,7 +121,7 @@ export default function NavbarHead() {
   }, []);
 
   const handleOnSelect = (item) => {
-    if (item.uid !== auth?.currentUser?.uid) {
+    if (item.uid !== currentuid) {
       history.push(`/userprofile/${item.uid}`);
     } else {
       history.push(`/profile`);
@@ -135,7 +148,7 @@ export default function NavbarHead() {
 
   useEffect(() => {
     database
-      .ref(`/Users/${auth?.currentUser?.uid}/messages`)
+      .ref(`/Users/${currentuid}/messages`)
       .orderByChild("timestamp")
       .on("value", (snapshot) => {
         let mnotificationList = [];
@@ -150,7 +163,7 @@ export default function NavbarHead() {
   }, []);
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/messages`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/messages`).on("value", (snapshot) => {
       snapshot.forEach((snap) => {
         if (snapshot.length !== 0 && !isMobile) {
           if (Notification.permission === "granted") {
@@ -169,7 +182,7 @@ export default function NavbarHead() {
 
   useEffect(() => {
     database
-      .ref(`/Users/${auth?.currentUser?.uid}/notification`)
+      .ref(`/Users/${currentuid}/notification`)
       .orderByChild("timestamp")
       .on("value", (snapshot) => {
         let notificationList = [];
@@ -185,7 +198,7 @@ export default function NavbarHead() {
 
   useEffect(() => {
     database
-      .ref(`/Users/${auth?.currentUser?.uid}/notification`)
+      .ref(`/Users/${currentuid}/notification`)
       .on("value", (snapshot) => {
         snapshot.forEach((snap) => {
           if (snapshot.length !== 0 && !isMobile) {
@@ -204,7 +217,7 @@ export default function NavbarHead() {
   }, []);
 
   const clearNotification = () => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/notification`).remove();
+    database.ref(`/Users/${currentuid}/notification`).remove();
   };
 
   return (

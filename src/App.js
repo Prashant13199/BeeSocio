@@ -18,10 +18,10 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Error from "./pages/error";
 import { ColorModeContext } from './services/ThemeContext';
 import { useContext } from "react";
-import { auth } from "./firebase";
 
 function App() {
 
+  const currentuid = localStorage.getItem("uid");
   const { mode } = useContext(ColorModeContext);
 
   const [showScroll, setShowScroll] = useState(false);
@@ -42,62 +42,60 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
 
   window.addEventListener("scroll", checkScrollTop);
 
   return (
-    <div className="App">
-      <LoadingScreen
-        loading={loading}
-        bgColor={mode === "light" ? "#f1f1f1" : "black"}
-        spinnerColor="#9ee5f8"
-        textColor={mode === "light" ? "#676767" : "white"}
-        logoSrc={logo}
-        text="BeeSocio"
-      >
-        <BrowserRouter>
-          <div
-            className="scrollTop"
-            style={{ display: showScroll ? "flex" : "none", backgroundColor: mode === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)" }}
-            onClick={scrollTop}
-          >
-            <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
-          </div>
-          {auth?.currentUser?.uid ? (
-            <>
-              <NavbarHead />
-              <Switch>
-                <Route path="/" component={Home} exact={true} />
-                <Route
-                  path="/singlefeed/:postid"
-                  component={SingleFeed}
-                  exact={true}
-                />
-                <Route path="/profile" component={Profile} exact={true} />
-                <Route
-                  path="/userprofile/:uid"
-                  component={UserProfile}
-                  exact={true}
-                />
-                <Route path="/activity" component={Activity} exact={true} />
-                <Route path="/search" component={Search} exact={true} />
-                <Route path="/message" component={Message} />
-                <Route path="*" component={Error} />
-              </Switch>
-            </>
-          ) : (
+    <LoadingScreen
+      loading={loading}
+      bgColor={mode === "light" ? "#f1f1f1" : "black"}
+      spinnerColor="#9ee5f8"
+      textColor={mode === "light" ? "#676767" : "white"}
+      logoSrc={logo}
+      text="BeeSocio"
+    >
+      <BrowserRouter>
+        <div
+          className="scrollTop"
+          style={{ display: showScroll ? "flex" : "none", backgroundColor: mode === "light" ? "rgb(242, 241, 241)" : "rgb(24, 27, 30)" }}
+          onClick={scrollTop}
+        >
+          <ExpandLessIcon color="primary" style={{ fontSize: "40px" }} />
+        </div>
+        {currentuid ? (
+          <>
+            <NavbarHead />
             <Switch>
-              <Route path="/" component={Login} exact={true} />
-              <Route path="/register" component={Register} />
-              <Route path="/forgotpassword" component={ForgotPassword} />
+              <Route path="/" component={Home} exact={true} />
+              <Route
+                path="/singlefeed/:postid"
+                component={SingleFeed}
+                exact={true}
+              />
+              <Route path="/profile" component={Profile} exact={true} />
+              <Route
+                path="/userprofile/:uid"
+                component={UserProfile}
+                exact={true}
+              />
+              <Route path="/activity" component={Activity} exact={true} />
+              <Route path="/search" component={Search} exact={true} />
+              <Route path="/message" component={Message} />
               <Route path="*" component={Error} />
             </Switch>
-          )}
-        </BrowserRouter>
-      </LoadingScreen>
-    </div>
+          </>
+        ) : (
+          <Switch>
+            <Route path="/" component={Login} exact={true} />
+            <Route path="/register" component={Register} />
+            <Route path="/forgotpassword" component={ForgotPassword} />
+            <Route path="*" component={Error} />
+          </Switch>
+        )}
+      </BrowserRouter>
+    </LoadingScreen>
   );
 }
 

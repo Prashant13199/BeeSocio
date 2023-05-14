@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import "./style.css";
 import { makeid } from "../../services/makeid";
 import { MentionsInput, Mention } from 'react-mentions'
@@ -8,6 +8,7 @@ import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function CommentInput({ id, uid, photoURL }) {
 
+  const currentuid = localStorage.getItem("uid");
   const { mode } = useContext(ColorModeContext);
   const [currentUsername, setCurrentUsername] = useState("");
   const [items, setItems] = useState("");
@@ -17,7 +18,7 @@ export default function CommentInput({ id, uid, photoURL }) {
     database.ref("/Users").on("value", (snapshot) => {
       let itemsList = [];
       snapshot.forEach((snap) => {
-        if (snap.val().uid !== auth?.currentUser?.uid) {
+        if (snap.val().uid !== currentuid) {
           itemsList.push({
             id: snap.val().uid,
             display: snap.val().username,
@@ -29,7 +30,7 @@ export default function CommentInput({ id, uid, photoURL }) {
   }, []);
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
@@ -56,13 +57,13 @@ export default function CommentInput({ id, uid, photoURL }) {
           .ref(`/Posts/${id}/comments/${idc}`)
           .set({
             text: comment,
-            uid: auth?.currentUser?.uid,
+            uid: currentuid,
             id: idc,
             timestamp: Date.now(),
           })
           .then(() => {
             setComment("");
-            if (uid !== auth?.currentUser?.uid) {
+            if (uid !== currentuid) {
               let idcc = makeid(10);
               database.ref(`/Users/${uid}/activity/${idcc}`).set({
                 id: idcc,
@@ -70,7 +71,7 @@ export default function CommentInput({ id, uid, photoURL }) {
                 timestamp: Date.now(),
                 postid: id,
                 comment: newComment,
-                uid: auth?.currentUser?.uid,
+                uid: currentuid,
                 photoUrl: photoURL,
               });
               database.ref(`/Users/${uid}/notification/${idcc}`).set({
@@ -84,7 +85,7 @@ export default function CommentInput({ id, uid, photoURL }) {
                 text: `mentioned you in comment:`,
                 timestamp: Date.now(),
                 postid: id,
-                uid: auth?.currentUser?.uid,
+                uid: currentuid,
                 photoUrl: photoURL,
                 comment: newComment,
               });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import "./style.css";
 import { Button } from "react-bootstrap";
 import AOS from 'aos';
@@ -9,10 +9,10 @@ import 'aos/dist/aos.css';
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SearchUser({ uid }) {
-
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [follow, setfollow] = useState([]);
+  const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
   let like = false;
@@ -22,7 +22,7 @@ export default function SearchUser({ uid }) {
   }, [])
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
       }
@@ -53,17 +53,17 @@ export default function SearchUser({ uid }) {
   }, [uid]);
 
   for (var i = 0; i < follow.length; i++) {
-    if (follow[i].uid === auth?.currentUser?.uid) {
+    if (follow[i].uid === currentuid) {
       like = true;
     }
   }
   const handlefollow = async () => {
     if (like === false) {
       database
-        .ref(`/Users/${uid}/followers/${auth?.currentUser?.uid}`)
+        .ref(`/Users/${uid}/followers/${currentuid}`)
         .set({
-          id: auth?.currentUser?.uid,
-          uid: auth?.currentUser?.uid,
+          id: currentuid,
+          uid: currentuid,
         })
         .then(() => {
           console.log("following");
@@ -72,7 +72,7 @@ export default function SearchUser({ uid }) {
           console.log(e);
         });
       database
-        .ref(`/Users/${auth?.currentUser?.uid}/following/${uid}`)
+        .ref(`/Users/${currentuid}/following/${uid}`)
         .set({
           id: uid,
           uid: uid,
@@ -83,13 +83,13 @@ export default function SearchUser({ uid }) {
         .catch((e) => {
           console.log(e);
         });
-      database.ref(`/Users/${uid}/activity/${auth?.currentUser?.uid}`).set({
-        id: auth?.currentUser?.uid,
+      database.ref(`/Users/${uid}/activity/${currentuid}`).set({
+        id: currentuid,
         text: `started following you`,
         timestamp: Date.now(),
-        uid: auth?.currentUser?.uid,
+        uid: currentuid,
       });
-      database.ref(`/Users/${uid}/notification/${auth?.currentUser?.uid}`).set({
+      database.ref(`/Users/${uid}/notification/${currentuid}`).set({
         text: `${currentUsername} started following you`,
       });
     } else {
@@ -107,7 +107,7 @@ export default function SearchUser({ uid }) {
       }).then((result) => {
         if (result.isConfirmed) {
           database
-            .ref(`/Users/${uid}/followers/${auth?.currentUser?.uid}`)
+            .ref(`/Users/${uid}/followers/${currentuid}`)
             .remove()
             .then(() => {
               console.log("follow removed");
@@ -117,7 +117,7 @@ export default function SearchUser({ uid }) {
               console.log(e);
             });
           database
-            .ref(`/Users/${auth?.currentUser?.uid}/following/${uid}`)
+            .ref(`/Users/${currentuid}/following/${uid}`)
             .remove()
             .then(() => {
               console.log("follow removed");
@@ -127,7 +127,7 @@ export default function SearchUser({ uid }) {
               console.log(e);
             });
           database
-            .ref(`/Users/${uid}/activity/${auth?.currentUser?.uid}`)
+            .ref(`/Users/${uid}/activity/${currentuid}`)
             .remove()
             .then(() => {
               console.log("activity removed");
@@ -137,7 +137,7 @@ export default function SearchUser({ uid }) {
               console.log(e);
             });
           database
-            .ref(`/Users/${uid}/notification/${auth?.currentUser?.uid}`)
+            .ref(`/Users/${uid}/notification/${currentuid}`)
             .remove()
             .then(() => {
               console.log("activity removed");
@@ -162,7 +162,7 @@ export default function SearchUser({ uid }) {
   };
 
   return (
-    auth?.currentUser?.uid !== uid && (
+    currentuid !== uid && (
       <div
         style={{
           padding: "10px",

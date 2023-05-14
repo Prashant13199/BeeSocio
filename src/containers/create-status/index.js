@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import "./style.css";
-import { storage, database, auth } from "../../firebase";
+import { storage, database } from "../../firebase";
 import Compressor from "compressorjs";
 import Swal from "sweetalert2";
 import { makeid } from "../../services/makeid";
@@ -13,6 +13,7 @@ export default function CreateStatus({ handleClose }) {
   let fileName = "";
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
+  const currentuid = localStorage.getItem("uid");
   const [link, setLink] = useState("");
 
   const { mode } = useContext(ColorModeContext);
@@ -119,7 +120,7 @@ export default function CreateStatus({ handleClose }) {
               database.ref(`/Status/${statusid}`).set({
                 timestamp: Date.now(),
                 statusImg: imageUrl,
-                uid: auth?.currentUser?.uid,
+                uid: currentuid,
               });
               setProgress(0);
               setImage(null);
@@ -145,7 +146,7 @@ export default function CreateStatus({ handleClose }) {
         .set({
           timestamp: Date.now(),
           statusImg: link,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
           setImage(null);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
-import { database, auth } from "../../firebase";
+import { database } from "../../firebase";
 import { Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Like from "../../components/like";
@@ -33,12 +33,13 @@ export default function CommentReplyShow({
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const [clikes, setcLikes] = useState([]);
+  const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
   const [superUser, setSuperUser] = useState(false)
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setSuperUser(snapshot.val().superuser);
@@ -81,7 +82,7 @@ export default function CommentReplyShow({
   };
 
   for (var i = 0; i < clikes.length; i++) {
-    if (clikes[i].uid === auth?.currentUser?.uid) {
+    if (clikes[i].uid === currentuid) {
       like = true;
     }
   }
@@ -90,10 +91,10 @@ export default function CommentReplyShow({
     if (like === false) {
       var idl = makeid(10);
       database
-        .ref(`/Posts/${postid}/comments/${idc}/reply/${idr}/likes/${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${postid}/comments/${idc}/reply/${idr}/likes/${currentuid}`)
         .set({
           id: idl,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
           console.log("clike added");
@@ -101,13 +102,13 @@ export default function CommentReplyShow({
         .catch((e) => {
           console.log(e);
         });
-      if (uid !== auth?.currentUser?.uid) {
+      if (uid !== currentuid) {
         database.ref(`/Users/${uid}/activity/${idl}`).set({
           id: idl,
           text: `liked your comment`,
           timestamp: Date.now(),
           postid: postid,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           photoUrl: photoURL,
         });
         database.ref(`/Users/${uid}/notification/${idl}`).set({
@@ -116,7 +117,7 @@ export default function CommentReplyShow({
       }
     } else {
       database
-        .ref(`/Posts/${postid}/comments/${idc}/reply/${idr}/likes/${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${postid}/comments/${idc}/reply/${idr}/likes/${currentuid}`)
         .remove()
         .then(() => {
           console.log("clike removed");
@@ -176,13 +177,13 @@ export default function CommentReplyShow({
               color: mode === "light" ? "black" : "white",
               fontWeight: "bold",
             }}
-            to={uid === auth?.currentUser?.uid ? '/profile' : `/userprofile/${uid}`}
+            to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}
             activeClassName="is-active"
             exact={true}
           >
             {username && username.length > 20 ? username.substring(0, 20).concat('...') : username}
           </Link>
-          {(auth?.currentUser?.uid === uid || auth?.currentUser?.uid === postuid || superUser) &&
+          {(currentuid === uid || currentuid === postuid || superUser) &&
             <span onClick={handleCommentDelete} className="comment__delete">
               Delete
             </span>
@@ -220,7 +221,7 @@ export default function CommentReplyShow({
                 textDecoration: "none",
                 color: "#1976d2",
               }}
-              to={id === auth?.currentUser?.uid ? '/profile' : `/userprofile/${id}`}
+              to={id === currentuid ? '/profile' : `/userprofile/${id}`}
               activeClassName="is-active"
               exact={true}
             >

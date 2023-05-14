@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import "./style.css";
 import Comment from "../../components/comment";
 import Like from "../../components/like";
-import { storage, database, auth } from "../../firebase";
+import { storage, database } from "../../firebase";
 import CommentInput from "../../components/comment-input";
 import { Button, Modal } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -51,6 +51,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   const [bookmarkpost, setBookmarkpost] = useState(false);
   const [comments, setComments] = useState([]);
   const { mode } = useContext(ColorModeContext);
+  const currentuid = localStorage.getItem("uid");
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [showSuggested, setShowSuggested] = useState(false)
@@ -77,7 +78,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
         if (snap.val().group === true) {
           {
             snap.val().users && Object.entries(snap.val().users).map(([k, v]) => {
-              if (v.id === auth?.currentUser?.uid) {
+              if (v.id === currentuid) {
                 grp.push(
                   snap.key
                 )
@@ -91,22 +92,22 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   }, [])
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}/`).on("value", snapshot => {
+    database.ref(`/Users/${currentuid}/saved/${id}/`).on("value", snapshot => {
       if (snapshot.val()) {
         setBookmarkpost(true)
       } else {
         setBookmarkpost(false)
       }
     })
-  }, [auth?.currentUser?.uid, id])
+  }, [currentuid, id])
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/following`).orderByChild("timestamp").on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/following`).orderByChild("timestamp").on("value", (snapshot) => {
       let followList = [];
       snapshot.forEach((snap) => {
         followList.push(snap.val().uid);
       });
-      if (followList.includes(uid) || auth?.currentUser?.uid === uid) {
+      if (followList.includes(uid) || currentuid === uid) {
         setShowSuggested(false)
       } else {
         setShowSuggested(true)
@@ -154,7 +155,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   }, [id]);
 
   useEffect(() => {
-    database.ref(`/Users/${auth?.currentUser?.uid}/`).on("value", (snapshot) => {
+    database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
       if (snapshot.val()) {
         setCurrentUsername(snapshot.val().username);
         setCurrentPhoto(snapshot.val().photo);
@@ -174,9 +175,9 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
 
   const handlebookmark = () => {
     if (bookmarkpost) {
-      database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}`).remove()
+      database.ref(`/Users/${currentuid}/saved/${id}`).remove()
     } else {
-      database.ref(`/Users/${auth?.currentUser?.uid}/saved/${id}`).set({
+      database.ref(`/Users/${currentuid}/saved/${id}`).set({
         id: id,
         photoUrl: photoURL,
         timestamp: Date.now(),
@@ -204,7 +205,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
   }, [id]);
 
   for (var i = 0; i < likes.length; i++) {
-    if (likes[i].uid === auth?.currentUser?.uid) {
+    if (likes[i].uid === currentuid) {
       like = true;
     }
   }
@@ -213,10 +214,10 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
     if (!like) {
       var idl = makeid(10);
       database
-        .ref(`/Posts/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${id}/likes/${id}${currentuid}`)
         .set({
           id: idl,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
           console.log("like added");
@@ -224,7 +225,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
         .catch((e) => {
           console.log(e);
         });
-      if (uid !== auth?.currentUser?.uid) {
+      if (uid !== currentuid) {
         database.ref(`/Users/${uid}/activity/${id}`).set({
           id: id,
           text:
@@ -233,7 +234,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               : ` and ${likes.length} others liked your post`,
           timestamp: Date.now(),
           postid: id,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           photoUrl: photoURL,
         });
         database.ref(`/Users/${uid}/notification/${id}`).set({
@@ -247,7 +248,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
       }
     } else {
       database
-        .ref(`/Posts/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${id}/likes/${id}${currentuid}`)
         .remove()
         .then(() => {
           console.log("like removed");
@@ -263,10 +264,10 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
     if (!like) {
       var idl = makeid(10);
       database
-        .ref(`/Posts/${id}/likes/${id}${auth?.currentUser?.uid}`)
+        .ref(`/Posts/${id}/likes/${id}${currentuid}`)
         .set({
           id: idl,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
         })
         .then(() => {
           console.log("like added");
@@ -274,7 +275,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
         .catch((e) => {
           console.log(e);
         });
-      if (uid !== auth?.currentUser?.uid) {
+      if (uid !== currentuid) {
         database.ref(`/Users/${uid}/activity/${id}`).set({
           id: id,
           text:
@@ -283,7 +284,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               : ` and ${likes.length} others liked your post`,
           timestamp: Date.now(),
           postid: id,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           photoUrl: photoURL,
         });
         database.ref(`/Users/${uid}/notification/${id}`).set({
@@ -328,8 +329,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           console.log(e);
         }
         if (photoURL.includes('mp4')) {
-          if (uid === auth?.currentUser?.uid) {
-            database.ref(`/Users/${auth?.currentUser?.uid}/Videos/${id}`).remove().then(() => {
+          if (uid === currentuid) {
+            database.ref(`/Users/${currentuid}/Videos/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
@@ -341,8 +342,8 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           }
 
         } else {
-          if (uid === auth?.currentUser?.uid) {
-            database.ref(`/Users/${auth?.currentUser?.uid}/Posts/${id}`).remove().then(() => {
+          if (uid === currentuid) {
+            database.ref(`/Users/${currentuid}/Posts/${id}`).remove().then(() => {
               console.log("Deleted");
             })
               .catch((e) => { console.log(e) });
@@ -380,7 +381,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
       .set({
         timestamp: Date.now(),
         statusImg: photoURL,
-        uid: auth?.currentUser?.uid,
+        uid: currentuid,
         postUrl: id,
         postuid: uid,
       })
@@ -412,27 +413,27 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
       confirmButtonText: "Yes, send",
     }).then((result) => {
       if (result.isConfirmed) {
-        var names = [item.uid, auth?.currentUser?.uid];
+        var names = [item.uid, currentuid];
         names.sort();
         let chatRoom = names.join("");
         database.ref(`/Rooms/${chatRoom}`).set({
           name1: item.uid,
-          name2: auth?.currentUser?.uid,
+          name2: currentuid,
           timestamp: Date.now(),
         });
         let mid = makeid(10);
         database.ref(`/RoomsMsg/${chatRoom}/messages/${mid}`).set({
           post: photoURL,
-          uid: auth?.currentUser?.uid,
+          uid: currentuid,
           timestamp: Date.now(),
           postid: id,
           postuid: uid,
         });
         database.ref(`/Rooms/${chatRoom}`).update({ timestamp: Date.now() });
         database
-          .ref(`/Users/${item.uid}/messages/${auth?.currentUser?.uid}`)
+          .ref(`/Users/${item.uid}/messages/${currentuid}`)
           .set({
-            id: auth?.currentUser?.uid,
+            id: currentuid,
             text: `${currentUsername} sent you a post`,
           })
           .then(() => {
@@ -684,7 +685,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           })}
           {users &&
             users.map((user) =>
-              user.uid !== auth?.currentUser?.uid ? (
+              user.uid !== currentuid ? (
                 <Users2
                   uid={user.uid}
                   key={user.uid}
@@ -711,7 +712,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
           }}
         >
           <ListGroup>
-            {(auth?.currentUser?.uid === uid || superUser) && (
+            {(currentuid === uid || superUser) && (
               <ListGroup.Item
                 variant="danger"
                 action
@@ -757,7 +758,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
                 color: mode === "light" ? "black" : "white",
                 fontWeight: "bold",
               }}
-              to={uid !== auth?.currentUser?.uid ? `/userprofile/${uid}` : '/profile'}
+              to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}
               activeClassName="is-active"
               exact={true}
             >
@@ -774,7 +775,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
                   color: mode === "light" ? "black" : "white",
                   fontWeight: "bold",
                 }}
-                to={uid !== auth?.currentUser?.uid ? `/userprofile/${uid}` : '/profile'}
+                to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}
                 activeClassName="is-active"
                 exact={true}
               >
@@ -803,7 +804,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
             <div style={{ display: showSuggested ? "block" : "none", color: mode === "light" ? "black" : "white", marginLeft: "20px" }}>&bull; suggested</div>
           </div>
 
-          {(uid === auth?.currentUser?.uid || tagss || superUser) && (
+          {(uid === currentuid || tagss || superUser) && (
             <div>
               <div className="post__delete" onClick={handleShow5}>
                 <IconButton>
@@ -902,7 +903,7 @@ export default function Post({ uid, id, photoURL, caption, timestamp, tagss, ven
               color: mode === "light" ? "black" : "white",
               fontWeight: "bold",
             }}
-            to={uid !== auth?.currentUser?.uid ? `/userprofile/${uid}` : '/profile'}
+            to={uid !== currentuid ? `/userprofile/${uid}` : '/profile'}
             activeClassName="is-active"
             exact={true}
           >
