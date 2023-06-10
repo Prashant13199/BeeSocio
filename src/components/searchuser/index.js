@@ -210,7 +210,7 @@ export default function SearchUser({ uid }) {
             {like ? (
               <Button
                 style={{
-                  width: "75px",
+                  width: "78px",
                 }}
                 variant="warning"
                 size="sm"
@@ -220,7 +220,7 @@ export default function SearchUser({ uid }) {
             ) : (
               <Button
                 style={{
-                  width: "75px",
+                  width: "78px",
                 }}
                 variant="primary"
                 size="sm"

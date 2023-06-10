@@ -257,7 +257,6 @@ export default function NavbarHead() {
           bg={mode === "light" ? "light" : "dark"}
           fixed="top"
           variant="light"
-          collapseOnSelect
           id="navbar"
           style={{
             height: "45px",
@@ -288,126 +287,121 @@ export default function NavbarHead() {
                 </NavLink>
               </Nav>
             </Navbar.Brand>
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-auto"></Nav>
-              <Nav>
-                <Nav.Item>
-                  <div className="searchUser">
-                    <ReactSearchAutocomplete
-                      items={items}
-                      onSearch={handleOnSearch}
-                      onSelect={handleOnSelect}
-                      onClear={handleClear}
-                      formatResult={formatResult}
-                      placeholder="Search"
-                      styling={{
-                        backgroundColor: mode === "light" ? "white" : "black",
-                        placeholderColor: "grey",
-                        color: mode === "light" ? "black" : "white",
-                        hoverBackgroundColor:
-                          mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
-                        height: "33px",
-                        borderRadius: "8px",
-                        border: "none",
-                      }}
-                    />
-                  </div>
-                </Nav.Item>
-              </Nav>
-              <Nav className="me-auto"></Nav>
-              <Nav>
-                <Nav.Link eventKey="1">
-                  <NavLink
-                    to="/"
-                    activeClassName="is-active"
-                    exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
-                  >
-                    <IconButton>
-                      {location && location.pathname === '/' ? <HomeIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
-                    </IconButton>
-                  </NavLink>
-                </Nav.Link>
-
-                <Nav.Link eventKey="16">
-                  <NavLink
-                    to="/search"
-                    activeClassName="is-active"
-                    exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
-                  >
-                    <IconButton>
-                      {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
-                    </IconButton>
-                  </NavLink>
-                </Nav.Link>
-
-                <Nav.Link eventKey="2">
-                  <NavLink
-                    to="/message"
-                    activeClassName="is-active"
-                    exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
-                  >
-                    <IconButton>
-                      <Badge badgeContent={mnotifications.length} color="primary">
-                        {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
-                      </Badge>
-                    </IconButton>
-
-                  </NavLink>
-                </Nav.Link>
-                <Nav.Link eventKey="3">
-                  <NavLink
-                    to="/activity"
-                    activeClassName="is-active"
-                    exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
-                  >
-                    <IconButton onClick={() => {
-                      clearNotification();
-                    }}>
-                      <Badge badgeContent={notifications.length} color="primary">
-                        {location && location.pathname === '/activity' ? <FavoriteIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <FavoriteBorderOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
-                      </Badge>
-                    </IconButton>
-
-                  </NavLink>
-                </Nav.Link>
-
-                <Nav.Link
-                  eventKey="4"
+            <Nav className="me-auto"></Nav>
+            <Nav>
+              <Nav.Item>
+                <div className="searchUser">
+                  <ReactSearchAutocomplete
+                    items={items}
+                    onSearch={handleOnSearch}
+                    onSelect={handleOnSelect}
+                    onClear={handleClear}
+                    formatResult={formatResult}
+                    placeholder="Search"
+                    styling={{
+                      backgroundColor: mode === "light" ? "white" : "black",
+                      placeholderColor: "grey",
+                      color: mode === "light" ? "black" : "white",
+                      hoverBackgroundColor:
+                        mode === "light" ? "lightblue" : "rgb(21, 64, 89)",
+                      height: "33px",
+                      borderRadius: "8px",
+                      border: "none",
+                    }}
+                  />
+                </div>
+              </Nav.Item>
+            </Nav>
+            <Nav className="me-auto"></Nav>
+            <Nav>
+              <Nav.Link eventKey="1">
+                <NavLink
+                  to="/"
+                  activeClassName="is-active"
+                  exact={true}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
                 >
-                  <IconButton onClick={handleShow}>
-                    <AddCircleOutlineIcon style={{ color: mode === "light" ? "black" : "white" }} />
+                  <IconButton>
+                    {location && location.pathname === '/' ? <HomeIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
                   </IconButton>
-                </Nav.Link>
+                </NavLink>
+              </Nav.Link>
 
-                <Nav.Link eventKey="7">
-                  <NavLink
-                    to="/profile"
-                    activeClassName="is-active"
-                    exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
-                  >
-                    <IconButton>
-                      <img
-                        className={location && location.pathname === '/profile' ? mode === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
-                        alt=""
-                        src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
-                      />
-                    </IconButton>
-                  </NavLink>
-                </Nav.Link>
-                <Nav.Link eventKey="16">
-                  <NavLink to="" activeClassName="is-active" exact={true}>
-                    <IconButton onClick={toggleColorMode}>
-                      {mode === "light" ? <DarkModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
-                    </IconButton>
-                  </NavLink>
-                </Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
+              <Nav.Link eventKey="2">
+                <NavLink
+                  to="/search"
+                  activeClassName="is-active"
+                  exact={true}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                >
+                  <IconButton>
+                    {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
+                  </IconButton>
+                </NavLink>
+              </Nav.Link>
+
+              <Nav.Link eventKey="3">
+                <NavLink
+                  to="/message"
+                  activeClassName="is-active"
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                >
+                  <IconButton>
+                    <Badge badgeContent={mnotifications.length} color="primary">
+                      {location && location.pathname.includes('/message') ? <ChatBubbleIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <ChatBubbleOutlineOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
+                    </Badge>
+                  </IconButton>
+
+                </NavLink>
+              </Nav.Link>
+              <Nav.Link eventKey="4">
+                <NavLink
+                  to="/activity"
+                  activeClassName="is-active"
+                  exact={true}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                >
+                  <IconButton onClick={() => {
+                    clearNotification();
+                  }}>
+                    <Badge badgeContent={notifications.length} color="primary">
+                      {location && location.pathname === '/activity' ? <FavoriteIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <FavoriteBorderOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
+                    </Badge>
+                  </IconButton>
+
+                </NavLink>
+              </Nav.Link>
+
+              <Nav.Link eventKey="5">
+                <IconButton onClick={handleShow}>
+                  <AddCircleOutlineIcon style={{ color: mode === "light" ? "black" : "white" }} />
+                </IconButton>
+              </Nav.Link>
+
+              <Nav.Link eventKey="6">
+                <NavLink
+                  to="/profile"
+                  activeClassName="is-active"
+                  exact={true}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                >
+                  <IconButton>
+                    <img
+                      className={location && location.pathname === '/profile' ? mode === "light" ? 'navbar__img_active_light' : "navbar__img_active_dark" : "navbar__img"}
+                      alt=""
+                      src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
+                    />
+                  </IconButton>
+                </NavLink>
+              </Nav.Link>
+              <Nav.Link eventKey="7">
+                <NavLink to="" activeClassName="is-active" exact={true}>
+                  <IconButton onClick={toggleColorMode}>
+                    {mode === "light" ? <DarkModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
+                  </IconButton>
+                </NavLink>
+              </Nav.Link>
+            </Nav>
           </Container>
         </Navbar>
       </div>
@@ -423,7 +417,7 @@ export default function NavbarHead() {
               }}
             >
               <Nav>
-                <Nav.Link eventKey="17">
+                <Nav.Link eventKey="8">
                   <NavLink to="" activeClassName="is-active" exact={true}>
                     <IconButton onClick={toggleColorMode}>
                       {mode === "light" ? <DarkModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <LightModeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
@@ -484,7 +478,7 @@ export default function NavbarHead() {
               </Navbar.Brand>
               <Nav className="me-auto"></Nav>
               <Nav>
-                <Nav.Link eventKey="10">
+                <Nav.Link eventKey="9">
                   <NavLink
                     to="/message"
                     activeClassName="is-active"
@@ -517,7 +511,7 @@ export default function NavbarHead() {
               }}
             >
               <Nav className="me-auto">
-                <Nav.Link eventKey="11">
+                <Nav.Link eventKey="10">
                   <NavLink
                     to="/"
                     activeClassName="is-active"
@@ -531,7 +525,7 @@ export default function NavbarHead() {
                 </Nav.Link>
               </Nav>
               <Nav className="me-auto">
-                <Nav.Link eventKey="12">
+                <Nav.Link eventKey="11">
                   <NavLink
                     to="/search"
                     activeClassName="is-active"
@@ -545,14 +539,14 @@ export default function NavbarHead() {
                 </Nav.Link>
               </Nav>
               <Nav className="me-auto">
-                <Nav.Link eventKey="13">
+                <Nav.Link eventKey="12">
                   <IconButton onClick={handleShow}>
                     <AddCircleOutlineIcon style={{ color: mode === "light" ? "black" : "white" }} />
                   </IconButton>
                 </Nav.Link>
               </Nav>
               <Nav className="me-auto">
-                <Nav.Link eventKey="14">
+                <Nav.Link eventKey="13">
                   <NavLink
                     to="/activity"
                     activeClassName="is-active"
@@ -572,7 +566,7 @@ export default function NavbarHead() {
               </Nav>
 
               <Nav>
-                <Nav.Link eventKey="15">
+                <Nav.Link eventKey="14">
                   <NavLink
                     to="/profile"
                     activeClassName="is-active"

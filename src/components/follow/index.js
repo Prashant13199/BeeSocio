@@ -123,7 +123,7 @@ export default function Follow({ uid }) {
         <Button
           onClick={handleUnfollow}
           style={{
-            width: "70px",
+            width: "78px",
           }}
           variant="warning"
           size="sm"

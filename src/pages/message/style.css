@@ -4,24 +4,28 @@
   display: grid;
   place-items: center;
 }
+
 .app__body__light {
   display: flex;
   height: 85vh;
   width: 90vw;
-  background-color: rgba(248,249,250,1);
+  background-color: rgba(248, 249, 250, 1);
   border-radius: 10px;
 }
+
 .app__body__dark {
   display: flex;
   height: 85vh;
   width: 90vw;
-  background-color: rgba(33,37,41,1);
+  background-color: rgba(33, 37, 41, 1);
   border-radius: 10px;
 }
+
 .showsidebar {
   flex: 0.35;
   height: 100%;
 }
+
 .chatmain {
   display: block;
   flex: 0.65;
@@ -29,6 +33,7 @@
   place-items: center;
   border-radius: 10px;
 }
+
 .chatmain1 {
   display: block;
   flex: 0.35;
@@ -36,30 +41,35 @@
   overflow: auto;
   border-radius: 10px;
 }
+
 .chatmain1::-webkit-scrollbar {
   display: none;
 }
+
 @media screen and (max-width: 990px) {
   .chatmain1 {
     display: none;
   }
-  .chatmain{
+
+  .chatmain {
     display: none;
   }
-  .app{
-      height: 100%;
-      width: 100%;
+
+  .app {
+    height: 100%;
+    width: 100%;
   }
+
   .app__body__light {
     padding-top: 0px;
-      height: 100%;
-      width: 100%;
-      box-shadow: none;
-      bottom: 0;
-      position: absolute;  
-      max-width: none;
-      background-color: white;
-      border-radius: 0px;
+    height: 100%;
+    width: 100%;
+    box-shadow: none;
+    bottom: 0;
+    position: absolute;
+    max-width: none;
+    background-color: white;
+    border-radius: 0px;
   }
 
   .app__body__dark {
@@ -68,15 +78,16 @@
     width: 100%;
     box-shadow: none;
     bottom: 0;
-    position: absolute;  
+    position: absolute;
     max-width: none;
     background-color: black;
     border-radius: 0px;
-}
+  }
 
-  .chattitle{
+  .chattitle {
     display: none;
   }
+
   .showsidebar {
     display: none;
   }

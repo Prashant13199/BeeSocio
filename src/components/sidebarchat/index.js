@@ -6,8 +6,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { time } from "../../services/time";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { ColorModeContext } from "../../services/ThemeContext";
 
 function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
@@ -22,14 +20,9 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
   const { mode } = useContext(ColorModeContext);
   const history = useHistory();
   const [active, setActive] = useState(false)
+  const [mnotifications, setmNotification] = useState([]);
 
   useEffect(() => {
-    AOS.init({ duration: 800 })
-  }, [])
-
-  useEffect(() => {
-    console.log(location && location.pathname.split('/')[3])
-    console.log(id)
     if (location && location.pathname.split('/')[3] === id) {
       setActive(true)
     } else {
@@ -73,6 +66,7 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
     names.sort();
     setRoomName(names.join(""));
   }, [id, currentuid, name1, name2]);
+
   useEffect(() => {
     database.ref(`/Users/${currentuid}/messages`).on("value", (snapshot) => {
       let mNotification = [];
@@ -86,11 +80,10 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
     });
   }, []);
 
-  const [mnotifications, setmNotification] = useState([]);
-
   const removeNotification = async () => {
     database.ref(`/Users/${currentuid}/messages/${id}`).remove();
   };
+
   const handleLink = () => {
     removeNotification()
     history.push('/message')
@@ -113,7 +106,7 @@ function SidebarChat({ id, name1, addNewChat, name2, groupName }) {
         }}
         className="chata"
       >
-        <div data-aos="fade-right" className={active ? mode === "light" ? "sidebarChat_active" : "sidebarChatdark_active" : mode === "light" ? "sidebarChat" : "sidebarChatdark"}>
+        <div className={active ? mode === "light" ? "sidebarChat_active" : "sidebarChatdark_active" : mode === "light" ? "sidebarChat" : "sidebarChatdark"}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <img
               src={photo ? photo : `https://api.dicebear.com/6.x/thumbs/png?seed=Bubba`}

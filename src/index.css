@@ -5,12 +5,11 @@
 
 body {
   margin: 0;
-  font-family: 'Sen';
+  font-family: 'Montserrat';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: 'Sen',
-    monospace;
+  font-family: 'Montserrat'
 }
