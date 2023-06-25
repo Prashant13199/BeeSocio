@@ -66,7 +66,7 @@ export default function Home() {
                 <img
                   src={currentPhoto ? currentPhoto : "https://api.dicebear.com/6.x/thumbs/png?seed=Bubba"}
                   style={{
-                    borderRadius: "10px",
+                    borderRadius: "50%",
                     height: "80px",
                     width: "80px",
                     objectFit: "cover",

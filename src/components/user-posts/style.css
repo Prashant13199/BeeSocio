@@ -2,18 +2,22 @@
     height: 300px;
     width: 100%;
     object-fit: cover;
+    transition: all .3s;
 }
-.userPost__img:hover{
+
+.userPost__img:hover {
     cursor: pointer;
-    box-shadow: 3px 3px 6px #686868, -3px -3px 6px #ffffff;
+    transition: all .3s;
+    transform: scale(98%)
 }
+
 .userPost__video {
     height: 300px;
     width: 100%;
-    object-fit: cover;    
+    object-fit: cover;
 }
 
-.userPost__video:hover{
+.userPost__video:hover {
     cursor: pointer;
     box-shadow: 3px 3px 6px #686868, -3px -3px 6px #ffffff;
 }
@@ -22,6 +26,7 @@
     .userPost__video {
         height: 200px;
     }
+
     .userPost__img {
         height: 200px;
     }

@@ -1,16 +1,18 @@
-.suggestion__img{
-    border-radius: 8px;
+.suggestion__img {
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     object-fit: cover;
     margin-right: 6px;
 }
+
 .sugfollow {
     font-size: 12px;
     cursor: pointer;
     float: right;
     text-decoration: none;
 }
-.sugfollow:hover{
+
+.sugfollow:hover {
     color: blue;
 }

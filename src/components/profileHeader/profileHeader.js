@@ -827,6 +827,7 @@ export default function ProfileHeader() {
                     margin: "0px 5px",
                     fontSize: "small",
                     borderRadius: '10px',
+                    boxShadow: '0 0 4px lightgray'
                 }
             }>
 

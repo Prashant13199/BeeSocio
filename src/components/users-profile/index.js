@@ -202,7 +202,7 @@ export default function UserP({ uid }) {
           {like ? (
             <Button
               style={{
-                width: "70px",
+                width: "78px",
               }}
               variant="warning"
               size="sm"
@@ -212,7 +212,7 @@ export default function UserP({ uid }) {
           ) : (
             <Button
               style={{
-                width: "70px",
+                width: "78px",
               }}
               variant="primary"
               size="sm"

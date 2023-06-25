@@ -1,5 +1,5 @@
-.activeuser__img{
-    border-radius: 8px;
+.activeuser__img {
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     object-fit: cover;
@@ -8,7 +8,7 @@
 
 .activeuser__img_online {
     padding: 2px;
-    border-radius: 8px;
+    border-radius: 50%;
     border-style: solid;
     border-width: 2px;
     border-color: green;
