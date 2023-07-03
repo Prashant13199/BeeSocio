@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { IconButton } from "@material-ui/core";
 import loadingIcon from '../../assets/loading.gif'
-import icon from "../../bee.png";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import AddIcon from '@mui/icons-material/Add';
 import { Button } from "react-bootstrap";
@@ -155,8 +154,10 @@ function Sidebar() {
       <div className="sidebar">
         <div className="sidebar__header">
           <Link to="/" style={{ color: mode === "light" ? "black" : "white", textDecoration: "none", fontSize: "24px", }}>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <ArrowBackIosIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: 'flex-start' }}>
+              <IconButton>
+                <ArrowBackIosIcon style={{ color: mode === 'light' ? 'black' : 'white' }} />
+              </IconButton>
               <div style={{ fontWeight: "700" }}>Chats</div>
             </div>
           </Link>

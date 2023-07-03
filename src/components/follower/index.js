@@ -102,7 +102,7 @@ export default function Follower({ uid }) {
             activeClassName="is-active"
             exact={true}
           >
-            {username && username.length > 15 ? username.substring(0, 15).concat('...') : username}
+            {username && username.length > 10 ? username.substring(0, 10).concat('...') : username}
           </Link>
         </div>
       </div>

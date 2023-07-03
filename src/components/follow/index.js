@@ -7,16 +7,19 @@ import { Button } from "react-bootstrap";
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function Follow({ uid }) {
+
   const currentuid = localStorage.getItem("uid");
   const [photo, setPhoto] = useState("");
   const [username, setUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
+
   useEffect(() => {
     database.ref(`/Users/${uid}`).on("value", (snapshot) => {
       setPhoto(snapshot.val().photo);
       setUsername(snapshot.val().username);
     });
   }, [uid]);
+
   const handleUnfollow = () => {
     Swal.fire({
       background:
@@ -115,7 +118,7 @@ export default function Follow({ uid }) {
             activeClassName="is-active"
             exact={true}
           >
-            {username && username.length > 15 ? username.substring(0, 15).concat('...') : username}
+            {username && username.length > 10 ? username.substring(0, 10).concat('...') : username}
           </Link>
         </div>
       </div>
