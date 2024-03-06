@@ -1,43 +1,49 @@
-.activitysinglelight{
+.activitysinglelight {
     display: flex;
     margin: auto;
     padding: 10px;
     margin: 6px;
     justify-content: space-between;
 }
+
 .activitysinglelight:hover {
     background-color: rgb(175, 218, 243);
     border-radius: 8px;
 }
-.activitysingledark:hover{
+
+.activitysingledark:hover {
     background-color: rgb(21, 64, 89);
     border-radius: 8px;
 }
-.activitysingledark{
+
+.activitysingledark {
     display: flex;
     margin: auto;
     padding: 10px;
     margin: 6px;
     justify-content: space-between;
 }
+
 .activity__profilePic {
     height: 40px;
     width: 40px;
     min-width: 40px;
     min-height: 40px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 50%;
 }
+
 .activity__postPic {
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
-    min-height: 40px;
+    height: 50px;
+    width: 50px;
+    min-width: 50px;
+    min-height: 50px;
     margin-left: 5px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 8px;
 }
-.activity__time{
+
+.activity__time {
     font-size: small;
     color: gray;
 }

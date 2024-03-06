@@ -4,8 +4,6 @@ import Swal from "sweetalert2";
 import { database } from "../../firebase";
 import "./style.css";
 import { Button } from "react-bootstrap";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function SearchUser({ uid }) {
@@ -16,10 +14,6 @@ export default function SearchUser({ uid }) {
   const [currentUsername, setCurrentUsername] = useState("");
   const { mode } = useContext(ColorModeContext);
   let like = false;
-
-  useEffect(() => {
-    AOS.init({ duration: 800 })
-  }, [])
 
   useEffect(() => {
     database.ref(`/Users/${currentuid}/`).on("value", (snapshot) => {
@@ -178,7 +172,6 @@ export default function SearchUser({ uid }) {
             justifyContent: "center",
             alignItems: "center",
           }}
-          data-aos="fade-right"
         >
           <div>
             <Link to={`/userprofile/${uid}`}>
@@ -205,7 +198,7 @@ export default function SearchUser({ uid }) {
             </Link>
           </div>
         </div>
-        <div className="sugfollow1" data-aos="fade-left">
+        <div className="sugfollow1" >
           <a onClick={handlefollow}>
             {like ? (
               <Button

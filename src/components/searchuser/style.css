@@ -1,11 +1,12 @@
-.searchuser__img{
+.searchuser__img {
     cursor: pointer;
     height: 50px;
     width: 50px;
     min-width: 50px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 50%;
 }
+
 .sugfollow1 {
     cursor: pointer;
     text-decoration: none;

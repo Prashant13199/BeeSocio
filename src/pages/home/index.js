@@ -95,9 +95,9 @@ export default function Home() {
           <Suggestions />
           <ActiveUsers />
           <div style={{ padding: "0px 40px", color: "grey", fontSize: "14px" }}>
-            React · Firebase · version 3.1.0
+            React · Firebase · version 3.2.0
             <br />
-            ©2022 BeeSocio by{" "}
+            ©2024 BeeSocio by{" "}
             <a
               style={{ textDecoration: "none" }}
               href="https://siyadevelopers.netlify.app"

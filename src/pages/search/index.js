@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import { Helmet } from "react-helmet";
 import { database } from "../../firebase";
-
 import loadingIcon from '../../assets/loading.gif'
 import SearchUser from "../../components/searchuser";
 import { ColorModeContext } from "../../services/ThemeContext";
@@ -33,7 +32,7 @@ export default function Search() {
   useEffect(() => {
     database
       .ref("Users")
-      .orderByChild("createdAccountOn").limitToLast(10)
+      .orderByChild("createdAccountOn").limitToLast(12)
       .on("value", (snapshot) => {
         let userList = [];
         let key = ""

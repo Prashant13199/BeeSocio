@@ -1,15 +1,16 @@
-.like__img1{
+.like__img1 {
     padding: 0px;
-    border-radius: 10px;
+    border-radius: 50%;
     cursor: pointer;
     height: 30px;
     width: 30px;
     min-width: 30px;
     object-fit: cover;
 }
+
 .like__img1_online {
     padding: 2px;
-    border-radius: 10px;
+    border-radius: 50%;
     border-style: solid;
     border-width: 2px;
     border-color: green;

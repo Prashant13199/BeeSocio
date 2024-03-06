@@ -1,10 +1,11 @@
-.follow__img{
-    border-radius: 10px;
+.follow__img {
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     object-fit: cover;
     margin-right: 6px;
 }
+
 .profileUnfollow {
     text-decoration: none;
     cursor: pointer;

@@ -319,7 +319,7 @@ export default function NavbarHead() {
                   to="/"
                   activeClassName="is-active"
                   exact={true}
-                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                 >
                   <IconButton>
                     {location && location.pathname === '/' ? <HomeIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
@@ -332,7 +332,7 @@ export default function NavbarHead() {
                   to="/search"
                   activeClassName="is-active"
                   exact={true}
-                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                 >
                   <IconButton>
                     {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
@@ -344,7 +344,7 @@ export default function NavbarHead() {
                 <NavLink
                   to="/message"
                   activeClassName="is-active"
-                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                 >
                   <IconButton>
                     <Badge badgeContent={mnotifications.length} color="primary">
@@ -359,7 +359,7 @@ export default function NavbarHead() {
                   to="/activity"
                   activeClassName="is-active"
                   exact={true}
-                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                 >
                   <IconButton onClick={() => {
                     clearNotification();
@@ -383,7 +383,7 @@ export default function NavbarHead() {
                   to="/profile"
                   activeClassName="is-active"
                   exact={true}
-                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                  activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                 >
                   <IconButton>
                     <img
@@ -516,7 +516,7 @@ export default function NavbarHead() {
                     to="/"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       {location && location.pathname === '/' ? <HomeIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <HomeOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
@@ -530,7 +530,7 @@ export default function NavbarHead() {
                     to="/search"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       {location && location.pathname === '/search' ? <PersonSearchIcon style={{ color: mode === "light" ? "black" : "white" }} /> : <PersonSearchOutlinedIcon style={{ color: mode === "light" ? "black" : "white" }} />}
@@ -551,7 +551,7 @@ export default function NavbarHead() {
                     to="/activity"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
 
                     <IconButton onClick={() => {
@@ -571,7 +571,7 @@ export default function NavbarHead() {
                     to="/profile"
                     activeClassName="is-active"
                     exact={true}
-                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '10px', paddingTop: '2px', paddingBottom: '6px' }}
+                    activeStyle={{ backgroundColor: mode === "light" ? 'white' : 'black', borderRadius: '6px', paddingTop: '2px', paddingBottom: '6px' }}
                   >
                     <IconButton>
                       <img

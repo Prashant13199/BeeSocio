@@ -1,16 +1,18 @@
-.like__img{
-    border-radius: 10px;
+.like__img {
+    border-radius: 50%;
     width: 30px;
     height: 30px;
     object-fit: cover;
     margin-right: 6px;
 }
+
 .users2__a {
     text-decoration: none;
     cursor: pointer;
     color: black;
     font-size: 20px;
 }
+
 .users2__a:hover {
     color: black;
 }

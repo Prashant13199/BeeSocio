@@ -3,10 +3,12 @@
     max-width: 600px;
     margin-top: 20px;
 }
+
 .post__likecomment {
     justify-content: space-between;
     display: flex;
 }
+
 .addStatus {
     cursor: pointer;
     font-size: 20px;
@@ -14,26 +16,29 @@
     color: black;
     text-decoration: none;
 }
+
 .addStatus:hover {
     color: black;
 }
-.post__header{
+
+.post__header {
     padding: 5px 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.post__headerLeft{
+
+.post__headerLeft {
     display: flex;
     align-items: center;
     margin: 5px;
 }
 
-.post__profilePic{
+.post__profilePic {
     height: 35px;
     width: 35px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 50%;
 }
 
 .post__delete {
@@ -52,6 +57,7 @@
     max-width: 600px;
     word-wrap: break-word;
 }
+
 .post_like {
     display: flex;
 }
@@ -63,8 +69,8 @@
         box-shadow: none;
         background-color: transparent !important;
     }
-    .post__photoUrl{
+
+    .post__photoUrl {
         width: 100%;
     }
 }
-

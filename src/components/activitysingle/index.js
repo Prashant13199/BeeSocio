@@ -5,8 +5,6 @@ import { Link } from "react-router-dom";
 import { database } from "../../firebase";
 import Swal from "sweetalert2";
 import { useLongPress } from "use-long-press";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { ColorModeContext } from "../../services/ThemeContext";
 
 export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid, id, comment, }) {
@@ -14,10 +12,6 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
     const [username, setUsername] = useState("");
     const currentuid = localStorage.getItem("uid");
     const { mode } = useContext(ColorModeContext);
-
-    useEffect(() => {
-        AOS.init({ duration: 800 })
-    }, [])
 
     useEffect(() => { database.ref(`/Users/${uid}`).on("value", (snapshot) => { if (snapshot.val()) { setPhoto(snapshot.val().photo); setUsername(snapshot.val().username); } }); }, [uid]);
 
@@ -42,7 +36,7 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
     return (
         <Link to={postid ? `/singlefeed/${postid}` : `/userprofile/${uid}`} style={{ textDecoration: "none" }} className="noselect">
             <div className={mode === "light" ? "activitysinglelight" : "activitysingledark"} {...bind(id)}>
-                <div data-aos="fade-right" style={{ display: "flex" }}> <Link to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}>
+                <div style={{ display: "flex" }}> <Link to={uid === currentuid ? '/profile' : `/userprofile/${uid}`}>
                     <img src={photo ? photo : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`} className="activity__profilePic" alt="" />
                 </Link>
                     <div style={{ marginLeft: "10px" }}>
@@ -55,7 +49,7 @@ export default function ActivitySingle({ uid, text, timestamp, photoUrl, postid,
                         </div>
                     </div>
                 </div>
-                <img data-aos="fade-left" style={{ display: postid ? "block" : "none" }} effect="blur" className="activity__postPic" alt="" src={photoUrl ? photoUrl : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`} />
+                <img style={{ display: postid ? "block" : "none" }} effect="blur" className="activity__postPic" alt="" src={photoUrl ? photoUrl : `https://api.dicebear.com/6.x/thumbs/png?seed=Spooky`} />
             </div>
         </Link>);
 }

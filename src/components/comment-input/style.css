@@ -1,11 +1,12 @@
-.commentInput{
-    width: 96%;
-    outline: none;
-    background: transparent;
-    margin: 15px 10px;
+.commentInput {
+  width: 96%;
+  outline: none;
+  background: transparent;
+  margin: 15px 10px;
 }
+
 .commentInput__input {
-    border: none;
+  border: none;
 }
 
 .commentInput__suggestions {
@@ -15,28 +16,28 @@
 }
 
 .commentInput :focus {
-    outline: none;
+  outline: none;
 }
 
 .commentInput {
-    display: flex;
-    justify-content: space-between;
-  }
+  display: flex;
+  justify-content: space-between;
+}
 
-  .commentInput__text {
-    flex: 1;
-  }
+.commentInput__text {
+  flex: 1;
+}
 
-  .commentInput__textarea {
-    border: none;
-    width: 100%;
-    resize: none;
-  }
-  
-  .commentInput__textarea {
-    border: none;
-  }
-  
-  .commentInput__textarea:focus {
-    outline: none;
-  }
+.commentInput__textarea {
+  border: none;
+  width: 100%;
+  resize: none;
+}
+
+.commentInput__textarea {
+  border: none;
+}
+
+.commentInput__textarea:focus {
+  outline: none;
+}

@@ -3,13 +3,15 @@
     width: 200px;
     min-width: 160px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 50%;
     cursor: pointer;
 }
+
 .info_name {
     font-size: 32px;
     font-weight: 700;
 }
+
 /* .listitem{
     background-color: rgba(248,249,250,1);
     color: black;
@@ -27,14 +29,15 @@
     color: white;
     background-color: rgb(66, 65, 65);
 } */
-.swal{
+.swal {
     color: black
 }
+
 .swaldark {
-    color:white
+    color: white
 }
 
-.head{
+.head {
     align-items: center;
     justify-content: space-around;
     margin: 20px;
@@ -45,11 +48,13 @@
     .head {
         margin: 2px;
     }
+
     .profile__img {
         height: 100px;
         width: 100px;
         min-width: 100px;
     }
+
     .info_name {
         font-size: 28px;
     }
